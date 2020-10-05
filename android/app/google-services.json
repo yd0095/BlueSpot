@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "831204771409",
+    "firebase_url": "https://bluespot-78643.firebaseio.com",
+    "project_id": "bluespot-78643",
+    "storage_bucket": "bluespot-78643.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:831204771409:android:20ba47d0bf165848139a70",
+        "android_client_info": {
+          "package_name": "com.bluespot"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "831204771409-9b1r5eh2utkk8iis547ggfp5dhs6uk7t.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.bluespot",
+            "certificate_hash": "7fb1eb8bc552584046cde26e9ebf18550c138cb5"
+          }
+        },
+        {
+          "client_id": "831204771409-qq35laqu90o236ul11hdqpu8e5bt8q2p.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBjHUEuc3OjmzVa6VCltHSW102KJIT-QBg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "831204771409-qq35laqu90o236ul11hdqpu8e5bt8q2p.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

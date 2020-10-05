@@ -22,7 +22,8 @@ class MyApp extends StatelessWidget {
       ),
       home: SplashPage(),
       routes: <String,WidgetBuilder>{
-        '/AfterSplash': (BuildContext context) => MainPage()
+        '/AfterSplash': (BuildContext context) => MapPage()
+
       },
     );
   }
