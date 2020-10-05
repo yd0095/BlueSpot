@@ -10,13 +10,11 @@ class _MapPageState extends State<MapPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Map'),
-      ),
       body: GoogleMap(
         initialCameraPosition:
         CameraPosition(target: LatLng(37.77483, -122.41942), zoom: 12),
       ),
+
     );
   }
 }
