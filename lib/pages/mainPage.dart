@@ -50,17 +50,17 @@ class _MainPageState extends State<MainPage> {
     return Scaffold(
       resizeToAvoidBottomPadding: false,
       appBar: AppBar(
-        title:  Text('Blue Spot', style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold)),
-        centerTitle: true,
-        elevation: 0.0,
-        backgroundColor: Colors.white,
-        iconTheme: new IconThemeData(color: Colors.grey),
-        actions:[
-          Icon(Icons.more_vert,),
-          Padding(
-              padding: EdgeInsets.symmetric(horizontal: 8)
-          ),
-        ]
+          title:  Text('Blue Spot', style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold)),
+          centerTitle: true,
+          elevation: 0.0,
+          backgroundColor: Colors.white,
+          iconTheme: new IconThemeData(color: Colors.grey),
+          actions:[
+            Icon(Icons.more_vert,),
+            Padding(
+                padding: EdgeInsets.symmetric(horizontal: 8)
+            ),
+          ]
       ),
       body: Container(
           child:SingleChildScrollView(
