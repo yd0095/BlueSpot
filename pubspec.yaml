@@ -49,7 +49,6 @@ flutter:
   uses-material-design: true
   assets:
       - lib/images/logo.png
-<<<<<<< HEAD
       - lib/images/b.jpg
       - lib/images/star.jpg
       - lib/images/60.jpg
