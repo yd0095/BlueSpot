@@ -5,6 +5,8 @@ import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:bluespot/pages/myPage.dart';
 import 'package:bluespot/pages/errorPage.dart';
+import 'package:bluespot/pages/spotPage.dart';
+import 'package:bluespot/pages/manageCoursePage.dart';
 
 class MainPage extends StatefulWidget {
   @override
@@ -119,7 +121,7 @@ class _MainPageState extends State<MainPage> {
                     onTap: (){
                       Navigator.of(context).pop();
                       Navigator.of(context).push(MaterialPageRoute(
-                          builder: (BuildContext context) => ErrorPage()));
+                          builder: (BuildContext context) => SpotPage()));
                     },
                     child: Container(
                       height: 320,
@@ -291,7 +293,7 @@ class _MainPageState extends State<MainPage> {
                 onTap:(){
                   Navigator.of(context).pop();
                   Navigator.of(context).push(MaterialPageRoute(
-                      builder: (BuildContext context) => ErrorPage()));
+                      builder: (BuildContext context) => ManageCoursePage()));
                 }
             ),
             ListTile(

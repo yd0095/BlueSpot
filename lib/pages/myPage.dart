@@ -23,7 +23,7 @@ class MyPage extends StatelessWidget {
         decoration: BoxDecoration(
           color: Color.fromARGB(255, 255, 255, 255),
         ),
-        child: Column(
+        child: ListView(
           children: [
             Container(
               width: 326,
@@ -188,371 +188,371 @@ class MyPage extends StatelessWidget {
               ),
             ),
             Spacer(),
-            // Align(
-            //   alignment: Alignment.topLeft,
-            //   child: Container(
-            //     width: 320,
-            //     height: 468,
-            //     margin: EdgeInsets.only(left: 28),
-            //     child: Stack(
-            //       alignment: Alignment.center,
-            //       children: [
-            //         Positioned(
-            //           bottom: 0,
-            //           child: Row(
-            //             crossAxisAlignment: CrossAxisAlignment.start,
-            //             children: [
-            //               Container(
-            //                 width: 152,
-            //                 height: 468,
-            //                 child: Stack(
-            //                   alignment: Alignment.center,
-            //                   children: [
-            //                     Positioned(
-            //                       left: 0,
-            //                       top: 0,
-            //                       child: Stack(
-            //                         alignment: Alignment.topCenter,
-            //                         children: [
-            //                           Container(),
-            //                           Positioned(
-            //                             left: 0,
-            //                             top: 0,
-            //                             right: 0,
-            //                             child: Container(
-            //                               height: 186,
-            //                               decoration: BoxDecoration(
-            //                                 color: Colors.black,
-            //                                 boxShadow: [
-            //                                   BoxShadow(
-            //                                     color: Colors.grey.withOpacity(0.5),
-            //                                     spreadRadius: 5,
-            //                                     blurRadius: 7,
-            //                                     offset: Offset(0,3),
-            //                                   ),
-            //                                 ],
-            //                               ),
-            //                               child: Container(),
-            //                             ),
-            //                           ),
-            //                           Positioned(
-            //                             left: 0,
-            //                             top: 0,
-            //                             right: 0,
-            //                             bottom: 0,
-            //                             child: Column(
-            //                               crossAxisAlignment: CrossAxisAlignment.stretch,
-            //                               children: [
-            //                                 Container(
-            //                                   height: 120,
-            //                                   decoration: BoxDecoration(
-            //                                     color: Colors.black,
-            //                                     boxShadow: [
-            //                                       BoxShadow(
-            //                                         color: Colors.grey.withOpacity(0.5),
-            //                                         spreadRadius: 5,
-            //                                         blurRadius: 7,
-            //                                         offset: Offset(0,3),
-            //                                       ),
-            //                                     ],
-            //                                   ),
-            //                                   child: Container(),
-            //                                 ),
-            //                                 Spacer(),
-            //                                 Container(
-            //                                   height: 120,
-            //                                   decoration: BoxDecoration(
-            //                                     color: Colors.black,
-            //                                     boxShadow: [
-            //                                       BoxShadow(
-            //                                         color: Colors.grey.withOpacity(0.5),
-            //                                         spreadRadius: 5,
-            //                                         blurRadius: 7,
-            //                                         offset: Offset(0,3),
-            //                                       ),
-            //                                     ],
-            //                                   ),
-            //                                   child: Container(),
-            //                                 ),
-            //                               ],
-            //                             ),
-            //                           ),
-            //                         ],
-            //                       ),
-            //                     ),
-            //                     Positioned(
-            //                       left: 0,
-            //                       top: 206,
-            //                       child: Stack(
-            //                         alignment: Alignment.topCenter,
-            //                         children: [
-            //                           Container(),
-            //                           Positioned(
-            //                             left: 0,
-            //                             top: 0,
-            //                             right: 0,
-            //                             child: Container(
-            //                               height: 186,
-            //                               decoration: BoxDecoration(
-            //                                 color: Colors.black,
-            //                                 boxShadow: [
-            //                                   BoxShadow(
-            //                                     color: Colors.grey.withOpacity(0.5),
-            //                                     spreadRadius: 5,
-            //                                     blurRadius: 7,
-            //                                     offset: Offset(0,3),
-            //                                   ),
-            //                                 ],
-            //                               ),
-            //                               child: Container(),
-            //                             ),
-            //                           ),
-            //                           Positioned(
-            //                             left: 0,
-            //                             top: 0,
-            //                             right: 0,
-            //                             bottom: 0,
-            //                             child: Column(
-            //                               crossAxisAlignment: CrossAxisAlignment.stretch,
-            //                               children: [
-            //                                 Container(
-            //                                   height: 120,
-            //                                   decoration: BoxDecoration(
-            //                                     color: Colors.black,
-            //                                     boxShadow: [
-            //                                       BoxShadow(
-            //                                         color: Colors.grey.withOpacity(0.5),
-            //                                         spreadRadius: 5,
-            //                                         blurRadius: 7,
-            //                                         offset: Offset(0,3),
-            //                                       ),
-            //                                     ],
-            //                                   ),
-            //                                   child: Container(),
-            //                                 ),
-            //                                 Spacer(),
-            //                                 Container(
-            //                                   height: 120,
-            //                                   decoration: BoxDecoration(
-            //                                     color: Colors.black,
-            //                                     boxShadow: [
-            //                                       BoxShadow(
-            //                                         color: Colors.grey.withOpacity(0.5),
-            //                                         spreadRadius: 5,
-            //                                         blurRadius: 7,
-            //                                         offset: Offset(0,3),
-            //                                       ),
-            //                                     ],
-            //                                   ),
-            //                                   child: Container(),
-            //                                 ),
-            //                               ],
-            //                             ),
-            //                           ),
-            //                         ],
-            //                       ),
-            //                     ),
-            //                   ],
-            //                 ),
-            //               ),
-            //               Spacer(),
-            //               Container(
-            //                 width: 152,
-            //                 height: 468,
-            //                 child: Stack(
-            //                   alignment: Alignment.center,
-            //                   children: [
-            //                     Positioned(
-            //                       top: 0,
-            //                       right: 0,
-            //                       child: Stack(
-            //                         alignment: Alignment.topCenter,
-            //                         children: [
-            //                           Positioned(
-            //                             left: 0,
-            //                             top: 0,
-            //                             right: 0,
-            //                             child: Container(
-            //                               height: 186,
-            //                               decoration: BoxDecoration(
-            //                                 color: Colors.black,
-            //                                 boxShadow: [
-            //                                   BoxShadow(
-            //                                     color: Colors.grey.withOpacity(0.5),
-            //                                     spreadRadius: 5,
-            //                                     blurRadius: 7,
-            //                                     offset: Offset(0,3),
-            //                                   ),
-            //                                 ],
-            //                               ),
-            //                               child: Container(),
-            //                             ),
-            //                           ),
-            //                           Positioned(
-            //                             left: 0,
-            //                             top: 0,
-            //                             right: 0,
-            //                             bottom: 0,
-            //                             child: Column(
-            //                               crossAxisAlignment: CrossAxisAlignment.stretch,
-            //                               children: [
-            //                                 Container(
-            //                                   height: 120,
-            //                                   decoration: BoxDecoration(
-            //                                     color: Colors.black,
-            //                                     boxShadow: [
-            //                                       BoxShadow(
-            //                                         color: Colors.grey.withOpacity(0.5),
-            //                                         spreadRadius: 5,
-            //                                         blurRadius: 7,
-            //                                         offset: Offset(0,3),
-            //                                       ),
-            //                                     ],
-            //                                   ),
-            //                                   child: Container(),
-            //                                 ),
-            //                                 Spacer(),
-            //                                 Container(
-            //                                   height: 120,
-            //                                   decoration: BoxDecoration(
-            //                                     color: Colors.black,
-            //                                     boxShadow: [
-            //                                       BoxShadow(
-            //                                         color: Colors.grey.withOpacity(0.5),
-            //                                         spreadRadius: 5,
-            //                                         blurRadius: 7,
-            //                                         offset: Offset(0,3),
-            //                                       ),
-            //                                     ],
-            //                                   ),
-            //                                   child: Container(),
-            //                                 ),
-            //                               ],
-            //                             ),
-            //                           ),
-            //                         ],
-            //                       ),
-            //                     ),
-            //                     Positioned(
-            //                       top: 206,
-            //                       right: 0,
-            //                       child: Stack(
-            //                         alignment: Alignment.topCenter,
-            //                         children: [
-            //                           Positioned(
-            //                             left: 0,
-            //                             top: 0,
-            //                             right: 0,
-            //                             child: Container(
-            //                               height: 186,
-            //                               decoration: BoxDecoration(
-            //                                 color: Colors.black,
-            //                                 boxShadow: [
-            //                                   BoxShadow(
-            //                                     color: Colors.grey.withOpacity(0.5),
-            //                                     spreadRadius: 5,
-            //                                     blurRadius: 7,
-            //                                     offset: Offset(0,3),
-            //                                   ),
-            //                                 ],
-            //                               ),
-            //                               child: Container(),
-            //                             ),
-            //                           ),
-            //                           Positioned(
-            //                             left: 0,
-            //                             top: 0,
-            //                             right: 0,
-            //                             bottom: 0,
-            //                             child: Column(
-            //                               crossAxisAlignment: CrossAxisAlignment.stretch,
-            //                               children: [
-            //                                 Container(
-            //                                   height: 120,
-            //                                   decoration: BoxDecoration(
-            //                                     color: Colors.black,
-            //                                     boxShadow: [
-            //                                       BoxShadow(
-            //                                         color: Colors.grey.withOpacity(0.5),
-            //                                         spreadRadius: 5,
-            //                                         blurRadius: 7,
-            //                                         offset: Offset(0,3),
-            //                                       ),
-            //                                     ],
-            //                                   ),
-            //                                   child: Container(),
-            //                                 ),
-            //                                 Spacer(),
-            //                                 Container(
-            //                                   height: 120,
-            //                                   decoration: BoxDecoration(
-            //                                     color: Colors.black,
-            //                                     boxShadow: [
-            //                                       BoxShadow(
-            //                                         color: Colors.grey.withOpacity(0.5),
-            //                                         spreadRadius: 5,
-            //                                         blurRadius: 7,
-            //                                         offset: Offset(0,3),
-            //                                       ),
-            //                                     ],
-            //                                   ),
-            //                                   child: Container(),
-            //                                 ),
-            //                               ],
-            //                             ),
-            //                           ),
-            //                         ],
-            //                       ),
-            //                     ),
-            //                   ],
-            //                 ),
-            //               ),
-            //             ],
-            //           ),
-            //         ),
-            //         Positioned(
-            //           left: 91,
-            //           bottom: 88,
-            //           child: Column(
-            //             mainAxisAlignment: MainAxisAlignment.end,
-            //             crossAxisAlignment: CrossAxisAlignment.stretch,
-            //             children: [
-            //               Align(
-            //                 alignment: Alignment.topLeft,
-            //                 child: Container(
-            //                   margin: EdgeInsets.only(left: 1, bottom: 41),
-            //                   child: Text(
-            //                     "SPOT 등록하기",
-            //                     textAlign: TextAlign.left,
-            //                     style: TextStyle(
-            //                       color: Colors.black,
-            //                       fontFamily: "Arial",
-            //                       fontWeight: FontWeight.w700,
-            //                       fontSize: 20,
-            //                     ),
-            //                   ),
-            //                 ),
-            //               ),
-            //               Align(
-            //                 alignment: Alignment.topLeft,
-            //                 child: Text(
-            //                   "코스 관리하기",
-            //                   textAlign: TextAlign.left,
-            //                   style: TextStyle(
-            //                     color: Colors.black,
-            //                     fontFamily: "Arial",
-            //                     fontWeight: FontWeight.w700,
-            //                     fontSize: 20,
-            //                   ),
-            //                 ),
-            //               ),
-            //             ],
-            //           ),
-            //         ),
-            //       ],
-            //     ),
-            //   ),
-            // ),
+            Align(
+              alignment: Alignment.topLeft,
+              child: Container(
+                width: 320,
+                height: 468,
+                margin: EdgeInsets.only(left: 28),
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    Positioned(
+                      bottom: 0,
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            width: 152,
+                            height: 468,
+                            child: Stack(
+                              alignment: Alignment.center,
+                              children: [
+                                Positioned(
+                                  left: 0,
+                                  top: 0,
+                                  child: Stack(
+                                    alignment: Alignment.topCenter,
+                                    children: [
+                                      Container(),
+                                      Positioned(
+                                        left: 0,
+                                        top: 0,
+                                        right: 0,
+                                        child: Container(
+                                          height: 186,
+                                          decoration: BoxDecoration(
+                                            color: Colors.black,
+                                            boxShadow: [
+                                              BoxShadow(
+                                                color: Colors.grey.withOpacity(0.5),
+                                                spreadRadius: 5,
+                                                blurRadius: 7,
+                                                offset: Offset(0,3),
+                                              ),
+                                            ],
+                                          ),
+                                          child: Container(),
+                                        ),
+                                      ),
+                                      Positioned(
+                                        left: 0,
+                                        top: 0,
+                                        right: 0,
+                                        bottom: 0,
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                                          children: [
+                                            Container(
+                                              height: 120,
+                                              decoration: BoxDecoration(
+                                                color: Colors.black,
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                    color: Colors.grey.withOpacity(0.5),
+                                                    spreadRadius: 5,
+                                                    blurRadius: 7,
+                                                    offset: Offset(0,3),
+                                                  ),
+                                                ],
+                                              ),
+                                              child: Container(),
+                                            ),
+                                            Spacer(),
+                                            Container(
+                                              height: 120,
+                                              decoration: BoxDecoration(
+                                                color: Colors.black,
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                    color: Colors.grey.withOpacity(0.5),
+                                                    spreadRadius: 5,
+                                                    blurRadius: 7,
+                                                    offset: Offset(0,3),
+                                                  ),
+                                                ],
+                                              ),
+                                              child: Container(),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Positioned(
+                                  left: 0,
+                                  top: 206,
+                                  child: Stack(
+                                    alignment: Alignment.topCenter,
+                                    children: [
+                                      Container(),
+                                      Positioned(
+                                        left: 0,
+                                        top: 0,
+                                        right: 0,
+                                        child: Container(
+                                          height: 186,
+                                          decoration: BoxDecoration(
+                                            color: Colors.black,
+                                            boxShadow: [
+                                              BoxShadow(
+                                                color: Colors.grey.withOpacity(0.5),
+                                                spreadRadius: 5,
+                                                blurRadius: 7,
+                                                offset: Offset(0,3),
+                                              ),
+                                            ],
+                                          ),
+                                          child: Container(),
+                                        ),
+                                      ),
+                                      Positioned(
+                                        left: 0,
+                                        top: 0,
+                                        right: 0,
+                                        bottom: 0,
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                                          children: [
+                                            Container(
+                                              height: 120,
+                                              decoration: BoxDecoration(
+                                                color: Colors.black,
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                    color: Colors.grey.withOpacity(0.5),
+                                                    spreadRadius: 5,
+                                                    blurRadius: 7,
+                                                    offset: Offset(0,3),
+                                                  ),
+                                                ],
+                                              ),
+                                              child: Container(),
+                                            ),
+                                            Spacer(),
+                                            Container(
+                                              height: 120,
+                                              decoration: BoxDecoration(
+                                                color: Colors.black,
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                    color: Colors.grey.withOpacity(0.5),
+                                                    spreadRadius: 5,
+                                                    blurRadius: 7,
+                                                    offset: Offset(0,3),
+                                                  ),
+                                                ],
+                                              ),
+                                              child: Container(),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Spacer(),
+                          Container(
+                            width: 152,
+                            height: 468,
+                            child: Stack(
+                              alignment: Alignment.center,
+                              children: [
+                                Positioned(
+                                  top: 0,
+                                  right: 0,
+                                  child: Stack(
+                                    alignment: Alignment.topCenter,
+                                    children: [
+                                      Positioned(
+                                        left: 0,
+                                        top: 0,
+                                        right: 0,
+                                        child: Container(
+                                          height: 186,
+                                          decoration: BoxDecoration(
+                                            color: Colors.black,
+                                            boxShadow: [
+                                              BoxShadow(
+                                                color: Colors.grey.withOpacity(0.5),
+                                                spreadRadius: 5,
+                                                blurRadius: 7,
+                                                offset: Offset(0,3),
+                                              ),
+                                            ],
+                                          ),
+                                          child: Container(),
+                                        ),
+                                      ),
+                                      Positioned(
+                                        left: 0,
+                                        top: 0,
+                                        right: 0,
+                                        bottom: 0,
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                                          children: [
+                                            Container(
+                                              height: 120,
+                                              decoration: BoxDecoration(
+                                                color: Colors.black,
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                    color: Colors.grey.withOpacity(0.5),
+                                                    spreadRadius: 5,
+                                                    blurRadius: 7,
+                                                    offset: Offset(0,3),
+                                                  ),
+                                                ],
+                                              ),
+                                              child: Container(),
+                                            ),
+                                            Spacer(),
+                                            Container(
+                                              height: 120,
+                                              decoration: BoxDecoration(
+                                                color: Colors.black,
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                    color: Colors.grey.withOpacity(0.5),
+                                                    spreadRadius: 5,
+                                                    blurRadius: 7,
+                                                    offset: Offset(0,3),
+                                                  ),
+                                                ],
+                                              ),
+                                              child: Container(),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Positioned(
+                                  top: 206,
+                                  right: 0,
+                                  child: Stack(
+                                    alignment: Alignment.topCenter,
+                                    children: [
+                                      Positioned(
+                                        left: 0,
+                                        top: 0,
+                                        right: 0,
+                                        child: Container(
+                                          height: 186,
+                                          decoration: BoxDecoration(
+                                            color: Colors.black,
+                                            boxShadow: [
+                                              BoxShadow(
+                                                color: Colors.grey.withOpacity(0.5),
+                                                spreadRadius: 5,
+                                                blurRadius: 7,
+                                                offset: Offset(0,3),
+                                              ),
+                                            ],
+                                          ),
+                                          child: Container(),
+                                        ),
+                                      ),
+                                      Positioned(
+                                        left: 0,
+                                        top: 0,
+                                        right: 0,
+                                        bottom: 0,
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                                          children: [
+                                            Container(
+                                              height: 120,
+                                              decoration: BoxDecoration(
+                                                color: Colors.black,
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                    color: Colors.grey.withOpacity(0.5),
+                                                    spreadRadius: 5,
+                                                    blurRadius: 7,
+                                                    offset: Offset(0,3),
+                                                  ),
+                                                ],
+                                              ),
+                                              child: Container(),
+                                            ),
+                                            Spacer(),
+                                            Container(
+                                              height: 120,
+                                              decoration: BoxDecoration(
+                                                color: Colors.black,
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                    color: Colors.grey.withOpacity(0.5),
+                                                    spreadRadius: 5,
+                                                    blurRadius: 7,
+                                                    offset: Offset(0,3),
+                                                  ),
+                                                ],
+                                              ),
+                                              child: Container(),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Positioned(
+                      left: 91,
+                      bottom: 88,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Align(
+                            alignment: Alignment.topLeft,
+                            child: Container(
+                              margin: EdgeInsets.only(left: 1, bottom: 41),
+                              child: Text(
+                                "SPOT 등록하기",
+                                textAlign: TextAlign.left,
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontFamily: "Arial",
+                                  fontWeight: FontWeight.w700,
+                                  fontSize: 20,
+                                ),
+                              ),
+                            ),
+                          ),
+                          Align(
+                            alignment: Alignment.topLeft,
+                            child: Text(
+                              "코스 관리하기",
+                              textAlign: TextAlign.left,
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontFamily: "Arial",
+                                fontWeight: FontWeight.w700,
+                                fontSize: 20,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
           ],
         ),
       ),
