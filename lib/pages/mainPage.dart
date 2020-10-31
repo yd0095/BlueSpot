@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:bluespot/pages/myPage.dart';
+import 'package:bluespot/pages/errorPage.dart';
 
 class MainPage extends StatefulWidget {
   @override
@@ -49,6 +50,7 @@ class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+
       resizeToAvoidBottomPadding: false,
       appBar: AppBar(
           title:  Text('Blue Spot', style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold)),
@@ -113,60 +115,67 @@ class _MainPageState extends State<MainPage> {
                       )
                   ),
 
-                  Container(
-                    height: 320,
-                    child: ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        padding: EdgeInsets.only(left:16, right:6),
-                        itemCount: 3,
-                        itemBuilder: (context,index){
-                          return Container(
-                            margin: EdgeInsets.only(right:10),
-                            height:199,
-                            width:360,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(20),
-                              color: Colors.white,
-                              border: Border.all(width: 0.1),
-                            ),
+                  GestureDetector(
+                    onTap: (){
+                      Navigator.of(context).pop();
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (BuildContext context) => ErrorPage()));
+                    },
+                    child: Container(
+                      height: 320,
+                      child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          padding: EdgeInsets.only(left:16, right:6),
+                          itemCount: 3,
+                          itemBuilder: (context,index){
+                            return Container(
+                              margin: EdgeInsets.only(right:10),
+                              height:199,
+                              width:360,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(20),
+                                color: Colors.white,
+                                border: Border.all(width: 0.1),
+                              ),
 
-                            child: Stack(
-                                children:<Widget>[
-                                  Positioned(
-                                      left:15,
-                                      child:Image.network('https://i2.wp.com/blog.allstay.com/wp-content/uploads/2019/07/2_122623_02-1.jpg?w=1024&ssl=1',
-                                        width: 330,
-                                        height:250,)
-                                  ),
-                                  Positioned(
-                                    left:25,
-                                    top:242,
-                                    child:Text('해운대 앞 바다',style: GoogleFonts.inter(
-                                      fontSize:22,
-                                      fontWeight: FontWeight.bold,
-                                    ),),
-                                  ),
-                                  Positioned(
-                                      left:15,
-                                      top:270,
-                                      child: Row(
-                                          children:[
+                              child: Stack(
+                                  children:<Widget>[
+                                    Positioned(
+                                        left:15,
+                                        child:Image.network('https://i2.wp.com/blog.allstay.com/wp-content/uploads/2019/07/2_122623_02-1.jpg?w=1024&ssl=1',
+                                          width: 330,
+                                          height:250,)
+                                    ),
+                                    Positioned(
+                                      left:25,
+                                      top:242,
+                                      child:Text('해운대 앞 바다',style: GoogleFonts.inter(
+                                        fontSize:22,
+                                        fontWeight: FontWeight.bold,
+                                      ),),
+                                    ),
+                                    Positioned(
+                                        left:15,
+                                        top:270,
+                                        child: Row(
+                                            children:[
 
-                                            IconButton(
-                                              icon: Icon(EvaIcons.heart , color: Colors.red,),
-                                              iconSize: 20,
-                                            ),
-                                            Text('109',style: GoogleFonts.inter(
-                                              fontSize:18,
-                                              fontWeight: FontWeight.w500,
-                                            ), )
-                                          ]
-                                      )
-                                  )
-                                ]
-                            ),
-                          );
-                        }),
+                                              IconButton(
+                                                icon: Icon(EvaIcons.heart , color: Colors.red,),
+                                                iconSize: 20,
+                                              ),
+                                              Text('109',style: GoogleFonts.inter(
+                                                fontSize:18,
+                                                fontWeight: FontWeight.w500,
+                                              ), )
+                                            ]
+                                        )
+                                    )
+                                  ]
+                              ),
+                            );
+                          }),
+                    ),
                   ),
                   /*
                   new ListView(
@@ -269,6 +278,9 @@ class _MainPageState extends State<MainPage> {
                 ),
                 title: Text('지도로 가기'),
                 onTap:(){
+                  Navigator.of(context).pop();
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (BuildContext context) => ErrorPage()));
                 }
             ),
             ListTile(
@@ -277,6 +289,9 @@ class _MainPageState extends State<MainPage> {
                 ),
                 title: Text('코스 관리하기'),
                 onTap:(){
+                  Navigator.of(context).pop();
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (BuildContext context) => ErrorPage()));
                 }
             ),
             ListTile(
@@ -285,6 +300,9 @@ class _MainPageState extends State<MainPage> {
                 ),
                 title: Text('설정'),
                 onTap:(){
+                  Navigator.of(context).pop();
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (BuildContext context) => ErrorPage()));
                 }
             ),
             ListTile(
@@ -293,6 +311,9 @@ class _MainPageState extends State<MainPage> {
                 ),
                 title: Text('로그아웃'),
                 onTap:(){
+                  Navigator.of(context).pop();
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (BuildContext context) => ErrorPage()));
                 }
             ),
           ],
