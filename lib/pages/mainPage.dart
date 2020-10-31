@@ -3,6 +3,7 @@ import 'dart:core';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
+import 'package:bluespot/pages/myPage.dart';
 
 class MainPage extends StatefulWidget {
   @override
@@ -19,7 +20,7 @@ class _MainPageState extends State<MainPage> {
         space: '인하대 hidden places',
         like: '인천광역시 남구 용현1.4동 인하로 100',
         imglink:'https://image.edaily.co.kr/images/photo/files/NP/S/2018/06/PS18062101013.jpg' ,
-        heart: 'lib/images/heart.jpg'
+        heart: 'lib/images/heart.jpg',
     ),
     const Choice(
         space: '부평 맛집 투어',
@@ -257,6 +258,9 @@ class _MainPageState extends State<MainPage> {
                 ),
                 title: Text('My Page'),
                 onTap:(){
+                  Navigator.of(context).pop();
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (BuildContext context) => MyPage()));
                 }
             ),
             ListTile(
