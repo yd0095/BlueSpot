@@ -14,6 +14,7 @@ class _MainPageState extends State<MainPage> {
   var _controller = TextEditingController();
   SwiperController controller;
   Color myHexColor = Color(0xFFE3F2FD);
+  Color myThemeColor = Color(0xFFBBDEFB);
   List choices = const[
     const Choice(
         space: '인하대 hidden places',
@@ -28,6 +29,7 @@ class _MainPageState extends State<MainPage> {
         heart: 'lib/images/heart.jpg'
     )
   ];
+
   List choices1 = const[
     const Choice1(
         space: '해운대 앞 바다',
@@ -45,6 +47,7 @@ class _MainPageState extends State<MainPage> {
         imglink: 'f'
     )
   ];
+  final List<String> theme = ['데이트','먹방','힐링','오락','건강'];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -104,7 +107,7 @@ class _MainPageState extends State<MainPage> {
                       child: Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children:<Widget>[
-                            Text('#오늘의 Pick', style: GoogleFonts.inter(
+                            Text('#오늘의 Hot 스팟', style: GoogleFonts.inter(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
                             ))
@@ -180,28 +183,90 @@ class _MainPageState extends State<MainPage> {
                       })
                   ),*/
                   Padding(
-                      padding: EdgeInsets.only(top:30, left:25),
-                      child: Row(
+                      padding: EdgeInsets.only(top:60,right:160,),
+                      child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children:<Widget>[
-                            Text('#코스', style: GoogleFonts.inter(
+                            Text('#나에게 맞는', style: GoogleFonts.inter(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
-                            ))
+                            )),
+                            Text('다른 사용자들의 코스는', style: GoogleFonts.inter(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            )),
                           ]
                       )
-                  ),
 
+                  ),
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+                    height: MediaQuery.of(context).size.height * 0.12,
+                    child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: theme.length, itemBuilder: (context, index) {
+                      return Container(
+                        width: MediaQuery.of(context).size.width * 0.3,
+                        child: Card(
+                          elevation: 0,
+                          color: myThemeColor,
+                          child: Container(
+                            child: Center(child: Text(theme[index].toString(), style: TextStyle(color: Colors.black, fontSize: 17.0),)),
+                          ),
+                        ),
+                      );
+                    }),
+                  ),
                   new ListView(
                       shrinkWrap: true,
                       scrollDirection: Axis.vertical,
                       controller: _scrollController,
-                      padding: const EdgeInsets.all(20.0),
+                      //padding: const EdgeInsets.all(20.0),
+                      padding: EdgeInsets.only(top:3,right:20, left:20,bottom:20),
                       children: List.generate(choices.length,(index){
                         return Center(
                           child: ChoiceCard(choice: choices[index],item:choices[index]),
                         );
                       })
+                  ),
+                  Padding(
+                      padding: EdgeInsets.only(top:40,right:160,bottom:4),
+                      child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children:<Widget>[
+                            Text('#Blue Spot의', style: GoogleFonts.inter(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            )),
+                            Text('추천 코스를 만나보세요', style: GoogleFonts.inter(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            )),
+                          ]
+                      )
+                  ),
+                  new Card(
+                    child: new Column(
+                      children: <Widget>[
+                        //new Image.network('https://i.ytimg.com/vi/fq4N0hgOWzU/maxresdefault.jpg'),
+                        Image.asset('lib/images/map1.png', width:380,height:380),
+                        new Padding(
+                            padding: EdgeInsets.only(top:1,left:12,bottom:15),
+                          child: new Row(
+                            children: <Widget>[
+                              new Padding(
+                                padding: new EdgeInsets.all(7.0),
+                                child: new Icon(Icons.thumb_up),
+                              ),
+                              new Padding(
+                                  padding: new EdgeInsets.all(7.0),
+                                child: new Text('내 코스로 등록',style: new TextStyle(fontSize: 18.0))
+                              )
+                            ]
+                          )
+                        )
+                      ]
+                    )
                   )
                 ],
 
@@ -271,7 +336,7 @@ class _MainPageState extends State<MainPage> {
                 leading: Icon(Icons.my_location,
                   color: Colors.grey[850],
                 ),
-                title: Text('코스 관리하기'),
+                title: Text('AR로 가기'),
                 onTap:(){
                 }
             ),

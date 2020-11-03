@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:bluespot/pages/mainPage.dart';
 import 'package:bluespot/pages/mapPage.dart';
 import 'package:bluespot/pages/splashPage.dart';
-
+import 'package:bluespot/pages/spotPage.dart';
 void main() {
   runApp(MyApp());
 }
@@ -22,7 +22,8 @@ class MyApp extends StatelessWidget {
       ),
       home: SplashPage(),
       routes: <String,WidgetBuilder>{
-        '/AfterSplash': (BuildContext context) => MainPage()
+        '/AfterSplash': (BuildContext context) => MainPage(),
+        '/clickSpot' : (BuildContext context) => SpotPage()
       },
     );
   }
