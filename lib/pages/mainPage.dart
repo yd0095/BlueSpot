@@ -8,12 +8,46 @@ import 'package:bluespot/pages/errorPage.dart';
 import 'package:bluespot/pages/spotPage.dart';
 import 'package:bluespot/pages/manageCoursePage.dart';
 
+import 'package:http/http.dart' as http;
+
+class UserInfo {
+  final String user_id;
+  final String user_password;
+  final String user_name;
+  final String user_picture;
+  final List<String> theme_id;
+  final List<String> my_course;
+  final List<String> my_spot;
+  final List<int> my_position;
+
+  UserInfo({this.user_id, this.user_password, this.user_name,this.user_picture,
+    this.theme_id,this.my_course,this.my_spot,this.my_position});
+
+  // factory UserInfo.fromJson(Map<String, dynamic> json) {
+  //   return UserInfo(
+  //     user_id: json['user_id'] as String,
+  //     user_password: json['user_password'] as String,
+  //     user_name: json['user_name'] as String,
+  //     user_picture: json['user_picture'] as String,
+  //     theme_id: json['theme_id'] as List<String>,
+  //     my_course: json['my_course'] as List<String>,
+  //     my_spot: json['my_spot'] as List<String>,
+  //     my_position: json['my_position'] as List<int>
+  //   );
+  }
+
 class MainPage extends StatefulWidget {
   @override
   _MainPageState createState() => _MainPageState();
 }
 
+
+
 class _MainPageState extends State<MainPage> {
+
+  // Future<http.Response> fetchPhotos(http.Client client) async {
+  //   return client.get('url');
+  // }
   final ScrollController _scrollController = ScrollController();
   var _controller = TextEditingController();
   SwiperController controller;
@@ -52,7 +86,6 @@ class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
       resizeToAvoidBottomPadding: false,
       appBar: AppBar(
           title:  Text('Blue Spot', style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold)),
@@ -270,8 +303,7 @@ class _MainPageState extends State<MainPage> {
                 title: Text('My Page'),
                 onTap:(){
                   Navigator.of(context).pop();
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (BuildContext context) => MyPage()));
+                  Navigator.pushNamed(context,'/ToMyPage');
                 }
             ),
             ListTile(

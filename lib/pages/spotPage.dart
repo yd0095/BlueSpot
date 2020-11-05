@@ -174,8 +174,8 @@ class SpotPage extends StatelessWidget {
               child: Stack(
                 alignment: Alignment.center,
                 children: [
-                  Positioned(
-                    bottom: 43,
+                  Expanded(
+                    //bottom: 43,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
