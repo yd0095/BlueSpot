@@ -3,13 +3,51 @@ import 'dart:core';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
+import 'package:bluespot/pages/myPage.dart';
+import 'package:bluespot/pages/errorPage.dart';
+import 'package:bluespot/pages/spotPage.dart';
+import 'package:bluespot/pages/manageCoursePage.dart';
+
+import 'package:http/http.dart' as http;
+
+class UserInfo {
+  final String user_id;
+  final String user_password;
+  final String user_name;
+  final String user_picture;
+  final List<String> theme_id;
+  final List<String> my_course;
+  final List<String> my_spot;
+  final List<int> my_position;
+
+  UserInfo({this.user_id, this.user_password, this.user_name,this.user_picture,
+    this.theme_id,this.my_course,this.my_spot,this.my_position});
+
+  // factory UserInfo.fromJson(Map<String, dynamic> json) {
+  //   return UserInfo(
+  //     user_id: json['user_id'] as String,
+  //     user_password: json['user_password'] as String,
+  //     user_name: json['user_name'] as String,
+  //     user_picture: json['user_picture'] as String,
+  //     theme_id: json['theme_id'] as List<String>,
+  //     my_course: json['my_course'] as List<String>,
+  //     my_spot: json['my_spot'] as List<String>,
+  //     my_position: json['my_position'] as List<int>
+  //   );
+  }
 
 class MainPage extends StatefulWidget {
   @override
   _MainPageState createState() => _MainPageState();
 }
 
+
+
 class _MainPageState extends State<MainPage> {
+
+  // Future<http.Response> fetchPhotos(http.Client client) async {
+  //   return client.get('url');
+  // }
   final ScrollController _scrollController = ScrollController();
   var _controller = TextEditingController();
   SwiperController controller;
@@ -20,7 +58,7 @@ class _MainPageState extends State<MainPage> {
         space: '인하대 hidden places',
         like: '인천광역시 남구 용현1.4동 인하로 100',
         imglink:'https://image.edaily.co.kr/images/photo/files/NP/S/2018/06/PS18062101013.jpg' ,
-        heart: 'lib/images/heart.jpg'
+        heart: 'lib/images/heart.jpg',
     ),
     const Choice(
         space: '부평 맛집 투어',
@@ -115,60 +153,67 @@ class _MainPageState extends State<MainPage> {
                       )
                   ),
 
-                  Container(
-                    height: 320,
-                    child: ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        padding: EdgeInsets.only(left:16, right:6),
-                        itemCount: 3,
-                        itemBuilder: (context,index){
-                          return Container(
-                            margin: EdgeInsets.only(right:10),
-                            height:199,
-                            width:360,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(20),
-                              color: Colors.white,
-                              border: Border.all(width: 0.1),
-                            ),
+                  GestureDetector(
+                    onTap: (){
+                      Navigator.of(context).pop();
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (BuildContext context) => SpotPage()));
+                    },
+                    child: Container(
+                      height: 320,
+                      child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          padding: EdgeInsets.only(left:16, right:6),
+                          itemCount: 3,
+                          itemBuilder: (context,index){
+                            return Container(
+                              margin: EdgeInsets.only(right:10),
+                              height:199,
+                              width:360,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(20),
+                                color: Colors.white,
+                                border: Border.all(width: 0.1),
+                              ),
 
-                            child: Stack(
-                                children:<Widget>[
-                                  Positioned(
-                                      left:15,
-                                      child:Image.network('https://i2.wp.com/blog.allstay.com/wp-content/uploads/2019/07/2_122623_02-1.jpg?w=1024&ssl=1',
-                                        width: 330,
-                                        height:250,)
-                                  ),
-                                  Positioned(
-                                    left:25,
-                                    top:242,
-                                    child:Text('해운대 앞 바다',style: GoogleFonts.inter(
-                                      fontSize:22,
-                                      fontWeight: FontWeight.bold,
-                                    ),),
-                                  ),
-                                  Positioned(
-                                      left:15,
-                                      top:270,
-                                      child: Row(
-                                          children:[
+                              child: Stack(
+                                  children:<Widget>[
+                                    Positioned(
+                                        left:15,
+                                        child:Image.network('https://i2.wp.com/blog.allstay.com/wp-content/uploads/2019/07/2_122623_02-1.jpg?w=1024&ssl=1',
+                                          width: 330,
+                                          height:250,)
+                                    ),
+                                    Positioned(
+                                      left:25,
+                                      top:242,
+                                      child:Text('해운대 앞 바다',style: GoogleFonts.inter(
+                                        fontSize:22,
+                                        fontWeight: FontWeight.bold,
+                                      ),),
+                                    ),
+                                    Positioned(
+                                        left:15,
+                                        top:270,
+                                        child: Row(
+                                            children:[
 
-                                            IconButton(
-                                              icon: Icon(EvaIcons.heart , color: Colors.red,),
-                                              iconSize: 20,
-                                            ),
-                                            Text('109',style: GoogleFonts.inter(
-                                              fontSize:18,
-                                              fontWeight: FontWeight.w500,
-                                            ), )
-                                          ]
-                                      )
-                                  )
-                                ]
-                            ),
-                          );
-                        }),
+                                              IconButton(
+                                                icon: Icon(EvaIcons.heart , color: Colors.red,),
+                                                iconSize: 20,
+                                              ),
+                                              Text('109',style: GoogleFonts.inter(
+                                                fontSize:18,
+                                                fontWeight: FontWeight.w500,
+                                              ), )
+                                            ]
+                                        )
+                                    )
+                                  ]
+                              ),
+                            );
+                          }),
+                    ),
                   ),
                   /*
                   new ListView(
@@ -322,6 +367,8 @@ class _MainPageState extends State<MainPage> {
                 ),
                 title: Text('My Page'),
                 onTap:(){
+                  Navigator.of(context).pop();
+                  Navigator.pushNamed(context,'/ToMyPage');
                 }
             ),
             ListTile(
@@ -330,6 +377,9 @@ class _MainPageState extends State<MainPage> {
                 ),
                 title: Text('지도로 가기'),
                 onTap:(){
+                  Navigator.of(context).pop();
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (BuildContext context) => ErrorPage()));
                 }
             ),
             ListTile(
@@ -338,6 +388,9 @@ class _MainPageState extends State<MainPage> {
                 ),
                 title: Text('AR로 가기'),
                 onTap:(){
+                  Navigator.of(context).pop();
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (BuildContext context) => ManageCoursePage()));
                 }
             ),
             ListTile(
@@ -346,6 +399,9 @@ class _MainPageState extends State<MainPage> {
                 ),
                 title: Text('설정'),
                 onTap:(){
+                  Navigator.of(context).pop();
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (BuildContext context) => ErrorPage()));
                 }
             ),
             ListTile(
@@ -354,6 +410,9 @@ class _MainPageState extends State<MainPage> {
                 ),
                 title: Text('로그아웃'),
                 onTap:(){
+                  Navigator.of(context).pop();
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (BuildContext context) => ErrorPage()));
                 }
             ),
           ],

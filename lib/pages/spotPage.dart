@@ -3,6 +3,7 @@ import 'dart:core';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
+import 'package:bluespot/pages/mainPage.dart';
 
 class SpotPage extends StatefulWidget {
   @override
@@ -14,21 +15,21 @@ class _SpotPageState extends State<SpotPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          title:  Text('Spot Page', style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold)),
+
+          title: Text('Spot Page', style: TextStyle(
+              color: Colors.blue, fontWeight: FontWeight.bold)),
           centerTitle: true,
           elevation: 0.0,
           backgroundColor: Colors.white,
           iconTheme: new IconThemeData(color: Colors.grey),
-          actions:[
+          actions: [
             Icon(Icons.more_vert,),
             Padding(
                 padding: EdgeInsets.symmetric(horizontal: 8)
             ),
           ]
       ),
+
     );
-
   }
-
 }
-
