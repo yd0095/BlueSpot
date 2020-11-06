@@ -244,6 +244,7 @@ class _MainPageState extends State<MainPage> {
                   Container(
                     padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
                     height: MediaQuery.of(context).size.height * 0.12,
+
                     child: ListView.builder(
                         scrollDirection: Axis.horizontal,
                         itemCount: theme.length, itemBuilder: (context, index) {
@@ -252,9 +253,14 @@ class _MainPageState extends State<MainPage> {
                         child: Card(
                           elevation: 0,
                           color: myThemeColor,
+                          child: InkWell(
+                            onTap: (){
+                              Navigator.pushNamed(context, '/clickCourseThemeSetting');
+                            },
                           child: Container(
                             child: Center(child: Text(theme[index].toString(), style: TextStyle(color: Colors.black, fontSize: 17.0),)),
                           ),
+                          )
                         ),
                       );
                     }),
