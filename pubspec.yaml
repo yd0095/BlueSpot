@@ -58,6 +58,7 @@ flutter:
       - lib/images/h.jpg
       - lib/images/map.png
       - lib/images/map1.png
+      - lib/images/BlueSpot.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:

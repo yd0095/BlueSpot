@@ -4,6 +4,7 @@ import 'package:bluespot/pages/mainPage.dart';
 import 'package:bluespot/pages/mapPage.dart';
 import 'package:bluespot/pages/splashPage.dart';
 import 'package:bluespot/pages/spotPage.dart';
+import 'package:bluespot/pages/loginPage.dart';
 void main() {
   runApp(MyApp());
 }
@@ -23,11 +24,14 @@ class MyApp extends StatelessWidget {
       ),
       home: SplashPage(),
       routes: <String,WidgetBuilder>{
-        '/AfterSplash': (BuildContext context) => MainPage(),
 
         '/clickSpot' : (BuildContext context) => SpotPage(),
 
-        '/ToMyPage': (BuildContext context) => MyPage()
+        '/ToMyPage': (BuildContext context) => MyPage(),
+
+        '/AfterSplash': (BuildContext context) => LoginPage(),
+        '/AfterLogin' : (BuildContext context) => MainPage(),
+        '/clickSpot' : (BuildContext context) => SpotPage()
       },
     );
   }

@@ -15,12 +15,15 @@ class _SplashPageState extends State<SplashPage> {
   }
   @override
   Widget build(BuildContext context) {
-    return Center(
+    return Container(
+      color: Colors.white,
       child: SizedBox(
         width: 100,
         height: 100,
-        child: Image.asset('lib/images/logo.png'),
+
+        child: Image.asset('lib/images/BlueSpot.png'),
         ),
+
     );
   }
 }

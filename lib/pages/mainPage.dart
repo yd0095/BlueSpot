@@ -152,15 +152,12 @@ class _MainPageState extends State<MainPage> {
                           ]
                       )
                   ),
-
-                  GestureDetector(
-                    onTap: (){
-                      Navigator.of(context).pop();
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (BuildContext context) => SpotPage()));
-                    },
-                    child: Container(
-                      height: 320,
+                  Container(
+                    height: 320,
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.pushNamed(context, '/clickSpot');
+                      },
                       child: ListView.builder(
                           scrollDirection: Axis.horizontal,
                           padding: EdgeInsets.only(left:16, right:6),
