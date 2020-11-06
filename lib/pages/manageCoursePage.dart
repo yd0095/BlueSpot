@@ -161,61 +161,66 @@ class _ManageCoursePageState extends State<ManageCoursePage> {
             Container(
               height: 65,
               margin: EdgeInsets.only(left: 16, top: 29, right: 16),
-              child: Stack(
-                alignment: Alignment.center,
-                children: [
-                  Positioned(
-                    left: 0,
-                    top: 0,
-                    right: 0,
-                    child: Container(
-                      height: 65,
-                      decoration: BoxDecoration(
-                          color: Color(0xFFF1F9FF),
-                          border: Border.all(
-                            color: Colors.black,
-                            width: 2.0,
-                          ),
-                          borderRadius:
-                              BorderRadius.all(Radius.circular(10.0))),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Container(
-                            margin: EdgeInsets.only(left: 65),
-                            child: Text(
-                              "내가 등록한 코스 보기",
-                              textAlign: TextAlign.left,
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontFamily: "Arial",
-                                fontWeight: FontWeight.w700,
-                                fontSize: 15,
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.pushNamed(context, '/clickMyEnrolledPage');
+                },
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    Positioned(
+                      left: 0,
+                      top: 0,
+                      right: 0,
+                      child: Container(
+                        height: 65,
+                        decoration: BoxDecoration(
+                            color: Color(0xFFF1F9FF),
+                            border: Border.all(
+                              color: Colors.black,
+                              width: 2.0,
+                            ),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(10.0))),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              margin: EdgeInsets.only(left: 65),
+                              child: Text(
+                                "내가 등록한 코스 보기",
+                                textAlign: TextAlign.left,
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontFamily: "Arial",
+                                  fontWeight: FontWeight.w700,
+                                  fontSize: 15,
+                                ),
                               ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                  Positioned(
-                    top: 21,
-                    left: 20,
-                    child: Icon(
-                      Icons.zoom_in,
-                      color: Colors.grey[850],
+                    Positioned(
+                      top: 21,
+                      left: 20,
+                      child: Icon(
+                        Icons.zoom_in,
+                        color: Colors.grey[850],
+                      ),
                     ),
-                  ),
-                  Positioned(
-                    top: 21,
-                    right: 27,
-                    child: Icon(
-                      Icons.arrow_forward,
-                      color: Colors.grey[850],
+                    Positioned(
+                      top: 21,
+                      right: 27,
+                      child: Icon(
+                        Icons.arrow_forward,
+                        color: Colors.grey[850],
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
             Container(

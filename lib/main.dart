@@ -6,6 +6,7 @@ import 'package:bluespot/pages/splashPage.dart';
 import 'package:bluespot/pages/spotPage.dart';
 import 'package:bluespot/pages/loginPage.dart';
 import 'package:bluespot/pages/courseThemePage.dart';
+import 'package:bluespot/pages/myEnrolledPage.dart';
 
 void main() {
   runApp(MyApp());
@@ -30,8 +31,8 @@ class MyApp extends StatelessWidget {
         '/ToMyPage': (BuildContext context) => MyPage(),
         '/AfterSplash': (BuildContext context) => LoginPage(),
         '/AfterLogin': (BuildContext context) => MainPage(),
-        '/clickSpot': (BuildContext context) => SpotPage(),
         '/clickCourseThemeSetting': (BuildContext context) => CourseThemePage(),
+        '/clickMyEnrolledPage' : (BuildContext context) => MyEnrolledPage(),
       },
     );
   }
