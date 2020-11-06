@@ -6,6 +6,7 @@ import 'package:bluespot/pages/splashPage.dart';
 import 'package:bluespot/pages/spotPage.dart';
 import 'package:bluespot/pages/loginPage.dart';
 import 'package:bluespot/pages/courseThemePage.dart';
+
 void main() {
   runApp(MyApp());
 }
@@ -17,26 +18,21 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-          // primarySwatch: Colors.white,
-          visualDensity: VisualDensity.adaptivePlatformDensity,
-          // appBarTheme: AppBarTheme(
-          //     color: Colors.grey.shade50
-          // )
+        // primarySwatch: Colors.white,
+        visualDensity: VisualDensity.adaptivePlatformDensity,
+        // appBarTheme: AppBarTheme(
+        //     color: Colors.grey.shade50
+        // )
       ),
       home: SplashPage(),
-      routes: <String,WidgetBuilder>{
-
-        '/clickSpot' : (BuildContext context) => SpotPage(),
-
+      routes: <String, WidgetBuilder>{
+        '/clickSpot': (BuildContext context) => SpotPage(),
         '/ToMyPage': (BuildContext context) => MyPage(),
-
         '/AfterSplash': (BuildContext context) => LoginPage(),
-        '/AfterLogin' : (BuildContext context) => MainPage(),
-        '/clickSpot' : (BuildContext context) => SpotPage(),
-        '/clickCourseThemeSetting' : (BuildContext context) => CourseThemePage(),
-
+        '/AfterLogin': (BuildContext context) => MainPage(),
+        '/clickSpot': (BuildContext context) => SpotPage(),
+        '/clickCourseThemeSetting': (BuildContext context) => CourseThemePage(),
       },
     );
   }
 }
-

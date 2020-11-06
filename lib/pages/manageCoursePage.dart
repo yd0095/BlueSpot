@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 
 class ManageCoursePage extends StatefulWidget {
   @override
@@ -11,18 +12,21 @@ class _ManageCoursePageState extends State<ManageCoursePage> {
     return Scaffold(
       resizeToAvoidBottomPadding: false,
       appBar: AppBar(
-          title:  Text('코스관리하기', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
+          title: Text('코스 관리하기',
+              style: TextStyle(
+                  color: Colors.blue,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18)),
           centerTitle: true,
           elevation: 0.0,
           backgroundColor: Colors.white,
           iconTheme: new IconThemeData(color: Colors.grey),
-          actions:[
-            Icon(Icons.more_vert,),
-            Padding(
-                padding: EdgeInsets.symmetric(horizontal: 8)
+          actions: [
+            Icon(
+              Icons.more_vert,
             ),
-          ]
-      ),
+            Padding(padding: EdgeInsets.symmetric(horizontal: 8)),
+          ]),
       body: Container(
         constraints: BoxConstraints.expand(),
         decoration: BoxDecoration(
@@ -44,15 +48,13 @@ class _ManageCoursePageState extends State<ManageCoursePage> {
                     child: Container(
                       height: 65,
                       decoration: BoxDecoration(
-                        color: Color(0xFFF1F9FF),
-                        border: Border.all(
-                          color: Colors.black,
-                          width: 2.0,
-                        ),
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(10.0)
-                        )
-                      ),
+                          color: Color(0xFFF1F9FF),
+                          border: Border.all(
+                            color: Colors.black,
+                            width: 2.0,
+                          ),
+                          borderRadius:
+                              BorderRadius.all(Radius.circular(10.0))),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -77,14 +79,16 @@ class _ManageCoursePageState extends State<ManageCoursePage> {
                   Positioned(
                     top: 21,
                     left: 20,
-                    child: Icon(Icons.add_location_alt_rounded,
+                    child: Icon(
+                      Icons.location_on,
                       color: Colors.grey[850],
                     ),
                   ),
                   Positioned(
                     top: 21,
                     right: 27,
-                    child: Icon(Icons.arrow_forward_outlined,
+                    child: Icon(
+                      Icons.arrow_forward,
                       color: Colors.grey[850],
                     ),
                   ),
@@ -92,65 +96,68 @@ class _ManageCoursePageState extends State<ManageCoursePage> {
               ),
             ),
             Container(
-              height: 65,
-              margin: EdgeInsets.only(left: 16, top: 26, right: 16),
-              child: Stack(
-                alignment: Alignment.center,
-                children: [
-                  Positioned(
-                    left: 0,
-                    top: 0,
-                    right: 0,
-                    child: Container(
-                      height: 65,
-                      decoration: BoxDecoration(
-                          color: Color(0xFFF1F9FF),
-                          border: Border.all(
-                            color: Colors.black,
-                            width: 2.0,
-                          ),
-                          borderRadius: BorderRadius.all(
-                              Radius.circular(10.0)
-                          )
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Container(
-                            margin: EdgeInsets.only(left: 65),
-                            child: Text(
-                              "관심코스 테마 설정",
-                              textAlign: TextAlign.left,
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontFamily: "Arial",
-                                fontWeight: FontWeight.w700,
-                                fontSize: 15,
-                              ),
+                height: 65,
+                margin: EdgeInsets.only(left: 16, top: 26, right: 16),
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.pushNamed(context, '/clickCourseThemeSetting');
+                  },
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      Positioned(
+                          left: 0,
+                          top: 0,
+                          right: 0,
+                          child: Container(
+                            height: 65,
+                            decoration: BoxDecoration(
+                                color: Color(0xFFF1F9FF),
+                                border: Border.all(
+                                  color: Colors.black,
+                                  width: 2.0,
+                                ),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10.0))),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  margin: EdgeInsets.only(left: 65),
+                                  child: Text(
+                                    "관심코스 테마 설정",
+                                    textAlign: TextAlign.left,
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontFamily: "Arial",
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 15,
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
-                          ),
-                        ],
+                          )),
+                      Positioned(
+                        top: 21,
+                        left: 20,
+                        child: Icon(
+                          Icons.apps,
+                          color: Colors.grey[850],
+                        ),
                       ),
-                    ),
+                      Positioned(
+                        top: 21,
+                        right: 27,
+                        child: Icon(
+                          Icons.arrow_forward,
+                          color: Colors.grey[850],
+                        ),
+                      ),
+                    ],
                   ),
-                  Positioned(
-                    top: 21,
-                    left: 20,
-                    child: Icon(Icons.apps_rounded,
-                      color: Colors.grey[850],
-                    ),
-                  ),
-                  Positioned(
-                    top: 21,
-                    right: 27,
-                    child: Icon(Icons.arrow_forward_outlined,
-                      color: Colors.grey[850],
-                    ),
-                  ),
-                ],
-              ),
-            ),
+                )),
             Container(
               height: 65,
               margin: EdgeInsets.only(left: 16, top: 29, right: 16),
@@ -169,10 +176,8 @@ class _ManageCoursePageState extends State<ManageCoursePage> {
                             color: Colors.black,
                             width: 2.0,
                           ),
-                          borderRadius: BorderRadius.all(
-                              Radius.circular(10.0)
-                          )
-                      ),
+                          borderRadius:
+                              BorderRadius.all(Radius.circular(10.0))),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -197,14 +202,16 @@ class _ManageCoursePageState extends State<ManageCoursePage> {
                   Positioned(
                     top: 21,
                     left: 20,
-                    child: Icon(Icons.zoom_in_rounded,
+                    child: Icon(
+                      Icons.zoom_in,
                       color: Colors.grey[850],
                     ),
                   ),
                   Positioned(
                     top: 21,
                     right: 27,
-                    child: Icon(Icons.arrow_forward_outlined,
+                    child: Icon(
+                      Icons.arrow_forward,
                       color: Colors.grey[850],
                     ),
                   ),
@@ -229,10 +236,8 @@ class _ManageCoursePageState extends State<ManageCoursePage> {
                             color: Colors.black,
                             width: 2.0,
                           ),
-                          borderRadius: BorderRadius.all(
-                              Radius.circular(10.0)
-                          )
-                      ),
+                          borderRadius:
+                              BorderRadius.all(Radius.circular(10.0))),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -257,14 +262,16 @@ class _ManageCoursePageState extends State<ManageCoursePage> {
                   Positioned(
                     top: 21,
                     left: 20,
-                    child: Icon(Icons.map,
+                    child: Icon(
+                      Icons.map,
                       color: Colors.grey[850],
                     ),
                   ),
                   Positioned(
                     top: 21,
                     right: 27,
-                    child: Icon(Icons.arrow_forward_outlined,
+                    child: Icon(
+                      Icons.arrow_forward,
                       color: Colors.grey[850],
                     ),
                   ),
