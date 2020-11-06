@@ -28,8 +28,8 @@ class _ManageCoursePageState extends State<ManageCoursePage> {
         decoration: BoxDecoration(
           color: Color.fromARGB(255, 255, 255, 255),
         ),
-        child: ListView(
-          //crossAxisAlignment: CrossAxisAlignment.stretch,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Container(
               height: 65,
@@ -44,7 +44,14 @@ class _ManageCoursePageState extends State<ManageCoursePage> {
                     child: Container(
                       height: 65,
                       decoration: BoxDecoration(
-                        color: Colors.black,
+                        color: Color(0xFFF1F9FF),
+                        border: Border.all(
+                          color: Colors.black,
+                          width: 2.0,
+                        ),
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(10.0)
+                        )
                       ),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -68,11 +75,17 @@ class _ManageCoursePageState extends State<ManageCoursePage> {
                     ),
                   ),
                   Positioned(
-                    top: 23,
+                    top: 21,
+                    left: 20,
+                    child: Icon(Icons.add_location_alt_rounded,
+                      color: Colors.grey[850],
+                    ),
+                  ),
+                  Positioned(
+                    top: 21,
                     right: 27,
-                    child: Image.asset(
-                      "assets/images/--18--2.png",
-                      fit: BoxFit.none,
+                    child: Icon(Icons.arrow_forward_outlined,
+                      color: Colors.grey[850],
                     ),
                   ),
                 ],
@@ -91,16 +104,23 @@ class _ManageCoursePageState extends State<ManageCoursePage> {
                     child: Container(
                       height: 65,
                       decoration: BoxDecoration(
-                        color: Colors.black,
+                          color: Color(0xFFF1F9FF),
+                          border: Border.all(
+                            color: Colors.black,
+                            width: 2.0,
+                          ),
+                          borderRadius: BorderRadius.all(
+                              Radius.circular(10.0)
+                          )
                       ),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Container(
-                            margin: EdgeInsets.only(left: 64),
+                            margin: EdgeInsets.only(left: 65),
                             child: Text(
-                              "관심 코스 테마 설정",
+                              "관심코스 테마 설정",
                               textAlign: TextAlign.left,
                               style: TextStyle(
                                 color: Colors.black,
@@ -115,11 +135,17 @@ class _ManageCoursePageState extends State<ManageCoursePage> {
                     ),
                   ),
                   Positioned(
-                    top: 23,
+                    top: 21,
+                    left: 20,
+                    child: Icon(Icons.apps_rounded,
+                      color: Colors.grey[850],
+                    ),
+                  ),
+                  Positioned(
+                    top: 21,
                     right: 27,
-                    child: Image.asset(
-                      "assets/images/--18--2.png",
-                      fit: BoxFit.none,
+                    child: Icon(Icons.arrow_forward_outlined,
+                      color: Colors.grey[850],
                     ),
                   ),
                 ],
@@ -138,14 +164,21 @@ class _ManageCoursePageState extends State<ManageCoursePage> {
                     child: Container(
                       height: 65,
                       decoration: BoxDecoration(
-                        color: Colors.black,
+                          color: Color(0xFFF1F9FF),
+                          border: Border.all(
+                            color: Colors.black,
+                            width: 2.0,
+                          ),
+                          borderRadius: BorderRadius.all(
+                              Radius.circular(10.0)
+                          )
                       ),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Container(
-                            margin: EdgeInsets.only(left: 64),
+                            margin: EdgeInsets.only(left: 65),
                             child: Text(
                               "내가 등록한 코스 보기",
                               textAlign: TextAlign.left,
@@ -162,11 +195,17 @@ class _ManageCoursePageState extends State<ManageCoursePage> {
                     ),
                   ),
                   Positioned(
-                    top: 23,
+                    top: 21,
+                    left: 20,
+                    child: Icon(Icons.zoom_in_rounded,
+                      color: Colors.grey[850],
+                    ),
+                  ),
+                  Positioned(
+                    top: 21,
                     right: 27,
-                    child: Image.asset(
-                      "assets/images/--18--2.png",
-                      fit: BoxFit.none,
+                    child: Icon(Icons.arrow_forward_outlined,
+                      color: Colors.grey[850],
                     ),
                   ),
                 ],
@@ -175,32 +214,6 @@ class _ManageCoursePageState extends State<ManageCoursePage> {
             Container(
               height: 65,
               margin: EdgeInsets.only(left: 16, top: 31, right: 16),
-              decoration: BoxDecoration(
-                color: Colors.black,
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    margin: EdgeInsets.only(left: 64),
-                    child: Text(
-                      "자동 코스 추천",
-                      textAlign: TextAlign.left,
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontFamily: "Arial",
-                        fontWeight: FontWeight.w700,
-                        fontSize: 15,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Container(
-              height: 277,
-              margin: EdgeInsets.only(top: 17),
               child: Stack(
                 alignment: Alignment.center,
                 children: [
@@ -208,83 +221,56 @@ class _ManageCoursePageState extends State<ManageCoursePage> {
                     left: 0,
                     top: 0,
                     right: 0,
-                    child: Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        Positioned(
-                          child: Container(
-                            width: 318,
-                            height: 277,
-                            decoration: BoxDecoration(
-                              color: Colors.black,
+                    child: Container(
+                      height: 65,
+                      decoration: BoxDecoration(
+                          color: Color(0xFFF1F9FF),
+                          border: Border.all(
+                            color: Colors.black,
+                            width: 2.0,
+                          ),
+                          borderRadius: BorderRadius.all(
+                              Radius.circular(10.0)
+                          )
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            margin: EdgeInsets.only(left: 65),
+                            child: Text(
+                              "자동 코스 추천",
+                              textAlign: TextAlign.left,
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontFamily: "Arial",
+                                fontWeight: FontWeight.w700,
+                                fontSize: 15,
+                              ),
                             ),
-                            child: Container(),
                           ),
-                        ),
-                        Positioned(
-                          left: 0,
-                          right: 0,
-                          child: Image.asset(
-                            "assets/images/-2.png",
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                   Positioned(
-                    top: 64,
-                    right: 159,
-                    child: Image.asset(
-                      "assets/images/route.png",
-                      fit: BoxFit.cover,
+                    top: 21,
+                    left: 20,
+                    child: Icon(Icons.map,
+                      color: Colors.grey[850],
+                    ),
+                  ),
+                  Positioned(
+                    top: 21,
+                    right: 27,
+                    child: Icon(Icons.arrow_forward_outlined,
+                      color: Colors.grey[850],
                     ),
                   ),
                 ],
               ),
             ),
-            Spacer(),
-            Align(
-              alignment: Alignment.topLeft,
-              child: Container(
-                width: 134,
-                height: 17,
-                margin: EdgeInsets.only(left: 41, bottom: 50),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Align(
-                      alignment: Alignment.bottomLeft,
-                      child: Container(
-                        width: 17,
-                        height: 17,
-                        child: Image.asset(
-                          "assets/images/--14--1.png",
-                          fit: BoxFit.none,
-                        ),
-                      ),
-                    ),
-                    Align(
-                      alignment: Alignment.bottomLeft,
-                      child: Container(
-                        margin: EdgeInsets.only(left: 12),
-                        child: Text(
-                          "내 코스로 등록하기",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontFamily: "Arial",
-                            fontWeight: FontWeight.w700,
-                            fontSize: 14,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            Container(),
           ],
         ),
       ),
