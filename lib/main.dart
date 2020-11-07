@@ -1,3 +1,4 @@
+import 'package:bluespot/pages/myEnrolledDetailPage.dart';
 import 'package:bluespot/pages/myPage.dart';
 import 'package:flutter/material.dart';
 import 'package:bluespot/pages/mainPage.dart';
@@ -33,6 +34,7 @@ class MyApp extends StatelessWidget {
         '/AfterLogin': (BuildContext context) => MainPage(),
         '/clickCourseThemeSetting': (BuildContext context) => CourseThemePage(),
         '/clickMyEnrolledPage' : (BuildContext context) => MyEnrolledPage(),
+        '/clickMyCourse' : (BuildContext context) => MyEnrolledDetailPage(),
       },
     );
   }

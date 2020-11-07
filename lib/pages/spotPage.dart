@@ -197,7 +197,7 @@ class _SpotPageState extends State<SpotPage> {
                           Text(
                               '저도 코로나 끝나면 가보고 싶어요!', style: GoogleFonts.inter(
                               fontSize: 16,
-                              fontWeight: FontWeight.w500
+                              fontWeight: FontWeight.w500,
                           ),),
                           Padding(
                               padding: EdgeInsets.all(5)

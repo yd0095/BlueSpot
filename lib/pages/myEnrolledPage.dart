@@ -51,7 +51,7 @@ class _MyEnrolledPageState extends State<MyEnrolledPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          title: Text('내가 등록한 코스 보기',
+          title: Text('내가 등록한 코스',
               style: TextStyle(
                   color: Colors.blue,
                   fontWeight: FontWeight.bold,
@@ -77,7 +77,11 @@ class _MyEnrolledPageState extends State<MyEnrolledPage> {
               borderRadius: BorderRadius.circular(20),
             ),
             padding: EdgeInsets.all(7),
-            child: Column(
+            child: GestureDetector(
+              onTap: () {
+                Navigator.pushNamed(context, '/clickMyCourse');
+              },
+              child: Column(
                 children: <CustomListItem>[
                   CustomListItem(
                     icon: Container(
@@ -105,6 +109,7 @@ class _MyEnrolledPageState extends State<MyEnrolledPage> {
                     theme: '${courseTheme[index]}',
                   )
                 ]),
+            )
           );
         },
       ),
