@@ -38,9 +38,13 @@ class _ManageCoursePageState extends State<ManageCoursePage> {
             Container(
               height: 65,
               margin: EdgeInsets.only(left: 16, top: 32, right: 16),
-              child: Stack(
-                alignment: Alignment.center,
-                children: [
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.pushNamed(context, '/clickCourseMake');
+                },
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
                   Positioned(
                     left: 0,
                     top: 0,
@@ -74,6 +78,7 @@ class _ManageCoursePageState extends State<ManageCoursePage> {
                           ),
                         ],
                       ),
+
                     ),
                   ),
                   Positioned(
@@ -93,7 +98,7 @@ class _ManageCoursePageState extends State<ManageCoursePage> {
                     ),
                   ),
                 ],
-              ),
+              ),)
             ),
             Container(
                 height: 65,
