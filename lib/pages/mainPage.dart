@@ -339,6 +339,7 @@ class _MainPageState extends State<MainPage> {
                 backgroundImage: AssetImage('lib/images/b.jpg'),
                 backgroundColor: Colors.white,
               ),
+
               otherAccountsPictures: <Widget>[
                 CircleAvatar(
                   backgroundImage: AssetImage('lib/images/star.jpg'),
@@ -346,11 +347,12 @@ class _MainPageState extends State<MainPage> {
                 ),
               ],
               onDetailsPressed: (){
+                Navigator.pushNamed(context, '/ToMyPage');
                 //인하 혹은 이메일을 눌러도 마이페이지로 이동 가능
               },
               accountName: new Container(
                   child: Text(
-                      '인하',
+                      '비룡',
                       style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15, color: Colors.black)
                   )
               ),
@@ -390,6 +392,17 @@ class _MainPageState extends State<MainPage> {
                   color: Colors.grey[850],
                 ),
                 title: Text('AR로 가기'),
+                onTap:(){
+                  Navigator.of(context).pop();
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (BuildContext context) => ErrorPage()));
+                }
+            ),
+            ListTile(
+                leading: Icon(Icons.apps,
+                  color: Colors.grey[850],
+                ),
+                title: Text('코스 관리하기'),
                 onTap:(){
                   Navigator.of(context).pop();
                   Navigator.of(context).push(MaterialPageRoute(
