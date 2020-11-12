@@ -256,10 +256,11 @@ class _MyPageState extends State<MyPage> {
               ),
               Container(
                   width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height,
+                  height: MediaQuery.of(context).size.height/2,
 
                   child: GridView.builder(
-                    itemCount: 4,
+                    scrollDirection: Axis.horizontal,
+                    itemCount: 5,
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2,
                       crossAxisSpacing: 10,
@@ -269,7 +270,9 @@ class _MyPageState extends State<MyPage> {
                       return Card(
                         child: Column(
                           children: [
-                            Image.asset(imageList[_currentSelection][index]),
+                            Image.asset(imageList[_currentSelection][index],
+                            width: 300,
+                            height: 100,),
                             Text("비룡이 얼굴짱커"),
                           ],
                         ),
