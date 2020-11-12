@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'dart:core';
 import 'package:google_fonts/google_fonts.dart';
@@ -7,6 +8,7 @@ import 'package:bluespot/pages/myPage.dart';
 import 'package:bluespot/pages/errorPage.dart';
 import 'package:bluespot/pages/spotPage.dart';
 import 'package:bluespot/pages/manageCoursePage.dart';
+import 'package:kopo/kopo.dart';
 
 import 'package:http/http.dart' as http;
 
@@ -45,6 +47,7 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
 
+  String addressJSON = '';
   // Future<http.Response> fetchPhotos(http.Client client) async {
   //   return client.get('url');
   // }
@@ -96,50 +99,64 @@ class _MainPageState extends State<MainPage> {
           elevation: 0.0,
           backgroundColor: Colors.white,
           iconTheme: new IconThemeData(color: Colors.grey),
-          actions:[
-            Icon(Icons.more_vert,),
-            Padding(
-                padding: EdgeInsets.symmetric(horizontal: 8)
+          actions:<Widget>[
+            IconButton(
+              icon: Icon(Icons.map),
+              tooltip: '맵세팅',
+              onPressed: () async {
+                KopoModel model = await Navigator.push(
+                  context,
+                  CupertinoPageRoute(
+                    builder: (context) => Kopo(), 
+                  )
+                );
+                print(model.toJson());
+                setState(() {
+                  addressJSON =
+                  '${model.address} ${model.buildingName}${model.apartment == 'Y' ? '아파트' : ''} ${model.zonecode} ';
+                });
+              },
             ),
+            Text('$addressJSON'),
           ]
       ),
       body: Container(
           child:SingleChildScrollView(
               child: Column(
                 children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.all(18.0),
-                    child: TextField(
-                      onChanged:(value){
+                  // Padding(
+                  //   padding: const EdgeInsets.all(18.0),
+                  //   child: TextField(
+                  //     onChanged:(value){
 
-                      },
-                      controller: _controller,
-                      decoration: InputDecoration(
-                        labelText: "Search",
-                        labelStyle: TextStyle(
-                            color: Colors.grey
-                        ),
-                        prefixIcon: IconButton(
-                          icon: Icon(Icons.search),
-                          color: Colors.grey,
-                        ),
-                        suffixIcon: IconButton(
-                          onPressed: ()=> _controller.clear(),
-                          icon: Icon(Icons.clear),
-                          color : Colors.grey,
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(25.0)),
-                            borderSide: BorderSide(color: Colors.grey)
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(25.0)),
-                            borderSide: BorderSide(color: Colors.grey)
-                        ),
-                      ),
+                  //     },
+                  //     controller: _controller,
+                  //     decoration: InputDecoration(
+                  //       labelText: "Search",
+                  //       labelStyle: TextStyle(
+                  //           color: Colors.grey
+                  //       ),
+                  //       prefixIcon: IconButton(
+                  //         icon: Icon(Icons.search),
+                  //         color: Colors.grey,
+                  //       ),
+                  //       suffixIcon: IconButton(
+                  //         onPressed: ()=> _controller.clear(),
+                  //         icon: Icon(Icons.clear),
+                  //         color : Colors.grey,
+                  //       ),
+                  //       enabledBorder: OutlineInputBorder(
+                  //           borderRadius: BorderRadius.all(Radius.circular(25.0)),
+                  //           borderSide: BorderSide(color: Colors.grey)
+                  //       ),
+                  //       focusedBorder: OutlineInputBorder(
+                  //           borderRadius: BorderRadius.all(Radius.circular(25.0)),
+                  //           borderSide: BorderSide(color: Colors.grey)
+                  //       ),
+                  //     ),
 
-                    ),
-                  ),
+                  //   ),
+                  // ),
                   Padding(
                       padding: EdgeInsets.only(left:25, bottom: 16),
                       child: Row(
