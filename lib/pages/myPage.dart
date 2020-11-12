@@ -280,6 +280,123 @@ class _MyPageState extends State<MyPage> {
                     },
                   )
               ),
+              Container(
+                  width: 250,
+                  height: 45,
+                  margin: EdgeInsets.only(left: 16, top: 26, right: 16),
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.pushNamed(context, '/errorPage');
+                    },
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        Positioned(
+                            left: 0,
+                            top: 0,
+                            right: 0,
+                            child: Container(
+                              height: 45,
+                              decoration: BoxDecoration(
+                                  color: Color(0xFF2699FB),
+                                  border: Border.all(
+                                    color: Colors.white,
+                                    width: 2.0,
+                                  ),
+                                  borderRadius:
+                                  BorderRadius.all(Radius.circular(10.0))),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Container(
+                                    margin: EdgeInsets.only(left: 70),
+                                    child: Text(
+                                      "스팟 등록하기",
+                                      textAlign: TextAlign.left,
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontFamily: "Arial",
+                                        fontWeight: FontWeight.w700,
+                                        fontSize: 15,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            )),
+                        Positioned(
+                          top: 11,
+                          right: 14,
+                          child: Icon(
+                            Icons.arrow_forward,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+              ),
+              Container(
+                  width: 250,
+                  height: 45,
+                  margin: EdgeInsets.only(left: 16, top: 13, right: 16),
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.pushNamed(context, '/manageCoursePage');
+                    },
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        Positioned(
+                            left: 0,
+                            top: 0,
+                            right: 0,
+                            child: Container(
+                              height: 45,
+                              decoration: BoxDecoration(
+                                  color: Color(0xFF2699FB),
+                                  border: Border.all(
+                                    color: Colors.white,
+                                    width: 2.0,
+                                  ),
+                                  borderRadius:
+                                  BorderRadius.all(Radius.circular(10.0))),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Container(
+                                    margin: EdgeInsets.only(left: 70),
+                                    child: Text(
+                                      "코스 관리하기",
+                                      textAlign: TextAlign.left,
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontFamily: "Arial",
+                                        fontWeight: FontWeight.w700,
+                                        fontSize: 15,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            )),
+                        Positioned(
+                          top: 11,
+                          right: 14,
+                          child: Icon(
+                            Icons.arrow_forward,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+              ),
+              Container(
+                height: 50,
+              )
             ],
           ),
         ),
