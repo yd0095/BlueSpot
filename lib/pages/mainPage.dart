@@ -400,8 +400,7 @@ class _MainPageState extends State<MainPage> {
                 title: Text('지도로 가기'),
                 onTap:(){
                   Navigator.of(context).pop();
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (BuildContext context) => ErrorPage()));
+                  Navigator.pushNamed(context,'/errorPage');
                 }
             ),
             ListTile(
@@ -411,8 +410,7 @@ class _MainPageState extends State<MainPage> {
                 title: Text('AR로 가기'),
                 onTap:(){
                   Navigator.of(context).pop();
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (BuildContext context) => ErrorPage()));
+                  Navigator.pushNamed(context,'/errorPage');
                 }
             ),
             ListTile(
@@ -422,8 +420,7 @@ class _MainPageState extends State<MainPage> {
                 title: Text('코스 관리하기'),
                 onTap:(){
                   Navigator.of(context).pop();
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (BuildContext context) => ManageCoursePage()));
+                  Navigator.pushNamed(context,'/manageCoursePage');
                 }
             ),
             ListTile(
@@ -433,8 +430,7 @@ class _MainPageState extends State<MainPage> {
                 title: Text('설정'),
                 onTap:(){
                   Navigator.of(context).pop();
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (BuildContext context) => ErrorPage()));
+                  Navigator.pushNamed(context,'/errorPage');
                 }
             ),
             ListTile(
@@ -444,8 +440,7 @@ class _MainPageState extends State<MainPage> {
                 title: Text('로그아웃'),
                 onTap:(){
                   Navigator.of(context).pop();
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (BuildContext context) => ErrorPage()));
+                  Navigator.pushNamed(context,'/errorPage');
                 }
             ),
           ],
