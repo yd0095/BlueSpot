@@ -70,11 +70,11 @@ class _SettingPageState extends State<SettingPage> {
             padding: new EdgeInsets.all(7),
             child: new Column(children: <Widget>[
               new ListTile(
-                  leading: Icon(Icons.settings, color: Colors.black,),
+                  leading: Icon(Icons.settings, color: Colors.black87,),
                   title: new Text('${courseTheme[index]}',
                       style: GoogleFonts.inter(
                         fontSize: 17,
-                        fontWeight: FontWeight.bold,
+                        //fontWeight: FontWeight.bold,
                       ),),
 
             ),]

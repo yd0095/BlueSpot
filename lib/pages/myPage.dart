@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:material_segmented_control/material_segmented_control.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 class MyPage extends StatefulWidget {
   @override
@@ -50,7 +51,7 @@ class _MyPageState extends State<MyPage> {
     return Scaffold(
       appBar: AppBar(
           title: Text('마이페이지', style: TextStyle(
-              color: Colors.black, fontWeight: FontWeight.bold)),
+              color: Colors.blue, fontWeight: FontWeight.bold)),
           centerTitle: true,
           elevation: 0.0,
           backgroundColor: Colors.white,
@@ -285,9 +286,7 @@ class _MyPageState extends State<MyPage> {
                   height: 45,
                   margin: EdgeInsets.only(left: 16, top: 26, right: 16),
                   child: GestureDetector(
-                    onTap: () {
-                      Navigator.pushNamed(context, '/errorPage');
-                    },
+                    onTap: ()=> _popupDialog(context),
                     child: Stack(
                       alignment: Alignment.center,
                       children: [
@@ -305,25 +304,30 @@ class _MyPageState extends State<MyPage> {
                                   ),
                                   borderRadius:
                                   BorderRadius.all(Radius.circular(10.0))),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Container(
-                                    margin: EdgeInsets.only(left: 70),
-                                    child: Text(
-                                      "스팟 등록하기",
-                                      textAlign: TextAlign.left,
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontFamily: "Arial",
-                                        fontWeight: FontWeight.w700,
-                                        fontSize: 15,
+                              child: GestureDetector(
+
+                                child:  Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Container(
+                                      margin: EdgeInsets.only(left: 70),
+                                      child: Text(
+                                        "스팟 등록하기",
+                                        textAlign: TextAlign.left,
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontFamily: "Arial",
+                                          fontWeight: FontWeight.w700,
+                                          fontSize: 15,
+                                        ),
                                       ),
+
                                     ),
-                                  ),
-                                ],
-                              ),
+                                  ],
+                                ),
+                              )
+
                             )),
                         Positioned(
                           top: 11,
@@ -403,5 +407,49 @@ class _MyPageState extends State<MyPage> {
       ),
     );
   }
-
+  void _popupDialog(BuildContext context) async {
+    /*
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text('로그아웃 하시겠습니까?',),
+            //content: Text('Alert Dialog Body Goes Here  ..'),
+            actions: <Widget>[
+              FlatButton(
+                  onPressed: (){
+                    Navigator.of(context).pop();
+                    Navigator.pushNamed(context,'/AfterSplash');
+                  },
+                  child: Text('YES')),
+              FlatButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: Text('CANCEL')),
+            ],
+          );
+        });*/
+    Alert(
+      context: context,
+      //type: AlertType.error,
+      title: "어디로 이동하시겠습니까?",
+      //desc: "스팟 등록을 위해 이동할 곳을 선택하시오.",
+      buttons: [
+        DialogButton(
+          child: Text(
+            "카메라",
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          ),
+          onPressed: () => Navigator.pop(context),
+          width: 120,
+        ),DialogButton(
+          child: Text(
+            "갤러리",
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          ),
+          onPressed: () => Navigator.pop(context),
+          width: 120,
+        )
+      ],
+    ).show();
+  }
 }
