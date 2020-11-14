@@ -80,6 +80,43 @@ class _LoginPageState extends State<LoginPage>{
                     height: 42,
                   )
                 ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(left:30, right:30, top:20),
+                child: SizedBox(
+                    width: double.infinity,
+                    child:ButtonTheme(
+                      child:RaisedButton(
+                          onPressed: () async{
+                            showDialog(context: context,
+                                builder: (BuildContext context){
+                                  return Center(child: CircularProgressIndicator());
+                                }
+                            );
+                            await loginAction();
+                            Navigator.pushNamed(context, '/AfterLogin');
+                          },
+                          padding: EdgeInsets.all(20),
+                          color: Colors.white,
+                          child: Row(
+                            children:[
+                                Image.asset('lib/images/google1.jpg',width: 28,height:36),
+
+                              RichText(
+                                  text: TextSpan(
+                                      text: '             Google Login',
+                                      style: TextStyle(
+                                          fontSize: 20,
+                                          color: Colors.blue
+                                      )
+                                  )
+                              )
+                            ]
+                          )
+                      ),
+                      height: 42,
+                    )
+                ),
               )
             ]
           )

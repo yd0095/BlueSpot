@@ -430,7 +430,7 @@ class _MainPageState extends State<MainPage> {
                 title: Text('설정'),
                 onTap:(){
                   Navigator.of(context).pop();
-                  Navigator.pushNamed(context,'/errorPage');
+                  Navigator.pushNamed(context,'/toSettingPage');
                 }
             ),
             ListTile(
@@ -438,10 +438,7 @@ class _MainPageState extends State<MainPage> {
                   color: Colors.grey[850],
                 ),
                 title: Text('로그아웃'),
-                onTap:(){
-                  Navigator.of(context).pop();
-                  Navigator.pushNamed(context,'/errorPage');
-                }
+                onTap:() => _popupDialog(context)
             ),
           ],
         ),
@@ -449,6 +446,27 @@ class _MainPageState extends State<MainPage> {
       ),
 
     );
+  }
+  void _popupDialog(BuildContext context) {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text('로그아웃 하시겠습니까?',),
+            //content: Text('Alert Dialog Body Goes Here  ..'),
+            actions: <Widget>[
+              FlatButton(
+                  onPressed: (){
+                    Navigator.of(context).pop();
+                    Navigator.pushNamed(context,'/AfterSplash');
+                  },
+                  child: Text('YES')),
+              FlatButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: Text('CANCEL')),
+            ],
+          );
+        });
   }
 }
 class Choice{
@@ -571,4 +589,5 @@ class ChoiceCard extends StatelessWidget{
         )
     );
   }
+
 }
