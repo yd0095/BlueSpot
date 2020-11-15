@@ -347,8 +347,8 @@ class _MyPageState extends State<MyPage> {
                   margin: EdgeInsets.only(left: 16, top: 13, right: 16),
                   child: GestureDetector(
                     onTap: () {
-                      Navigator.pushNamed(context, '/manageCoursePage');
-                    },
+                    Navigator.pushNamed(context, '/manageCoursePage');
+                  },
                     child: Stack(
                       alignment: Alignment.center,
                       children: [

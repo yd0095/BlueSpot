@@ -48,7 +48,7 @@ class _SpotMakePageState extends State<SpotMakePage> {
                               color: lightSkyblue,
                               border: Border.all(width: 0.1),
                             ),
-                          ),
+                          ),/*
                           Container( //number of heart
                               margin: EdgeInsets.only(left:25,right:25),
                               height:70,
@@ -82,66 +82,117 @@ class _SpotMakePageState extends State<SpotMakePage> {
                                     ),
                                   ]
                               )
-                          ),
+                          ),*/
                           Container( //spot name, location, explanation
-                            height: 250,
+                            height: 360,
                             margin: EdgeInsets.only(top:30,left:30,right:30),
                             color: Colors.white,
                             child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(
-                                    '해운대 앞 바다',style: GoogleFonts.inter(
-                                    fontSize:20,
-                                    fontWeight: FontWeight.bold,
-                                  ),),
-                                  Text(
-                                    '부산 해운대구 우동',style: GoogleFonts.inter(
-                                    fontSize:17,
-                                    color: Colors.grey,
-                                    fontWeight: FontWeight.w500,
-                                  ),),
+                                  TextField(
+                                    maxLength: 20,
+                                    decoration: InputDecoration(
+                                      hintText: 'spot명을 작성하세요.',
+                                    ),
+                                  ),
+                                  TextField(
+                                    maxLength: 40,
+                                    decoration: InputDecoration(
+                                      hintText: 'spot의 주소를 작성하세요.',
+                                    ),
+                                  ),
                                   Padding(
                                       padding:EdgeInsets.all(10)
                                   ),
-                                  Text(
-                                    '부산 해운대구 중동, 좌동, 우동에 걸쳐 있는 해수욕장. 수심이 얕고 조수의 변화도 심하지 않아 해수욕장으로서의 조건이 좋다.',
-                                    style: GoogleFonts.inter(
-                                      fontSize:18,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  )
+                                  Container(
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(1),
+                                      child: TextField(
+                                        minLines: 5,
+                                        maxLines: 10,
+                                        maxLength:200,
+                                        autocorrect: false,
+                                        decoration: InputDecoration(
+                                          hintText: 'spot에 대한 설명을 작성하세요.',
+                                          filled: true,
+                                          fillColor: Color(0xFFEEEEEE),
+                                          enabledBorder: OutlineInputBorder(
+                                            borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                                            borderSide: BorderSide(color: Colors.grey),
+                                          ),
+                                          focusedBorder: OutlineInputBorder(
+                                            borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                                            borderSide: BorderSide(color:Colors.white),
+                                          ),
+                                        ),
+                                      )
+                                    )
+                                  ),
                                 ]
                             ),
                           ),
-                          Padding( //comment
-                              padding: EdgeInsets.only(left:25),
-                              child:Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children:<Widget>[
-                                    Text('COMMENT', style: GoogleFonts.inter(
-                                        fontSize: 22,
-                                        fontWeight: FontWeight.bold,
-                                        color:Colors.blue
-                                    )),
-                                    Padding(
-                                        padding: EdgeInsets.all(10)
-                                    ),
-                                    Text('린다G', style: GoogleFonts.inter(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold
-                                    )),
-                                    Text(
-                                      '저도 코로나 끝나면 가보고 싶어요!', style: GoogleFonts.inter(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w500,
-                                    ),),
-                                    Padding(
-                                        padding: EdgeInsets.all(5)
-                                    )
-                                  ]
+                          Container(
+                            width: 100,
+                            height: 45,
+                            margin: EdgeInsets.only(left: 76,right: 76),
+                              child: GestureDetector(
+                                onTap: () {
+                                  Navigator.pushNamed(context, '/clickSpot');
+                                },
+                                  child: Stack(
+                                      alignment: Alignment.center,
+                                      children: [
+                                      Positioned(
+                                      left: 0,
+                                      top: 0,
+                                      right: 0,
+
+                                        child: Container(
+                                          height: 45,
+                                          width: 50,
+                                          decoration: BoxDecoration(
+                                              color: Color(0xFF2699FB),
+                                              border: Border.all(
+                                                color: Colors.white,
+                                                width: 2.0,
+                                              ),
+                                              borderRadius:
+                                              BorderRadius.all(Radius.circular(10.0))),
+                                          child: Column(
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Container(
+                                                margin: EdgeInsets.only(left: 70),
+                                                child: Text(
+                                                  "SPOT 등록하기",
+                                                  textAlign: TextAlign.left,
+                                                  style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontFamily: "Arial",
+                                                    fontWeight: FontWeight.w700,
+                                                    fontSize: 15,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        )),
+                                        Positioned(
+                                          top: 11,
+                                          right: 14,
+                                          child: Icon(
+                                            Icons.arrow_forward,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ]
+                                  )
                               )
-                          )
+                          ),
+                          Padding(padding:EdgeInsets.all(20))
+
                         ]
                     ))
             ),
