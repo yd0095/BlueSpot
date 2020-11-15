@@ -446,7 +446,10 @@ class _MyPageState extends State<MyPage> {
             "갤러리",
             style: TextStyle(color: Colors.white, fontSize: 20),
           ),
-          onPressed: () => Navigator.pop(context),
+          onPressed: (){
+            //Navigator.pop(context),
+            Navigator.pushNamed(context, '/toSpotMakePage');
+          },
           width: 120,
         )
       ],
