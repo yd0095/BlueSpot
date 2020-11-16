@@ -2,6 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:material_segmented_control/material_segmented_control.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
+import 'package:easy_permission_validator/easy_permission_validator.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
+import 'dart:async';
+import  'package:camera_camera/camera_camera.dart';
 
 class MyPage extends StatefulWidget {
   @override
@@ -9,7 +14,7 @@ class MyPage extends StatefulWidget {
 }
 
 class _MyPageState extends State<MyPage> {
-
+  PickedFile imageFile;
   int _currentSelection = 0;
 
   Map<int, Widget> _children = {
@@ -41,8 +46,42 @@ class _MyPageState extends State<MyPage> {
     "lib/images/60.jpg",
     "lib/images/60.jpg"
   ];
+  Future<File> _openGallary() async{
+    /*
+    PickedFile pickedImage = await ImagePicker().getImage(
+        source: ImageSource.gallery,
+        imageQuality: 50);
+    return pickedImage;*/
+    File _image;
+    final picker = ImagePicker();
 
+    final pickedFile = await picker.getImage(source: ImageSource.camera);
+    print('PickedFile: ${pickedFile.toString()}');
+
+    setState(() {
+      _image = File(pickedFile.path);
+    });
+    if (_image != null) {
+      return _image;
+    }
+    return null;
+  }
+  _openCamera(){
+    
+  }
   @override
+  void open_camera()
+  async {
+    /*
+    var image = await ImagePicker.pickImage(source: ImageSource.camera);
+    setState(() {
+      _image = image;
+    });*/
+    Camera(
+      orientationEnablePhoto: CameraOrientation.all,
+    );
+
+  }
   Widget build(BuildContext context) {
 
     final List<List<String>> imageList = [myImages, likeImages, visitImages];
@@ -439,7 +478,7 @@ class _MyPageState extends State<MyPage> {
             "카메라",
             style: TextStyle(color: Colors.white, fontSize: 20),
           ),
-          onPressed: () => Navigator.pop(context),
+          onPressed: () => _openGallary(),
           width: 120,
         ),DialogButton(
           child: Text(
@@ -455,4 +494,5 @@ class _MyPageState extends State<MyPage> {
       ],
     ).show();
   }
+
 }
