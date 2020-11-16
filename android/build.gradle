@@ -10,7 +10,6 @@ buildscript {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
-
 allprojects {
     repositories {
         google()
@@ -29,4 +28,3 @@ subprojects {
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
-minSdkVersion 21
