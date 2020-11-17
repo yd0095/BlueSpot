@@ -5,6 +5,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:bluespot/pages/mainPage.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
 
 class SpotPage extends StatefulWidget {
   @override
@@ -13,6 +15,28 @@ class SpotPage extends StatefulWidget {
 
 class _SpotPageState extends State<SpotPage> {
   Color lightSkyblue = Color(0xFFBBDEFB);
+  File imageFile;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+  Widget _decideImageView(){
+    if(imageFile == null){
+      return Container( //spot photo
+        margin: EdgeInsets.only(left:25,right:25),
+        height:200,
+        width:360,
+        decoration: BoxDecoration(
+          color: lightSkyblue,
+          border: Border.all(width: 0.1),
+        ),
+      );
+    }
+    else{
+      Image.file(imageFile,width: 360,height:200);
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -103,15 +127,7 @@ class _SpotPageState extends State<SpotPage> {
                         )
                       )
                     ),
-                    Container( //spot photo
-                      margin: EdgeInsets.only(left:25,right:25),
-                      height:200,
-                      width:360,
-                      decoration: BoxDecoration(
-                        color: lightSkyblue,
-                        border: Border.all(width: 0.1),
-                      ),
-                    ),
+                    _decideImageView(),
                     Container( //number of heart
                       margin: EdgeInsets.only(left:25,right:25),
                       height:70,

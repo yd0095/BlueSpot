@@ -8,13 +8,16 @@ import 'dart:io';
 import 'dart:async';
 import  'package:camera_camera/camera_camera.dart';
 
+class selectedImage{
+  File myImage;
+}
 class MyPage extends StatefulWidget {
   @override
   _MyPageState createState() => _MyPageState();
 }
 
 class _MyPageState extends State<MyPage> {
-  PickedFile imageFile;
+  File imageFile;
   int _currentSelection = 0;
 
   Map<int, Widget> _children = {
@@ -46,12 +49,24 @@ class _MyPageState extends State<MyPage> {
     "lib/images/60.jpg",
     "lib/images/60.jpg"
   ];
+
   Future<File> _openGallary() async{
-    /*
-    PickedFile pickedImage = await ImagePicker().getImage(
-        source: ImageSource.gallery,
-        imageQuality: 50);
-    return pickedImage;*/
+
+    File _image;
+    final picker = ImagePicker();
+
+    final pickedFile = await picker.getImage(source: ImageSource.gallery);
+    print('PickedFile: ${pickedFile.toString()}');
+
+    setState(() {
+      _image = File(pickedFile.path);
+    });
+    if (_image != null) {
+      return _image;
+    }
+    return null;
+  }
+  Future<File> _openCamera() async{
     File _image;
     final picker = ImagePicker();
 
@@ -66,22 +81,7 @@ class _MyPageState extends State<MyPage> {
     }
     return null;
   }
-  _openCamera(){
-    
-  }
   @override
-  void open_camera()
-  async {
-    /*
-    var image = await ImagePicker.pickImage(source: ImageSource.camera);
-    setState(() {
-      _image = image;
-    });*/
-    Camera(
-      orientationEnablePhoto: CameraOrientation.all,
-    );
-
-  }
   Widget build(BuildContext context) {
 
     final List<List<String>> imageList = [myImages, likeImages, visitImages];
@@ -478,17 +478,14 @@ class _MyPageState extends State<MyPage> {
             "카메라",
             style: TextStyle(color: Colors.white, fontSize: 20),
           ),
-          onPressed: () => _openGallary(),
+          onPressed: () => _openCamera(),
           width: 120,
         ),DialogButton(
           child: Text(
             "갤러리",
             style: TextStyle(color: Colors.white, fontSize: 20),
           ),
-          onPressed: (){
-            //Navigator.pop(context),
-            Navigator.pushNamed(context, '/toSpotMakePage');
-          },
+          onPressed: ()=> _openGallary(),
           width: 120,
         )
       ],
