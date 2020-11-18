@@ -8,6 +8,8 @@ buildscript {
     dependencies {
         classpath 'com.android.tools.build:gradle:3.5.0'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        //밑에가 로그인.
+        classpath 'com.google.gms:google-services:4.3.4'
     }
 }
 
@@ -29,4 +31,3 @@ subprojects {
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
-minSdkVersion 21

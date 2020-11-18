@@ -7,6 +7,7 @@ import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'dart:async';
 import  'package:camera_camera/camera_camera.dart';
+import 'package:bluespot/pages/googleAuthentication.dart';
 
 class MyPage extends StatefulWidget {
   @override
