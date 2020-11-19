@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -9,6 +10,7 @@ import 'package:search_map_place/search_map_place.dart';
 import 'package:permission/permission.dart';
 import 'dart:async';
 import 'package:bluespot/pages/mainPage.dart';
+import 'package:kopo/kopo.dart';
 
 // 중요! GCP 환경설정에서 direction api, maps sdk for android를 허용해야한다.
 // 중요! direction을 이용하기전에 해당 기기의 위치를 사용하는 것에 대해서 권한을 받아야 한다.
@@ -22,6 +24,7 @@ class MapPage extends StatefulWidget {
 
 class _MapPageState extends State<MapPage> {
 
+  String addressJSON = '';
   GoogleMapController googleMapController;
   Map<MarkerId, Marker> markers = <MarkerId, Marker>{};
   Position position;
@@ -104,29 +107,64 @@ class _MapPageState extends State<MapPage> {
   Widget build(BuildContext context) {
     //Stack을 이용해보기?
     return Scaffold(
+      //extendBodyBehindAppBar: true,
+      appBar: AppBar(
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back, color: Colors.black),
+            onPressed: () {
+              Navigator.of(context).pop();
+              Navigator.pushNamed(context, '/AfterLogin');
+            }
+          ),
+          title:  Text('Blue Spot', style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold)),
+          centerTitle: true,
+          elevation: 0.0,
+          backgroundColor: Colors.transparent,
+          iconTheme: new IconThemeData(color: Colors.grey),
+          actions:<Widget>[
+            IconButton(
+              icon: Icon(Icons.map),
+              tooltip: '맵세팅',
+              onPressed: () async {
+                KopoModel model = await Navigator.push(
+                    context,
+                    CupertinoPageRoute(
+                      builder: (context) => Kopo(),
+                    )
+                );
+                print(model.toJson());
+                setState(() {
+                  addressJSON =
+                  '${model.address} ${model.buildingName}${model.apartment == 'Y' ? '아파트' : ''} ${model.zonecode} ';
+                });
+              },
+            ),
+            Text('$addressJSON'),
+          ]
+      ),
       body: Container(
         child: Column(
           children: [
             //코포를 쓴다 하면 이쪽 부분을 삭제하시면 되요.
-            SearchMapPlaceWidget(
-              //language: 'kor', 한국말 안되는듯...
-              hasClearButton: true, //삭제버튼
-              placeType: PlaceType.address,
-              placeholder: '주소입력',
-              apiKey: 'AIzaSyC0vAxFsUvf3bafFQlG-3y3Pe1y94KBbi8',
-              //geolocation은 future이니까 async하고 await필요.
-              onSelected: (Place place) async{
-                Geolocation geolocation = await place.geolocation;
-                googleMapController.animateCamera(
-                    CameraUpdate.newLatLng(
-                        geolocation.coordinates
-                    )
-                );
-                googleMapController.animateCamera(
-                    CameraUpdate.newLatLngBounds(geolocation.bounds, 0)
-                );
-              },
-            ),
+            // SearchMapPlaceWidget(
+            //   //language: 'kor', 한국말 안되는듯...
+            //   hasClearButton: true, //삭제버튼
+            //   placeType: PlaceType.address,
+            //   placeholder: '주소입력',
+            //   apiKey: 'AIzaSyC0vAxFsUvf3bafFQlG-3y3Pe1y94KBbi8',
+            //   //geolocation은 future이니까 async하고 await필요.
+            //   onSelected: (Place place) async{
+            //     Geolocation geolocation = await place.geolocation;
+            //     googleMapController.animateCamera(
+            //         CameraUpdate.newLatLng(
+            //             geolocation.coordinates
+            //         )
+            //     );
+            //     googleMapController.animateCamera(
+            //         CameraUpdate.newLatLngBounds(geolocation.bounds, 0)
+            //     );
+            //   },
+            // ),
             SizedBox(
               height: 600.0,
               child: GoogleMap(
