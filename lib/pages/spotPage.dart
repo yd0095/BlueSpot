@@ -16,6 +16,7 @@ class SpotPage extends StatefulWidget {
 class _SpotPageState extends State<SpotPage> {
   Color lightSkyblue = Color(0xFFBBDEFB);
   File imageFile;
+
   @override
   void initState() {
     // TODO: implement initState

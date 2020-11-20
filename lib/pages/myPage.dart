@@ -15,9 +15,8 @@ class MyPage extends StatefulWidget {
   @override
   _MyPageState createState() => _MyPageState();
 }
-
 class _MyPageState extends State<MyPage> {
-  File imageFile;
+  Future<File> imageFile;
   int _currentSelection = 0;
 
   Map<int, Widget> _children = {
@@ -50,8 +49,8 @@ class _MyPageState extends State<MyPage> {
     "lib/images/60.jpg"
   ];
 
-  Future<File> _openGallary() async{
 
+  Future<File> _openGallary() async{
     File _image;
     final picker = ImagePicker();
 
@@ -62,10 +61,17 @@ class _MyPageState extends State<MyPage> {
       _image = File(pickedFile.path);
     });
     if (_image != null) {
+      Navigator.pushNamed(context,
+          '/toSpotMakePage',
+          arguments: <String, File>{
+            'photo' : _image
+          }
+      );
       return _image;
     }
     return null;
   }
+
   Future<File> _openCamera() async{
     File _image;
     final picker = ImagePicker();
@@ -77,6 +83,12 @@ class _MyPageState extends State<MyPage> {
       _image = File(pickedFile.path);
     });
     if (_image != null) {
+      Navigator.pushNamed(context,
+          '/toSpotMakePage',
+          arguments: <String, File>{
+            'photo' : _image
+          }
+      );
       return _image;
     }
     return null;
@@ -387,6 +399,7 @@ class _MyPageState extends State<MyPage> {
                   child: GestureDetector(
                     onTap: () {
                     Navigator.pushNamed(context, '/manageCoursePage');
+                    //Navigator.pushNamed(context, '/toSpotMakePage');
                   },
                     child: Stack(
                       alignment: Alignment.center,
@@ -447,6 +460,7 @@ class _MyPageState extends State<MyPage> {
     );
   }
   void _popupDialog(BuildContext context) async {
+    Future<File> photo;
     /*
     showDialog(
         context: context,
@@ -478,14 +492,19 @@ class _MyPageState extends State<MyPage> {
             "카메라",
             style: TextStyle(color: Colors.white, fontSize: 20),
           ),
-          onPressed: () => _openCamera(),
+          onPressed: (){
+            _openCamera();
+
+          },
           width: 120,
         ),DialogButton(
           child: Text(
             "갤러리",
             style: TextStyle(color: Colors.white, fontSize: 20),
           ),
-          onPressed: ()=> _openGallary(),
+          onPressed: (){
+            _openGallary();
+          },
           width: 120,
         )
       ],

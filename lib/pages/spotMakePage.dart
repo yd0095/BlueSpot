@@ -5,15 +5,26 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:bluespot/pages/mainPage.dart';
+import 'dart:io';
 
 class SpotMakePage extends StatefulWidget {
   @override
   _SpotMakePageState createState() => _SpotMakePageState();
 }
+/*
+class Arguments{
+  String address;
+  Future<File> photo;
+  Arguments(this.address,this.photo);
+}*/
 class _SpotMakePageState extends State<SpotMakePage> {
   Color lightSkyblue = Color(0xFFBBDEFB);
+
   @override
   Widget build(BuildContext context) {
+    final Map<String,File>args = ModalRoute.of(context).settings.arguments;
+    File _file = args['photo'];
+
     return Scaffold(
       appBar: AppBar(
           title: Text('스팟 등록하기', style: TextStyle(
@@ -42,11 +53,16 @@ class _SpotMakePageState extends State<SpotMakePage> {
                           ),
                           Container( //spot photo
                             margin: EdgeInsets.only(left:25,right:25),
-                            height:200,
+                            height:300,
                             width:360,
                             decoration: BoxDecoration(
                               color: lightSkyblue,
                               border: Border.all(width: 0.1),
+
+                              image: DecorationImage(
+                                image: FileImage(File(_file.path)),
+                                fit: BoxFit.fill
+                              )
                             ),
                           ),/*
                           Container( //number of heart
@@ -96,12 +112,14 @@ class _SpotMakePageState extends State<SpotMakePage> {
                                       hintText: 'spot명을 작성하세요.',
                                     ),
                                   ),
+
                                   TextField(
                                     maxLength: 40,
                                     decoration: InputDecoration(
                                       hintText: 'spot의 주소를 작성하세요.',
                                     ),
                                   ),
+                                  //Text(args['photo']),
                                   Padding(
                                       padding:EdgeInsets.all(10)
                                   ),
@@ -138,7 +156,12 @@ class _SpotMakePageState extends State<SpotMakePage> {
                             margin: EdgeInsets.only(left: 76,right: 76),
                               child: GestureDetector(
                                 onTap: () {
-                                  Navigator.pushNamed(context, '/clickSpot');
+                                  Navigator.pushNamed(context,
+                                      '/clickSpot',
+                                      arguments: <String, File>{
+                                        'photo' : _file
+                                      }
+                                  );
                                 },
                                   child: Stack(
                                       alignment: Alignment.center,
@@ -191,7 +214,8 @@ class _SpotMakePageState extends State<SpotMakePage> {
                                   )
                               )
                           ),
-                          Padding(padding:EdgeInsets.all(20))
+                          Padding(padding:EdgeInsets.all(20)),
+
 
                         ]
                     ))
