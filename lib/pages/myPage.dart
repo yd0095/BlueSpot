@@ -61,7 +61,7 @@ class _MyPageState extends State<MyPage> {
       _image = File(pickedFile.path);
     });
     if (_image != null) {
-      Navigator.pushNamed(context,
+      Navigator.pushReplacementNamed(context,
           '/toSpotMakePage',
           arguments: <String, File>{
             'photo' : _image
@@ -83,7 +83,7 @@ class _MyPageState extends State<MyPage> {
       _image = File(pickedFile.path);
     });
     if (_image != null) {
-      Navigator.pushNamed(context,
+      Navigator.pushReplacementNamed(context,
           '/toSpotMakePage',
           arguments: <String, File>{
             'photo' : _image
