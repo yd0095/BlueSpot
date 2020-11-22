@@ -108,66 +108,48 @@ class _MapPageState extends State<MapPage> {
     //Stack을 이용해보기?
     return Scaffold(
       //extendBodyBehindAppBar: true,
-      appBar: AppBar(
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back, color: Colors.black),
-            onPressed: () {
-              Navigator.of(context).pop();
-              Navigator.pushNamed(context, '/AfterLogin');
-            }
-          ),
-          title:  Text('Blue Spot', style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold)),
-          centerTitle: true,
-          elevation: 0.0,
-          backgroundColor: Colors.transparent,
-          iconTheme: new IconThemeData(color: Colors.grey),
-          actions:<Widget>[
-            IconButton(
-              icon: Icon(Icons.map),
-              tooltip: '맵세팅',
-              onPressed: () async {
-                KopoModel model = await Navigator.push(
-                    context,
-                    CupertinoPageRoute(
-                      builder: (context) => Kopo(),
-                    )
-                );
-                print(model.toJson());
-                setState(() {
-                  addressJSON =
-                  '${model.address} ${model.buildingName}${model.apartment == 'Y' ? '아파트' : ''} ${model.zonecode} ';
-                });
-              },
-            ),
-            Text('$addressJSON'),
-          ]
-      ),
+      // appBar: AppBar(
+      //     leading: IconButton(
+      //       icon: Icon(Icons.arrow_back, color: Colors.black),
+      //       onPressed: () {
+      //         Navigator.of(context).pop();
+      //         Navigator.pushNamed(context, '/AfterLogin');
+      //       }
+      //     ),
+      //     title:  Text('Blue Spot', style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold)),
+      //     centerTitle: true,
+      //     elevation: 0.0,
+      //     backgroundColor: Colors.transparent,
+      //     iconTheme: new IconThemeData(color: Colors.grey),
+      //     actions:<Widget>[
+      //       IconButton(
+      //         icon: Icon(Icons.map),
+      //         tooltip: '맵세팅',
+      //         onPressed: () async {
+      //           KopoModel model = await Navigator.push(
+      //               context,
+      //               CupertinoPageRoute(
+      //                 builder: (context) => Kopo(),
+      //               )
+      //           );
+      //           print(model.toJson());
+      //           setState(() {
+      //             addressJSON =
+      //             '${model.address} ${model.buildingName}${model.apartment == 'Y' ? '아파트' : ''} ${model.zonecode} ';
+      //           });
+      //         },
+      //       ),
+      //       Text('$addressJSON'),
+      //     ]
+      // ),
       body: Container(
-        child: Column(
+        child: Stack(
           children: [
-            //코포를 쓴다 하면 이쪽 부분을 삭제하시면 되요.
-            // SearchMapPlaceWidget(
-            //   //language: 'kor', 한국말 안되는듯...
-            //   hasClearButton: true, //삭제버튼
-            //   placeType: PlaceType.address,
-            //   placeholder: '주소입력',
-            //   apiKey: 'AIzaSyC0vAxFsUvf3bafFQlG-3y3Pe1y94KBbi8',
-            //   //geolocation은 future이니까 async하고 await필요.
-            //   onSelected: (Place place) async{
-            //     Geolocation geolocation = await place.geolocation;
-            //     googleMapController.animateCamera(
-            //         CameraUpdate.newLatLng(
-            //             geolocation.coordinates
-            //         )
-            //     );
-            //     googleMapController.animateCamera(
-            //         CameraUpdate.newLatLngBounds(geolocation.bounds, 0)
-            //     );
-            //   },
-            // ),
             SizedBox(
-              height: 600.0,
+              height: MediaQuery.of(context).size.height,
               child: GoogleMap(
+                //padding은 MyLocationButton을 위치조정 하기 위한 방안임.
+                  padding: EdgeInsets.only(top:100.0,),
                   onTap: (tapped) async {
                     final coordinated = new geoCo.Coordinates(tapped.latitude, tapped.longitude);
                     var address = await geoCo.Geocoder.local.findAddressesFromCoordinates(coordinated);
@@ -216,6 +198,41 @@ class _MapPageState extends State<MapPage> {
                       target: LatLng(37.5172,127.0473),
                       zoom: 15.0),
                   markers: Set<Marker>.of(markers.values)),
+            ),
+            Positioned(
+              top: 40,
+              child: IconButton(
+                icon: Icon(Icons.arrow_back),
+                onPressed: (){
+                  Navigator.pop(context);
+                  Navigator.pushNamed(context, '/AfterLogin');
+                },
+              ),
+            ),
+            // 코포를 쓴다 하면 이쪽 부분을 삭제하시면 되요.
+            Positioned(
+              left: 40,
+              top: 35,
+              child: SearchMapPlaceWidget(
+                //language: 'ko' 되잖아악
+                language: 'ko',
+                hasClearButton: true, //삭제버튼
+                placeType: PlaceType.address,
+                placeholder: '주소입력',
+                apiKey: 'AIzaSyC0vAxFsUvf3bafFQlG-3y3Pe1y94KBbi8',
+                //geolocation은 future이니까 async하고 await필요.
+                onSelected: (Place place) async{
+                  Geolocation geolocation = await place.geolocation;
+                  googleMapController.animateCamera(
+                      CameraUpdate.newLatLng(
+                          geolocation.coordinates
+                      )
+                  );
+                  googleMapController.animateCamera(
+                      CameraUpdate.newLatLngBounds(geolocation.bounds, 0)
+                  );
+                },
+              ),
             ),
           ],
         ),
