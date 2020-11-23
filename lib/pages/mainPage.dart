@@ -352,9 +352,8 @@ class _MainPageState extends State<MainPage> {
                 ),
                 title: Text('지도로 가기'),
                 onTap:() async{
-                  Navigator.of(context).pop();
-                  //Navigator.pushNamed(context,'/errorPage');
-                  Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => MapPage(uid: this.uid)));
+                  Navigator.of(context).popUntil((route) => route.isFirst);
+                  Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => MapPage(uid: this.uid, loggeduser: this.loggeduser,)));
                 }
             ),
             // AR은 아직 고려사항이 아님.

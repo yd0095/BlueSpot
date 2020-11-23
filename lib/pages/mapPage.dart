@@ -12,6 +12,7 @@ import 'dart:async';
 import 'package:bluespot/pages/mainPage.dart';
 import 'package:kopo/kopo.dart';
 import 'package:bluespot/pages/loginPage.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 // 중요! GCP 환경설정에서 direction api, maps sdk for android를 허용해야한다.
 // 중요! direction을 이용하기전에 해당 기기의 위치를 사용하는 것에 대해서 권한을 받아야 한다.
@@ -20,13 +21,19 @@ import 'package:bluespot/pages/loginPage.dart';
 
 class MapPage extends StatefulWidget {
   final String uid;
-  MapPage({Key key, @required this.uid,}) : super(key: key);
+  final User loggeduser;
+  MapPage({Key key, @required this.uid, this.loggeduser}) : super(key: key);
 
   @override
-  _MapPageState createState() => _MapPageState(uid);
+  _MapPageState createState() => _MapPageState(uid,loggeduser);
 }
 
 class _MapPageState extends State<MapPage> {
+
+  final String uid;
+  final User loggeduser;
+  _MapPageState(this.uid,this.loggeduser);  //현재위치
+
   var mid;
   String addressJSON = '';
   GoogleMapController googleMapController;
@@ -40,8 +47,8 @@ class _MapPageState extends State<MapPage> {
   Position currentPosition;       //내현재위치
   var geoLocator = Geolocator();
 
-  final String uid;
-  _MapPageState(this.uid);  //현재위치
+
+
 
 
   //실제위치 받아오는 함수.
@@ -179,8 +186,9 @@ class _MapPageState extends State<MapPage> {
               child: IconButton(
                 icon: Icon(Icons.arrow_back),
                 onPressed: (){
-                  Navigator.pop(context);
-                  Navigator.pushNamed(context, '/AfterLogin');
+                  Navigator.of(context).popUntil((route) => route.isFirst);
+                  Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) =>
+                      MainPage(uid: this.uid,loggeduser: this.loggeduser,)));
                 },
               ),
             ),
