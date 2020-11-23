@@ -1,15 +1,40 @@
+import 'package:bluespot/pages/mainPage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'dart:core';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
+import 'package:bluespot/pages/googleAuthentication.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:form_field_validator/form_field_validator.dart';
 
 class LoginPage extends StatefulWidget {
   @override
   _LoginPageState createState() => _LoginPageState();
 }
 class _LoginPageState extends State<LoginPage>{
+  String email;   //추후에 아뒤 비번을 내가 생성할때 필요한 변수들 3개.
+  String password;
+  GlobalKey<FormState> formkey = GlobalKey<FormState>();
+
+  //아뒤 비번 직접생성시 필요한 함수. 나중에 창 만들고 onPressed: login, ㄱㄱ
+  void login() {
+    if (formkey.currentState.validate()) {
+      formkey.currentState.save();
+      signin(email, password, context).then((value) {
+        if (value != null) {
+          Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => MainPage(uid: value.uid),
+              ));
+        }
+      });
+    }
+  }
+
+
   @override
   Widget build(BuildContext context){
     return Scaffold(
@@ -87,15 +112,23 @@ class _LoginPageState extends State<LoginPage>{
                     width: double.infinity,
                     child:ButtonTheme(
                       child:RaisedButton(
+                        /*
                           onPressed: () async{
                             showDialog(context: context,
                                 builder: (BuildContext context){
                                   return Center(child: CircularProgressIndicator());
                                 }
                             );
-                            await loginAction();
                             Navigator.pushNamed(context, '/AfterLogin');
-                          },
+                          },*/
+                          onPressed: () => googleSignIn().whenComplete(()async{
+                            //tasks에 건내줄 uid가 필요하다. 그래서 firebaseAuth함수를 사용.
+                            User user = await FirebaseAuth.instance.currentUser;
+
+                            //uid를 건내줘야 하니까 밑에 함수를 이용.
+                            //Navigator.of(context).pushNamed(('/AfterLogin'));
+                            Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => MainPage(uid: user.uid)));
+                          }),
                           padding: EdgeInsets.all(20),
                           color: Colors.white,
                           child: Row(
@@ -124,8 +157,10 @@ class _LoginPageState extends State<LoginPage>{
       )
     );
   }
+
   Future<bool> loginAction() async{
     await new Future.delayed(const Duration(seconds:2));
     return true;
   }
+
 }

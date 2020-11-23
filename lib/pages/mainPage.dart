@@ -9,8 +9,12 @@ import 'package:bluespot/pages/errorPage.dart';
 import 'package:bluespot/pages/spotPage.dart';
 import 'package:bluespot/pages/manageCoursePage.dart';
 import 'package:kopo/kopo.dart';
-
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:http/http.dart' as http;
+import 'package:bluespot/pages/loginPage.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:bluespot/pages/googleAuthentication.dart';
+import 'package:bluespot/pages/mapPage.dart';
 
 class UserInfo {
   final String user_id;
@@ -39,6 +43,11 @@ class UserInfo {
   }
 
 class MainPage extends StatefulWidget {
+  //밑에 2개 아뒤 직접생성하고 로그인할때 필요한거 여기서 받는거.
+  final String uid; //유저 아이디. 여기 오려면 uid가 필요하니까 uid를 받는 변수.
+  MainPage({Key key, @required this.uid}) : super(key: key);   //superfunction에서 uid를 받는다.
+
+
   @override
   _MainPageState createState() => _MainPageState();
 }
@@ -46,6 +55,9 @@ class MainPage extends StatefulWidget {
 
 
 class _MainPageState extends State<MainPage> {
+  //uid
+  //final String uid;
+  //_MainPageState(this.uid);
 
   String addressJSON = '';
   // Future<http.Response> fetchPhotos(http.Client client) async {
@@ -398,9 +410,10 @@ class _MainPageState extends State<MainPage> {
                   color: Colors.grey[850],
                 ),
                 title: Text('지도로 가기'),
-                onTap:(){
+                onTap:() async{
                   Navigator.of(context).pop();
-                  Navigator.pushNamed(context,'/errorPage');
+                  //Navigator.pushNamed(context,'/errorPage');
+                  Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => MapPage()));
                 }
             ),
             ListTile(
@@ -444,7 +457,6 @@ class _MainPageState extends State<MainPage> {
         ),
 
       ),
-
     );
   }
   void _popupDialog(BuildContext context) {
@@ -455,11 +467,15 @@ class _MainPageState extends State<MainPage> {
             title: Text('로그아웃 하시겠습니까?',),
             //content: Text('Alert Dialog Body Goes Here  ..'),
             actions: <Widget>[
-              FlatButton(
+              FlatButton(/*
                   onPressed: (){
                     Navigator.of(context).pop();
                     Navigator.pushNamed(context,'/AfterSplash');
-                  },
+                  },*/
+                  onPressed: () => signOutUser().whenComplete(() async{
+                    Navigator.of(context).pop();
+                   Navigator.of(context).pushNamed(('/AfterSplash'));
+                  }),
                   child: Text('YES')),
               FlatButton(
                   onPressed: () => Navigator.of(context).pop(),

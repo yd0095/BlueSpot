@@ -13,8 +13,13 @@ import 'package:bluespot/pages/loginPage.dart';
 import 'package:bluespot/pages/courseThemePage.dart';
 import 'package:bluespot/pages/myEnrolledPage.dart';
 import 'package:bluespot/pages/settingPage.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 
-void main() {
+void main() async {
+  //처음에 시작할때 firebase도 초기화하고 같이 바인딩해줘야 해서 필요한 부분. 삭제하면 어플 동작안해요ㅠ.
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(MyApp());
 }
 
@@ -27,7 +32,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         // primarySwatch: Colors.white,
         visualDensity: VisualDensity.adaptivePlatformDensity,
-        // appBarTheme: AppBarTheme(
+        // appBarTqheme: AppBarTheme(
         //     color: Colors.grey.shade50
         // )
       ),
