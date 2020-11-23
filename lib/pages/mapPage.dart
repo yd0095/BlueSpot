@@ -118,7 +118,7 @@ class _MapPageState extends State<MapPage> {
     //Stack을 이용해보기?
     return Scaffold(
       //extendBodyBehindAppBar: true,
-<<<<<<< HEAD
+
       appBar: AppBar(
           leading: IconButton(
             icon: Icon(Icons.arrow_back, color: Colors.black),
@@ -154,7 +154,7 @@ class _MapPageState extends State<MapPage> {
             Text('$addressJSON'),
           ]
       ),
-=======
+
       // appBar: AppBar(
       //     leading: IconButton(
       //       icon: Icon(Icons.arrow_back, color: Colors.black),
@@ -189,7 +189,7 @@ class _MapPageState extends State<MapPage> {
       //       Text('$addressJSON'),
       //     ]
       // ),
->>>>>>> 247f25f5eb53c4a44c36e00eaabe415d33f61940
+
       body: Container(
         child: Stack(
           children: [
