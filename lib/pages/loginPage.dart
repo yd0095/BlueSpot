@@ -1,4 +1,5 @@
 import 'package:bluespot/pages/mainPage.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'dart:core';
@@ -34,6 +35,10 @@ class _LoginPageState extends State<LoginPage>{
     }
   }
 
+getCurrentUser() {
+    final auth = FirebaseAuth.instance.currentUser;
+    return auth;
+  }
 
   @override
   Widget build(BuildContext context){
@@ -122,12 +127,21 @@ class _LoginPageState extends State<LoginPage>{
                             Navigator.pushNamed(context, '/AfterLogin');
                           },*/
                           onPressed: () => googleSignIn().whenComplete(()async{
-                            //tasks에 건내줄 uid가 필요하다. 그래서 firebaseAuth함수를 사용.
+                            //main 건내줄 uid가 필요하다. 그래서 firebaseAuth함수를 사용.
                             User user = await FirebaseAuth.instance.currentUser;
-
+                            //디비에 user data 입력.
+                            //로그인을 누르면 로그인과 동시에 디비에 userData생성.
+                            await FirebaseFirestore.instance.collection('UserData').doc(user.uid).set(
+                              {
+                                'name': user.displayName,
+                                'email': user.email,
+                                'uid': user.uid,
+                                'profile_pic': user.photoURL,
+                              }
+                            );
                             //uid를 건내줘야 하니까 밑에 함수를 이용.
-                            //Navigator.of(context).pushNamed(('/AfterLogin'));
-                            Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => MainPage(uid: user.uid)));
+                            //Navigator.of(context).pushNamed(('/AfterLogin'));                 // MainPage(uid: user.uid)
+                            Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => MainPage(uid: user.uid, loggeduser: getCurrentUser(),)));
                           }),
                           padding: EdgeInsets.all(20),
                           color: Colors.white,

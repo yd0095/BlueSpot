@@ -1,3 +1,6 @@
+import 'dart:developer';
+//import 'dart:html';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'dart:core';
@@ -8,6 +11,7 @@ import 'package:bluespot/pages/myPage.dart';
 import 'package:bluespot/pages/errorPage.dart';
 import 'package:bluespot/pages/spotPage.dart';
 import 'package:bluespot/pages/manageCoursePage.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:kopo/kopo.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:http/http.dart' as http;
@@ -15,6 +19,11 @@ import 'package:bluespot/pages/loginPage.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:bluespot/pages/googleAuthentication.dart';
 import 'package:bluespot/pages/mapPage.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
+import 'package:path/path.dart';
+
 
 class UserInfo {
   final String user_id;
@@ -26,38 +35,90 @@ class UserInfo {
   final List<String> my_spot;
   final List<int> my_position;
 
-  UserInfo({this.user_id, this.user_password, this.user_name,this.user_picture,
-    this.theme_id,this.my_course,this.my_spot,this.my_position});
+  UserInfo({this.user_id, this.user_password, this.user_name, this.user_picture,
+    this.theme_id, this.my_course, this.my_spot, this.my_position});
 
-  // factory UserInfo.fromJson(Map<String, dynamic> json) {
-  //   return UserInfo(
-  //     user_id: json['user_id'] as String,
-  //     user_password: json['user_password'] as String,
-  //     user_name: json['user_name'] as String,
-  //     user_picture: json['user_picture'] as String,
-  //     theme_id: json['theme_id'] as List<String>,
-  //     my_course: json['my_course'] as List<String>,
-  //     my_spot: json['my_spot'] as List<String>,
-  //     my_position: json['my_position'] as List<int>
-  //   );
+  factory UserInfo.fromJson(Map<String, dynamic> json) {
+    return UserInfo(
+        user_id: json['user_id'] as String,
+        user_password: json['user_password'] as String,
+        user_name: json['user_name'] as String,
+        user_picture: json['user_picture'] as String,
+        theme_id: json['theme_id'] as List<String>,
+        my_course: json['my_course'] as List<String>,
+        my_spot: json['my_spot'] as List<String>,
+        my_position: json['my_position'] as List<int>
+    );
   }
-
-class MainPage extends StatefulWidget {
-  //밑에 2개 아뒤 직접생성하고 로그인할때 필요한거 여기서 받는거.
-  final String uid; //유저 아이디. 여기 오려면 uid가 필요하니까 uid를 받는 변수.
-  MainPage({Key key, @required this.uid}) : super(key: key);   //superfunction에서 uid를 받는다.
-
-
-  @override
-  _MainPageState createState() => _MainPageState();
 }
 
+/*
+void userData() async{
+  final User user = await getCurreuntUser(); //auth.currentUser;
+  final uid = user.uid;
+  displayName: user.displayName;
+  profile_pic: user.photoURL;
+  user_uid: user.uid;
+}*/
 
+class MainPage extends StatefulWidget {
+
+  //밑에 2개 아뒤 직접생성하고 로그인할때 필요한거 여기서 받는거.
+  final String uid; //유저 아이디. 여기 오려면 uid가 필요하니까 uid를 받는 변수.
+  final User loggeduser;  //currentUser를 받기 위한 변수.
+  MainPage({Key key, @required this.uid, this.loggeduser,}) : super(key: key);   //superfunction에서 uid를 받는다.
+  @override
+  //매개변수를 통해 받는것!
+  _MainPageState createState() => _MainPageState(uid, loggeduser);
+}
 
 class _MainPageState extends State<MainPage> {
   //uid
   //final String uid;
   //_MainPageState(this.uid);
+  //User _user;
+  /*
+  getData() async{
+   // _user = await FirebaseAuth.instance.currentUser;
+    //return _user;
+    FirebaseAuth auth = FirebaseAuth.instance;
+    User user = await auth.currentUser;
+    String uid = user.uid.toString();
+    return uid;
+  }*/
+  //매개변수 받기위해서 변수2개 생성 + this. 걍 생성자.
+  final String uid;
+  final User loggeduser;
+  _MainPageState(this.uid, this.loggeduser);
+
+/*
+  File _image;
+  void getImage(ImageSource source) async {
+    var image = await ImagePicker.pickImage(source: source);
+
+    setState(() {
+      _image = image;
+      print('Image Path $_image');
+    });
+  }
+
+  Future uploadPic(BuildContext context) async{
+    String fileName = basename(_image.path);
+    var firebaseStorageRef = FirebaseStorage.instance.ref().child(fileName);
+    var uploadTask = firebaseStorageRef.putFile(_image);
+    var taskSnapshot=await uploadTask;
+    setState(() {
+      print("Profile Picture uploaded");
+      Scaffold.of(context).showSnackBar(SnackBar(content: Text('Profile Picture Uploaded')));
+    });
+  }*/
+
+  @override
+  void initState(){
+    super.initState();
+    print("hi");  //ㄷㅂㄱ
+    print(uid);   //ㄷㅂㄱ
+  }
 
   String addressJSON = '';
   // Future<http.Response> fetchPhotos(http.Client client) async {
@@ -101,6 +162,7 @@ class _MainPageState extends State<MainPage> {
     )
   ];
   final List<String> theme = ['데이트','먹방','힐링','오락','건강'];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -365,11 +427,19 @@ class _MainPageState extends State<MainPage> {
             ),*/
             UserAccountsDrawerHeader(
               currentAccountPicture: CircleAvatar(
-                backgroundImage: AssetImage('lib/images/b.jpg'),
+                backgroundImage: NetworkImage(loggeduser.photoURL.toString()),
                 backgroundColor: Colors.white,
               ),
 
               otherAccountsPictures: <Widget>[
+                new Container(
+                  child: new IconButton(
+                    icon : new Icon(Icons.camera_alt),
+                    onPressed: (){
+                      _showChoiceDialog(context);
+                    },
+                  )
+                ),
                 CircleAvatar(
                   backgroundImage: AssetImage('lib/images/star.jpg'),
                   backgroundColor: Colors.white,
@@ -379,13 +449,12 @@ class _MainPageState extends State<MainPage> {
                 Navigator.pushNamed(context, '/ToMyPage');
                 //인하 혹은 이메일을 눌러도 마이페이지로 이동 가능
               },
+
               accountName: new Container(
                   child: Text(
-                      '비룡',
-                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15, color: Colors.black)
-                  )
-              ),
-              accountEmail: Text('12172919@inha.edu',style: TextStyle(color: Colors.black),),
+                      loggeduser.displayName, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15, color: Colors.black))),
+
+              accountEmail: Text(loggeduser.email,style: TextStyle(color: Colors.black),),
 
               decoration: BoxDecoration(
                 color: myHexColor,
@@ -413,7 +482,7 @@ class _MainPageState extends State<MainPage> {
                 onTap:() async{
                   Navigator.of(context).pop();
                   //Navigator.pushNamed(context,'/errorPage');
-                  Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => MapPage()));
+                  Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => MapPage(uid: this.uid)));
                 }
             ),
             ListTile(
@@ -484,7 +553,61 @@ class _MainPageState extends State<MainPage> {
           );
         });
   }
+
+  //여기서부터 우리 drawer에 있는 배경화면 변경하는거.
+  File imageFile;
+  Future <void> _showChoiceDialog(BuildContext context) {
+    return showDialog(context: context, builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text("Make a choice"),
+        content: SingleChildScrollView(
+          child: ListBody(
+            children: <Widget>[
+              GestureDetector(
+                child: Text("Gallery"),
+                onTap: () {
+                  _openGallery(context);
+                },
+              ),
+              Padding(
+                  padding: EdgeInsets.all(8.0)
+              ),
+              GestureDetector(
+                child: Text("Camera"),
+                onTap: () {
+                  _openCamera(context);
+                },
+              )
+            ],
+          ),
+        ),
+      );
+    });
+  }
+
+  //갤러리 여는거
+  _openGallery(BuildContext context) async {
+    var pic = await ImagePicker.pickImage(source: ImageSource.gallery);
+    this.setState(() {
+      imageFile = pic;
+    });
+    Navigator.of(context).pop();
+  }
+
+  //카메라 여는거.
+  _openCamera(BuildContext context) async {
+    var pic = await ImagePicker.pickImage(source: ImageSource.camera);
+    this.setState(() {
+      imageFile = pic;
+    });
+    Navigator.of(context).pop();
+  }
+
 }
+
+
+
+
 class Choice{
   final String space;
   final String like;
@@ -552,10 +675,9 @@ class ChoiceCard1 extends StatelessWidget{
     );
   }
 }
-class ChoiceCard extends StatelessWidget{
-  const ChoiceCard(
-      {Key key, this.choice, this.onTap,@required this.item,
-        this.selected:false}) : super(key:key);
+class ChoiceCard extends StatelessWidget {
+  const ChoiceCard({Key key, this.choice, this.onTap, @required this.item,
+    this.selected: false}) : super(key: key);
   final Choice choice;
   final VoidCallback onTap;
   final Choice item;
@@ -569,32 +691,32 @@ class ChoiceCard extends StatelessWidget{
         ),
         color: Colors.white,
         child: Column(
-          children:[
+          children: [
             new Container(
-                padding:const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.all(8.0),
                 child: Image.network(choice.imglink)
             ),
             new Container(
               padding: const EdgeInsets.all(10.0),
-              child:Column(
+              child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children:[
+                  children: [
                     Text(choice.space, style: GoogleFonts.inter(
-                      fontSize:22,
+                      fontSize: 22,
                       fontWeight: FontWeight.bold,
                     ),),
                     Row(
-                        children:[
+                        children: [
                           /*
                     IconButton(
                       icon: Icon(EvaIcons.heart , color: Colors.red,),
                       iconSize: 20,
                     ),*/
-                          Text(choice.like,style: GoogleFonts.inter(
-                            fontSize:18,
+                          Text(choice.like, style: GoogleFonts.inter(
+                            fontSize: 18,
                             fontWeight: FontWeight.w500,
-                          ), )
+                          ),)
                         ]
                     )
                   ]
@@ -605,5 +727,4 @@ class ChoiceCard extends StatelessWidget{
         )
     );
   }
-
 }

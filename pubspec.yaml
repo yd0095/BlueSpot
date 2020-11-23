@@ -39,6 +39,7 @@ dependencies:
   path_provider:
   path:
   flutter_plugin_android_lifecycle: ^1.0.11
+  firebase_storage: ^5.0.1
 
   #여기서부터 로그인 관련.
   form_field_validator: ^1.0.1

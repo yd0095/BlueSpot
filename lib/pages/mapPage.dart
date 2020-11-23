@@ -11,6 +11,7 @@ import 'package:permission/permission.dart';
 import 'dart:async';
 import 'package:bluespot/pages/mainPage.dart';
 import 'package:kopo/kopo.dart';
+import 'package:bluespot/pages/loginPage.dart';
 
 // 중요! GCP 환경설정에서 direction api, maps sdk for android를 허용해야한다.
 // 중요! direction을 이용하기전에 해당 기기의 위치를 사용하는 것에 대해서 권한을 받아야 한다.
@@ -18,12 +19,15 @@ import 'package:kopo/kopo.dart';
 
 
 class MapPage extends StatefulWidget {
+  final String uid;
+  MapPage({Key key, @required this.uid,}) : super(key: key);
+
   @override
-  _MapPageState createState() => _MapPageState();
+  _MapPageState createState() => _MapPageState(uid);
 }
 
 class _MapPageState extends State<MapPage> {
-
+  var mid;
   String addressJSON = '';
   GoogleMapController googleMapController;
   Map<MarkerId, Marker> markers = <MarkerId, Marker>{};
@@ -34,7 +38,10 @@ class _MapPageState extends State<MapPage> {
   //여기서부터 내실시간 위치.
   Completer<GoogleMapController> _controllerGoogleMap = Completer();
   Position currentPosition;       //내현재위치
-  var geoLocator = Geolocator();  //현재위치
+  var geoLocator = Geolocator();
+
+  final String uid;
+  _MapPageState(this.uid);  //현재위치
 
 
   //실제위치 받아오는 함수.
@@ -63,6 +70,7 @@ class _MapPageState extends State<MapPage> {
     );
     setState(() {
       markers[markerId] = marker;
+      this.mid = markerId;
     });
   }
 
@@ -79,8 +87,9 @@ class _MapPageState extends State<MapPage> {
   }
 */
 
-  void getMarkers(double lat, double long) {
+  void getMarkers(double lat, double long,) {
     MarkerId markerId = MarkerId(lat.toString() + long.toString());
+    mid = markerId;
     Marker _marker = Marker(
         markerId: markerId,
         position: LatLng(lat, long),
@@ -88,10 +97,10 @@ class _MapPageState extends State<MapPage> {
         //infoWindow: InfoWindow(snippet: addressLocation)
         infoWindow: InfoWindow(title: "input", snippet: "data")
     );
-    print(markerId);  //ㄷㅂㄱ
     setState(() {
       markers[markerId] = _marker;
       print(markerId);  //ㄷㅂㄱ
+      //print(markerId.toString() + '__________________________');
     });
   }
 
@@ -105,6 +114,7 @@ class _MapPageState extends State<MapPage> {
 
   @override
   Widget build(BuildContext context) {
+    print(mid);
     //Stack을 이용해보기?
     return Scaffold(
       //extendBodyBehindAppBar: true,
@@ -134,6 +144,7 @@ class _MapPageState extends State<MapPage> {
                 );
                 print(model.toJson());
                 setState(() {
+                  print(MarkerId);
                   addressJSON =
                   '${model.address} ${model.buildingName}${model.apartment == 'Y' ? '아파트' : ''} ${model.zonecode} ';
                 });
@@ -173,16 +184,15 @@ class _MapPageState extends State<MapPage> {
                     var address = await geoCo.Geocoder.local.findAddressesFromCoordinates(coordinated);
                     var firstAddress = address.first;
                     getMarkers(tapped.latitude, tapped.longitude);
-                    await FirebaseFirestore.instance.collection('Marker').doc(firstAddress.countryName).collection(firstAddress.subLocality).add({
-                      'latitude': tapped.latitude,
-                      'longitude': tapped.longitude,
-                      'Address': firstAddress.addressLine,
-                      'Country': firstAddress.countryName,
-                      'local' : firstAddress.locality,
-                      'sublocal' : firstAddress.subLocality,
-                      'admin' : firstAddress.adminArea,
-                      'subadmi' : firstAddress.subAdminArea,
-                      'thoroughfare' : firstAddress.thoroughfare,
+                    await FirebaseFirestore.instance.collection('Marker').doc(firstAddress.countryName).collection(firstAddress.adminArea).add({
+                      'uid' : this.uid, //uid 출력.
+                      'markerId': markers.keys.toString(),  //markerId
+                      'lat, long': [tapped.latitude, tapped.longitude], //위도와 경도를 배열로 출력
+                      'Country': firstAddress.countryName,  //나라
+                      'admin' : firstAddress.adminArea,     //시
+                      'sublocality' : firstAddress.subLocality,  //구
+                      'thoroughfare' : firstAddress.thoroughfare, //도로명
+                      'Address': firstAddress.addressLine,  //전체주소
                     });
                     /*
                     String myaddr = "";

@@ -1,11 +1,15 @@
 //밑에 2개 라이브러리 필요.
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:http/http.dart';
+import 'package:bluespot/pages/mainPage.dart';
 
 FirebaseAuth auth = FirebaseAuth.instance;
 final GSignIn = GoogleSignIn(); //구글 로그인 함수.
+
 
 // a simple sialog to be visible everytime some error occurs
 showErrDialog(BuildContext context, String err) {
@@ -28,6 +32,7 @@ showErrDialog(BuildContext context, String err) {
   );
 }
 
+//원래 bool이였음
 Future<bool> googleSignIn() async {
   //함수. await googleSignIn.signIn()이게 있어야 구글 로그인이 가능하다. 이거 때문에 asynchronous함수가 됨.
   GoogleSignInAccount googleSignInAccount = await GSignIn.signIn();
@@ -50,13 +55,27 @@ Future<bool> googleSignIn() async {
     //FirebaseUser가 User로 업데이트 됨...
     User user = await auth.currentUser;
 
-    //유저 uid를 출력.
+    //콘솔 디버깅용.
     print(user.uid);
+    //print(await getCurrentUser());
+    print(await getCurrentUID());
 
     //나중에 발생하는 오류에 대해서 에러처리를X
     return Future.value(true);
+    //return user;
   }
 }
+
+/*
+Future <User> login() async{
+  await GSignIn.signIn();
+  User user= new User(
+    email: GSignIn.currentUser.email,
+    name: GSignIn.currentUser.displayName,
+    profilePic: GSignIn.currentUser.photoUrl,
+  );
+  return User;
+}*/
 
 //future 찾아보기.
 //밑에서 생성한 이메일, 비번을 가지고 로그인하는 방법.
@@ -144,3 +163,23 @@ Future <void> signOutUser() async{
   await auth.signOut(); //firebase에서도 나가는거
   await GSignIn.signOut();  //구글에서 나가는거.
 }
+
+//uid 받기
+Future <String> getCurrentUID() async{
+  return auth.currentUser.uid;
+}
+
+//current user
+/*
+Future getCurrentUser() async{
+  return auth.currentUser;
+}*/
+
+getProfileImage(){
+  if(auth.currentUser.photoURL!=null){
+    return Image.network(auth.currentUser.photoURL);
+  }else{
+    return Icon(Icons.account_circle);
+  }
+}
+

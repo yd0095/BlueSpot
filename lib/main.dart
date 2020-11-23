@@ -1,4 +1,5 @@
 import 'package:bluespot/pages/errorPage.dart';
+import 'package:bluespot/pages/googleAuthentication.dart';
 import 'package:bluespot/pages/makeCoursePage.dart';
 import 'package:bluespot/pages/manageCoursePage.dart';
 import 'package:bluespot/pages/myEnrolledDetailPage.dart';
@@ -23,6 +24,7 @@ void main() async {
   runApp(MyApp());
 }
 
+//StatelessWidget
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
