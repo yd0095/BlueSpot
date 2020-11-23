@@ -11,6 +11,7 @@ import 'package:permission/permission.dart';
 import 'dart:async';
 import 'package:bluespot/pages/mainPage.dart';
 import 'package:kopo/kopo.dart';
+import 'package:bluespot/pages/loginPage.dart';
 
 // 중요! GCP 환경설정에서 direction api, maps sdk for android를 허용해야한다.
 // 중요! direction을 이용하기전에 해당 기기의 위치를 사용하는 것에 대해서 권한을 받아야 한다.
@@ -18,12 +19,15 @@ import 'package:kopo/kopo.dart';
 
 
 class MapPage extends StatefulWidget {
+  final String uid;
+  MapPage({Key key, @required this.uid,}) : super(key: key);
+
   @override
-  _MapPageState createState() => _MapPageState();
+  _MapPageState createState() => _MapPageState(uid);
 }
 
 class _MapPageState extends State<MapPage> {
-
+  var mid;
   String addressJSON = '';
   GoogleMapController googleMapController;
   Map<MarkerId, Marker> markers = <MarkerId, Marker>{};
@@ -34,7 +38,10 @@ class _MapPageState extends State<MapPage> {
   //여기서부터 내실시간 위치.
   Completer<GoogleMapController> _controllerGoogleMap = Completer();
   Position currentPosition;       //내현재위치
-  var geoLocator = Geolocator();  //현재위치
+  var geoLocator = Geolocator();
+
+  final String uid;
+  _MapPageState(this.uid);  //현재위치
 
 
   //실제위치 받아오는 함수.
@@ -63,6 +70,7 @@ class _MapPageState extends State<MapPage> {
     );
     setState(() {
       markers[markerId] = marker;
+      this.mid = markerId;
     });
   }
 
@@ -79,8 +87,9 @@ class _MapPageState extends State<MapPage> {
   }
 */
 
-  void getMarkers(double lat, double long) {
+  void getMarkers(double lat, double long,) {
     MarkerId markerId = MarkerId(lat.toString() + long.toString());
+    mid = markerId;
     Marker _marker = Marker(
         markerId: markerId,
         position: LatLng(lat, long),
@@ -88,10 +97,10 @@ class _MapPageState extends State<MapPage> {
         //infoWindow: InfoWindow(snippet: addressLocation)
         infoWindow: InfoWindow(title: "input", snippet: "data")
     );
-    print(markerId);  //ㄷㅂㄱ
     setState(() {
       markers[markerId] = _marker;
       print(markerId);  //ㄷㅂㄱ
+      //print(markerId.toString() + '__________________________');
     });
   }
 
@@ -105,9 +114,11 @@ class _MapPageState extends State<MapPage> {
 
   @override
   Widget build(BuildContext context) {
+    print(mid);
     //Stack을 이용해보기?
     return Scaffold(
       //extendBodyBehindAppBar: true,
+<<<<<<< HEAD
       appBar: AppBar(
           leading: IconButton(
             icon: Icon(Icons.arrow_back, color: Colors.black),
@@ -134,6 +145,7 @@ class _MapPageState extends State<MapPage> {
                 );
                 print(model.toJson());
                 setState(() {
+                  print(MarkerId);
                   addressJSON =
                   '${model.address} ${model.buildingName}${model.apartment == 'Y' ? '아파트' : ''} ${model.zonecode} ';
                 });
@@ -142,47 +154,64 @@ class _MapPageState extends State<MapPage> {
             Text('$addressJSON'),
           ]
       ),
+=======
+      // appBar: AppBar(
+      //     leading: IconButton(
+      //       icon: Icon(Icons.arrow_back, color: Colors.black),
+      //       onPressed: () {
+      //         Navigator.of(context).pop();
+      //         Navigator.pushNamed(context, '/AfterLogin');
+      //       }
+      //     ),
+      //     title:  Text('Blue Spot', style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold)),
+      //     centerTitle: true,
+      //     elevation: 0.0,
+      //     backgroundColor: Colors.transparent,
+      //     iconTheme: new IconThemeData(color: Colors.grey),
+      //     actions:<Widget>[
+      //       IconButton(
+      //         icon: Icon(Icons.map),
+      //         tooltip: '맵세팅',
+      //         onPressed: () async {
+      //           KopoModel model = await Navigator.push(
+      //               context,
+      //               CupertinoPageRoute(
+      //                 builder: (context) => Kopo(),
+      //               )
+      //           );
+      //           print(model.toJson());
+      //           setState(() {
+      //             addressJSON =
+      //             '${model.address} ${model.buildingName}${model.apartment == 'Y' ? '아파트' : ''} ${model.zonecode} ';
+      //           });
+      //         },
+      //       ),
+      //       Text('$addressJSON'),
+      //     ]
+      // ),
+>>>>>>> 247f25f5eb53c4a44c36e00eaabe415d33f61940
       body: Container(
-        child: Column(
+        child: Stack(
           children: [
-            //코포를 쓴다 하면 이쪽 부분을 삭제하시면 되요.
-            // SearchMapPlaceWidget(
-            //   //language: 'kor', 한국말 안되는듯...
-            //   hasClearButton: true, //삭제버튼
-            //   placeType: PlaceType.address,
-            //   placeholder: '주소입력',
-            //   apiKey: 'AIzaSyC0vAxFsUvf3bafFQlG-3y3Pe1y94KBbi8',
-            //   //geolocation은 future이니까 async하고 await필요.
-            //   onSelected: (Place place) async{
-            //     Geolocation geolocation = await place.geolocation;
-            //     googleMapController.animateCamera(
-            //         CameraUpdate.newLatLng(
-            //             geolocation.coordinates
-            //         )
-            //     );
-            //     googleMapController.animateCamera(
-            //         CameraUpdate.newLatLngBounds(geolocation.bounds, 0)
-            //     );
-            //   },
-            // ),
             SizedBox(
-              height: 600.0,
+              height: MediaQuery.of(context).size.height,
               child: GoogleMap(
+                //padding은 MyLocationButton을 위치조정 하기 위한 방안임.
+                  padding: EdgeInsets.only(top:100.0,),
                   onTap: (tapped) async {
                     final coordinated = new geoCo.Coordinates(tapped.latitude, tapped.longitude);
                     var address = await geoCo.Geocoder.local.findAddressesFromCoordinates(coordinated);
                     var firstAddress = address.first;
                     getMarkers(tapped.latitude, tapped.longitude);
-                    await FirebaseFirestore.instance.collection('Marker').doc(firstAddress.countryName).collection(firstAddress.subLocality).add({
-                      'latitude': tapped.latitude,
-                      'longitude': tapped.longitude,
-                      'Address': firstAddress.addressLine,
-                      'Country': firstAddress.countryName,
-                      'local' : firstAddress.locality,
-                      'sublocal' : firstAddress.subLocality,
-                      'admin' : firstAddress.adminArea,
-                      'subadmi' : firstAddress.subAdminArea,
-                      'thoroughfare' : firstAddress.thoroughfare,
+                    await FirebaseFirestore.instance.collection('Marker').doc(firstAddress.countryName).collection(firstAddress.adminArea).add({
+                      'uid' : this.uid, //uid 출력.
+                      'markerId': markers.keys.toString(),  //markerId
+                      'lat, long': [tapped.latitude, tapped.longitude], //위도와 경도를 배열로 출력
+                      'Country': firstAddress.countryName,  //나라
+                      'admin' : firstAddress.adminArea,     //시
+                      'sublocality' : firstAddress.subLocality,  //구
+                      'thoroughfare' : firstAddress.thoroughfare, //도로명
+                      'Address': firstAddress.addressLine,  //전체주소
                     });
                     /*
                     String myaddr = "";
@@ -216,6 +245,41 @@ class _MapPageState extends State<MapPage> {
                       target: LatLng(37.5172,127.0473),
                       zoom: 15.0),
                   markers: Set<Marker>.of(markers.values)),
+            ),
+            Positioned(
+              top: 40,
+              child: IconButton(
+                icon: Icon(Icons.arrow_back),
+                onPressed: (){
+                  Navigator.pop(context);
+                  Navigator.pushNamed(context, '/AfterLogin');
+                },
+              ),
+            ),
+            // 코포를 쓴다 하면 이쪽 부분을 삭제하시면 되요.
+            Positioned(
+              left: 40,
+              top: 35,
+              child: SearchMapPlaceWidget(
+                //language: 'ko' 되잖아악
+                language: 'ko',
+                hasClearButton: true, //삭제버튼
+                placeType: PlaceType.address,
+                placeholder: '주소입력',
+                apiKey: 'AIzaSyC0vAxFsUvf3bafFQlG-3y3Pe1y94KBbi8',
+                //geolocation은 future이니까 async하고 await필요.
+                onSelected: (Place place) async{
+                  Geolocation geolocation = await place.geolocation;
+                  googleMapController.animateCamera(
+                      CameraUpdate.newLatLng(
+                          geolocation.coordinates
+                      )
+                  );
+                  googleMapController.animateCamera(
+                      CameraUpdate.newLatLngBounds(geolocation.bounds, 0)
+                  );
+                },
+              ),
             ),
           ],
         ),
