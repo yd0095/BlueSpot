@@ -15,6 +15,22 @@
       },
       "oauth_client": [
         {
+          "client_id": "1011942940996-sr07t4tgfbvqqauv68s5as75edcmlci6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.bluespot",
+            "certificate_hash": "7fb1eb8bc552584046cde26e9ebf18550c138cb5"
+          }
+        },
+        {
+          "client_id": "1011942940996-7in15fp7snsgq6k31g612ci6p27oclgr.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.bluespot",
+            "certificate_hash": "3731349c90e84081376b4cb5b621f0bff40df795"
+          }
+        },
+        {
           "client_id": "1011942940996-vig5gotcos9uc9uvj4ijvlcpfsmhnrr6.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

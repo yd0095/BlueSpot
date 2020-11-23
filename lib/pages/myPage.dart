@@ -8,48 +8,63 @@ import 'dart:io';
 import 'dart:async';
 import  'package:camera_camera/camera_camera.dart';
 import 'package:bluespot/pages/googleAuthentication.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:bluespot/pages/mainPage.dart';
 
 class selectedImage{
   File myImage;
 }
 class MyPage extends StatefulWidget {
+
+  //uid => Auth, loggeduser => google login information
+  final String uid;
+  final User loggeduser;
+
+  MyPage({Key key, @required this.uid, this.loggeduser,}) : super(key: key);
+
   @override
-  _MyPageState createState() => _MyPageState();
+  _MyPageState createState() => _MyPageState(uid, loggeduser);
 }
 class _MyPageState extends State<MyPage> {
+
+  FirebaseFirestore firestore = FirebaseFirestore.instance;
+  Stream<QuerySnapshot> currentStream;
+
+  @override
+  void initState() {
+    super.initState();
+
+    currentStream = firestore.collection('Spot').where("From", isEqualTo: this.uid).snapshots();
+    currentStream.forEach((field) {
+      field.docs.asMap().forEach((index, data) {
+        setState(() {
+          itemList.add(field.docs[index]["Content"]["Content_picture"]);
+          titleList.add(field.docs[index]["Content"]["Content_Title"]);
+        });
+      });
+    });
+  }
+
+  List<String> itemList = [];
+  List<String> titleList = [];
+
+  //uid => Auth, loggeduser => google login information
+  final String uid;
+  final User loggeduser;
+
+  _MyPageState(this.uid, this.loggeduser);
+
   Future<File> imageFile;
   int _currentSelection = 0;
 
+  //선택분기
   Map<int, Widget> _children = {
     0: Text('     MINE     '),
     1: Text('LIKE'),
     2: Text('VISIT'),
   };
-
-  final List<String> myImages = [
-    "lib/images/b.jpg",
-    "lib/images/b.jpg",
-    "lib/images/b.jpg",
-    "lib/images/b.jpg",
-    "lib/images/b.jpg"
-  ];
-
-  final List<String> likeImages = [
-    "lib/images/h.jpg",
-    "lib/images/h.jpg",
-    "lib/images/h.jpg",
-    "lib/images/h.jpg",
-    "lib/images/h.jpg"
-  ];
-
-  final List<String> visitImages = [
-    "lib/images/60.jpg",
-    "lib/images/60.jpg",
-    "lib/images/60.jpg",
-    "lib/images/60.jpg",
-    "lib/images/60.jpg"
-  ];
-
 
   Future<File> _openGallary() async{
     File _image;
@@ -97,11 +112,16 @@ class _MyPageState extends State<MyPage> {
   @override
   Widget build(BuildContext context) {
 
-    final List<List<String>> imageList = [myImages, likeImages, visitImages];
-
-
     return Scaffold(
       appBar: AppBar(
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back, color: Colors.black),
+            onPressed: () {
+              Navigator.of(context).popUntil((route) => route.isFirst);
+              Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) =>
+                  MainPage(uid: this.uid, loggeduser: this.loggeduser,)));
+            }
+          ),
           title: Text('마이페이지', style: TextStyle(
               color: Colors.blue, fontWeight: FontWeight.bold)),
           centerTitle: true,
@@ -122,17 +142,19 @@ class _MyPageState extends State<MyPage> {
         child: SingleChildScrollView(
           child: Column(
             children: [
+              //프로필사진
               Container(
                 width: MediaQuery.of(context).size.width,
                 height: 120.0,
                 decoration: BoxDecoration(
                   image: DecorationImage(
-                    image: AssetImage('lib/images/b.jpg'),
+                    image: NetworkImage(loggeduser.photoURL.toString()),
                     fit: BoxFit.contain,
                   ),
                   shape: BoxShape.circle,
                 ),
               ),
+              //프로필이름
               Container(
                 height: 122,
                 child: Column(
@@ -141,7 +163,7 @@ class _MyPageState extends State<MyPage> {
                     Align(
                       alignment: Alignment.topCenter,
                       child: Text(
-                        "비룡",
+                        loggeduser.displayName,
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           color: Colors.black,
@@ -156,7 +178,7 @@ class _MyPageState extends State<MyPage> {
                       child: Container(
                         margin: EdgeInsets.only(top: 6),
                         child: Text(
-                          "12172919@inha,edu",
+                          loggeduser.email,
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             color: Colors.black,
@@ -182,7 +204,7 @@ class _MyPageState extends State<MyPage> {
                   ],
                 ),
               ),
-              //Spacer(),
+              // 내가올린SPOT / 내가좋아하는SPOT
               Align(
                 alignment: Alignment.topCenter,
                 child: Container(
@@ -284,11 +306,12 @@ class _MyPageState extends State<MyPage> {
                   ),
                 ),
               ),
+              //패딩
               Container(
                 width: MediaQuery.of(context).size.width,
                 height: 20,
               ),
-
+              //Mine Like Visit 선택박스 구성
               MaterialSegmentedControl(
                 children: _children,
                 selectionIndex: _currentSelection,
@@ -303,35 +326,39 @@ class _MyPageState extends State<MyPage> {
                   });
                 },
               ),
+              //패딩
               Container(
                 width: MediaQuery.of(context).size.width,
                 height: 20,
               ),
+              //GridView
               Container(
-                  width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height/2,
+                      width: MediaQuery.of(context).size.width,
+                      height: MediaQuery.of(context).size.height/2,
 
-                  child: GridView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: 5,
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      crossAxisSpacing: 10,
-                      mainAxisSpacing: 10,
-                    ),
-                    itemBuilder: (BuildContext context, int index) {
-                      return Card(
-                        child: Column(
-                          children: [
-                            Image.asset(imageList[_currentSelection][index],
-                            width: 300,
-                            height: 100,),
-                            Text("비룡이 얼굴짱커"),
-                          ],
+                      child: GridView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: itemList.length,
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          crossAxisSpacing: 10,
+                          mainAxisSpacing: 10,
                         ),
-                      );
-                    },
-                  )
+                        itemBuilder: (BuildContext context, int index) {
+                          return Card(
+                            child: Column(
+                              children: [
+                                //Image.asset(imageList[_currentSelection][index],
+                                Image.network(itemList[index],
+                                width: 300,
+                                height: 100,),
+                               Text(titleList[index]),
+
+                              ],
+                            ),
+                          );
+                        },
+                      )
               ),
               Container(
                   width: 250,
