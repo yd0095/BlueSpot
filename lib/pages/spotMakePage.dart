@@ -11,12 +11,12 @@ import 'dart:io';
 class SpotMakePage extends StatefulWidget {
   final String uid;
   final User loggeduser;
-  //final File file1;
+  final File file1;
   final String address;
 
-  SpotMakePage({Key key, @required this.uid, this.loggeduser,this.address}) : super(key: key);
+  SpotMakePage({Key key, @required this.uid, this.loggeduser,this.file1,this.address}) : super(key: key);
   @override
-  _SpotMakePageState createState() => _SpotMakePageState(uid,loggeduser,address);
+  _SpotMakePageState createState() => _SpotMakePageState(uid,loggeduser,file1,address);
 }
 /*
 class Arguments{
@@ -28,10 +28,10 @@ class _SpotMakePageState extends State<SpotMakePage> {
   Color lightSkyblue = Color(0xFFBBDEFB);
   final String uid;
   final User loggeduser;
-  //final File file1;
+  final File file1;
   final String address;
 
-  _SpotMakePageState(this.uid,this.loggeduser,this.address);
+  _SpotMakePageState(this.uid,this.loggeduser,this.file1,this.address);
 
   @override
   Widget build(BuildContext context) {
@@ -71,11 +71,11 @@ class _SpotMakePageState extends State<SpotMakePage> {
                             decoration: BoxDecoration(
                               color: lightSkyblue,
                               border: Border.all(width: 0.1),
-/*
+
                               image: DecorationImage(
                                 image: FileImage(File(file1.path)),
                                 fit: BoxFit.fill
-                              )*/
+                              )
                             ),
                           ),/*
                           Container( //number of heart

@@ -143,8 +143,8 @@ class _MapPageState extends State<MapPage> {
             'photo' : _image
           },
       );*/
-      Navigator.of(context).pop((route) => route.isFirst);
-      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => SpotMakePage(uid: this.uid, loggeduser: this.loggeduser,address:addr)));
+      Navigator.of(context).popUntil((route) => route.isFirst);
+      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => SpotMakePage(uid: this.uid, loggeduser: this.loggeduser,file1:_image,address:addr)));
       return _image;
     }
     return null;
