@@ -5,11 +5,18 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:bluespot/pages/mainPage.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'dart:io';
 
 class SpotMakePage extends StatefulWidget {
+  final String uid;
+  final User loggeduser;
+  //final File file1;
+  final String address;
+
+  SpotMakePage({Key key, @required this.uid, this.loggeduser,this.address}) : super(key: key);
   @override
-  _SpotMakePageState createState() => _SpotMakePageState();
+  _SpotMakePageState createState() => _SpotMakePageState(uid,loggeduser,address);
 }
 /*
 class Arguments{
@@ -19,11 +26,17 @@ class Arguments{
 }*/
 class _SpotMakePageState extends State<SpotMakePage> {
   Color lightSkyblue = Color(0xFFBBDEFB);
+  final String uid;
+  final User loggeduser;
+  //final File file1;
+  final String address;
+
+  _SpotMakePageState(this.uid,this.loggeduser,this.address);
 
   @override
   Widget build(BuildContext context) {
-    final Map<String,File>args = ModalRoute.of(context).settings.arguments;
-    File _file = args['photo'];
+    //final Map<String,File>args = ModalRoute.of(context).settings.arguments;
+    //File _file = args['photo'];
 
     return Scaffold(
       appBar: AppBar(
@@ -58,11 +71,11 @@ class _SpotMakePageState extends State<SpotMakePage> {
                             decoration: BoxDecoration(
                               color: lightSkyblue,
                               border: Border.all(width: 0.1),
-
+/*
                               image: DecorationImage(
-                                image: FileImage(File(_file.path)),
+                                image: FileImage(File(file1.path)),
                                 fit: BoxFit.fill
-                              )
+                              )*/
                             ),
                           ),/*
                           Container( //number of heart
@@ -155,13 +168,13 @@ class _SpotMakePageState extends State<SpotMakePage> {
                             height: 45,
                             margin: EdgeInsets.only(left: 76,right: 76),
                               child: GestureDetector(
-                                onTap: () {
+                                onTap: () {/*
                                   Navigator.pushNamed(context,
                                       '/clickSpot',
                                       arguments: <String, File>{
                                         'photo' : _file
                                       }
-                                  );
+                                  );*/
                                 },
                                   child: Stack(
                                       alignment: Alignment.center,

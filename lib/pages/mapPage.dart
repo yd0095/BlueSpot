@@ -1,3 +1,5 @@
+//import 'package:bluespot/pages/spotMakePage.dart';
+import 'package:bluespot/pages/spotMakePage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -6,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:geocoder/geocoder.dart' as geoCo;
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:search_map_place/search_map_place.dart';
 import 'package:permission/permission.dart';
 import 'dart:async';
@@ -13,6 +16,8 @@ import 'package:bluespot/pages/mainPage.dart';
 import 'package:kopo/kopo.dart';
 import 'package:bluespot/pages/loginPage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'dart:io';
+import 'package:image_picker/image_picker.dart';
 
 // 중요! GCP 환경설정에서 direction api, maps sdk for android를 허용해야한다.
 // 중요! direction을 이용하기전에 해당 기기의 위치를 사용하는 것에 대해서 권한을 받아야 한다.
@@ -41,6 +46,7 @@ class _MapPageState extends State<MapPage> {
   Position position;
   String addressLocation;
   String country;
+  String addr; //spotMakePage로 넘겨줄 스팟의 전체 주소(인천광역시 미추홀구 용현동...)
 
   //여기서부터 내실시간 위치.
   Completer<GoogleMapController> _controllerGoogleMap = Completer();
@@ -118,7 +124,53 @@ class _MapPageState extends State<MapPage> {
       position = currentPosition;
     });
   }
+  Future<File> _openGallary(String address) async{
+    File _image;
+    final picker = ImagePicker();
+    address = addr;
 
+    final pickedFile = await picker.getImage(source: ImageSource.gallery);
+    print('PickedFile: ${pickedFile.toString()}');
+
+    setState(() {
+      _image = File(pickedFile.path);
+    });
+    if (_image != null) {
+      /*
+      Navigator.pushReplacementNamed(context,
+          '/toSpotMakePage',
+          arguments: <String, File>{
+            'photo' : _image
+          },
+      );*/
+      Navigator.of(context).pop((route) => route.isFirst);
+      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => SpotMakePage(uid: this.uid, loggeduser: this.loggeduser,address:addr)));
+      return _image;
+    }
+    return null;
+  }
+
+  Future<File> _openCamera() async{
+    File _image;
+    final picker = ImagePicker();
+
+    final pickedFile = await picker.getImage(source: ImageSource.camera);
+    print('PickedFile: ${pickedFile.toString()}');
+
+    setState(() {
+      _image = File(pickedFile.path);
+    });
+    if (_image != null) {
+      Navigator.pushReplacementNamed(context,
+          '/toSpotMakePage',
+          arguments: <String, File>{
+            'photo' : _image
+          }
+      );
+      return _image;
+    }
+    return null;
+  }
   @override
   Widget build(BuildContext context) {
     print(mid);
@@ -156,10 +208,13 @@ class _MapPageState extends State<MapPage> {
                     myaddr = "${name}, ${Locality}, ${subLocality}";
                     print(myaddr);
                      */
+
                     setState(() {
                       country = firstAddress.countryName;
                       addressLocation = firstAddress.addressLine;
+                      addr = firstAddress.addressLine;
                     });
+                    _popupDialog(context);
                   },
                   //compassEnabled: true,
                   //trafficEnabled: true,
@@ -222,7 +277,36 @@ class _MapPageState extends State<MapPage> {
       ),
     );
   }
+  void _popupDialog(BuildContext context) async {
+    Alert(
+      context: context,
+      //type: AlertType.error,
+      title: "스팟 사진 등록을 위해",
+      desc: "어디로 이동하시겠습니까?",
+      buttons: [
+        DialogButton(
+          child: Text(
+            "카메라",
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          ),
+          onPressed: (){
+            //_openCamera();
 
+          },
+          width: 120,
+        ),DialogButton(
+          child: Text(
+            "갤러리",
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          ),
+          onPressed: (){
+            _openGallary(addr);
+          },
+          width: 120,
+        )
+      ],
+    ).show();
+  }
   @override
   void dispose() {
     super.dispose();
