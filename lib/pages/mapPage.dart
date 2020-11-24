@@ -34,6 +34,21 @@ class _MapPageState extends State<MapPage> {
   final User loggeduser;
   _MapPageState(this.uid,this.loggeduser);  //현재위치
 
+  FirebaseFirestore firestore = FirebaseFirestore.instance;
+  Stream<QuerySnapshot> currentStream;
+  
+  @override
+  void initState() {
+    // getMarkerData();
+    WidgetsBinding.instance.addPostFrameCallback((_){
+      getCurrentLocation();
+      getMarkerData();
+      getCurrentSubLocality();
+    });
+    print("$markers hh");
+    super.initState();
+  }
+
   var mid;
   String addressJSON = '';
   GoogleMapController googleMapController;
@@ -41,14 +56,12 @@ class _MapPageState extends State<MapPage> {
   Position position;
   String addressLocation;
   String country;
+  var myCurrentSubLocality;
 
   //여기서부터 내실시간 위치.
   Completer<GoogleMapController> _controllerGoogleMap = Completer();
   Position currentPosition;       //내현재위치
   var geoLocator = Geolocator();
-
-
-
 
 
   //실제위치 받아오는 함수.
@@ -73,26 +86,26 @@ class _MapPageState extends State<MapPage> {
     final Marker marker = Marker(
       markerId: markerId,
       position:
-      LatLng(specify['location'].latitude, specify['location'].longitude),
+      // LatLng(specify['location'].latitude, specify['location'].longitude),
+      LatLng(specify['lat, long'][0],specify['lat, long'][1]),
     );
     setState(() {
-      markers[markerId] = marker;
       this.mid = markerId;
+      markers[markerId] = marker;
     });
   }
 
-  /*
-  //firestore에서 마커를 가지고 오는 함수.
+
   getMarkerData() async {
-    FirebaseFirestore.instance.collection('marker').get().then((myMockDoc) {
-      if (myMockDoc.docs.isNotEmpty) {
-        for (int i = 0; i < myMockDoc.docs.length; i++) {
-          initMarker(myMockDoc.docs[i].data(), myMockDoc.docs[i].id);
-        }
+    //원래는 현재위치 받아야함 ->핸드폰에서 myCurrentSubLocality를 getCurrentSubLocality를 통해 받을거
+    var myCurrentSubLocality = "Incheon";
+    await FirebaseFirestore.instance.collectionGroup(myCurrentSubLocality).get().then((myMockDoc) {
+      var deb= myMockDoc.docs.length;
+      for (int i = 0; i < myMockDoc.docs.length; i++) {
+        initMarker(myMockDoc.docs[i].data(), myMockDoc.docs[i].id);
       }
-    });
+    });임
   }
-*/
 
   void getMarkers(double lat, double long,) {
     MarkerId markerId = MarkerId(lat.toString() + long.toString());
@@ -118,6 +131,14 @@ class _MapPageState extends State<MapPage> {
       position = currentPosition;
     });
   }
+  void getCurrentSubLocality() async{
+    final coordinated = geoCo.Coordinates(position.latitude, position.longitude);
+    var address = await geoCo.Geocoder.local.findAddressesFromCoordinates(coordinated);
+    var firstAddress = address.first;
+    setState(() {
+      myCurrentSubLocality = firstAddress.subLocality;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -138,7 +159,10 @@ class _MapPageState extends State<MapPage> {
                     var address = await geoCo.Geocoder.local.findAddressesFromCoordinates(coordinated);
                     var firstAddress = address.first;
                     getMarkers(tapped.latitude, tapped.longitude);
-                    await FirebaseFirestore.instance.collection('Marker').doc(firstAddress.countryName).collection(firstAddress.adminArea).add({
+                    await FirebaseFirestore.instance.collection('Marker')
+                        .doc(firstAddress.countryName)
+                        .collection(firstAddress.adminArea)
+                        .add({
                       'uid' : this.uid, //uid 출력.
                       'markerId': markers.keys.toString(),  //markerId
                       'lat, long': [tapped.latitude, tapped.longitude], //위도와 경도를 배열로 출력
