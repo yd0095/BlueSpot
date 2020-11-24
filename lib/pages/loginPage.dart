@@ -117,15 +117,6 @@ getCurrentUser() {
                     width: double.infinity,
                     child:ButtonTheme(
                       child:RaisedButton(
-                        /*
-                          onPressed: () async{
-                            showDialog(context: context,
-                                builder: (BuildContext context){
-                                  return Center(child: CircularProgressIndicator());
-                                }
-                            );
-                            Navigator.pushNamed(context, '/AfterLogin');
-                          },*/
                           onPressed: () => googleSignIn().whenComplete(()async{
                             //main 건내줄 uid가 필요하다. 그래서 firebaseAuth함수를 사용.
                             User user = await FirebaseAuth.instance.currentUser;
@@ -140,7 +131,6 @@ getCurrentUser() {
                               }
                             );
                             //uid를 건내줘야 하니까 밑에 함수를 이용.
-                            //Navigator.of(context).pushNamed(('/AfterLogin'));                 // MainPage(uid: user.uid)
                             Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => MainPage(uid: user.uid, loggeduser: getCurrentUser(),)));
                           }),
                           padding: EdgeInsets.all(20),

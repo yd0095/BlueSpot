@@ -24,43 +24,6 @@ import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'package:path/path.dart';
 
-
-class UserInfo {
-  final String user_id;
-  final String user_password;
-  final String user_name;
-  final String user_picture;
-  final List<String> theme_id;
-  final List<String> my_course;
-  final List<String> my_spot;
-  final List<int> my_position;
-
-  UserInfo({this.user_id, this.user_password, this.user_name, this.user_picture,
-    this.theme_id, this.my_course, this.my_spot, this.my_position});
-
-  factory UserInfo.fromJson(Map<String, dynamic> json) {
-    return UserInfo(
-        user_id: json['user_id'] as String,
-        user_password: json['user_password'] as String,
-        user_name: json['user_name'] as String,
-        user_picture: json['user_picture'] as String,
-        theme_id: json['theme_id'] as List<String>,
-        my_course: json['my_course'] as List<String>,
-        my_spot: json['my_spot'] as List<String>,
-        my_position: json['my_position'] as List<int>
-    );
-  }
-}
-
-/*
-void userData() async{
-  final User user = await getCurreuntUser(); //auth.currentUser;
-  final uid = user.uid;
-  displayName: user.displayName;
-  profile_pic: user.photoURL;
-  user_uid: user.uid;
-}*/
-
 class MainPage extends StatefulWidget {
 
   //밑에 2개 아뒤 직접생성하고 로그인할때 필요한거 여기서 받는거.
@@ -73,62 +36,25 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-  //uid
-  //final String uid;
-  //_MainPageState(this.uid);
-  //User _user;
-  /*
-  getData() async{
-   // _user = await FirebaseAuth.instance.currentUser;
-    //return _user;
-    FirebaseAuth auth = FirebaseAuth.instance;
-    User user = await auth.currentUser;
-    String uid = user.uid.toString();
-    return uid;
-  }*/
   //매개변수 받기위해서 변수2개 생성 + this. 걍 생성자.
+
   final String uid;
   final User loggeduser;
   _MainPageState(this.uid, this.loggeduser);
 
-/*
-  File _image;
-  void getImage(ImageSource source) async {
-    var image = await ImagePicker.pickImage(source: source);
-
-    setState(() {
-      _image = image;
-      print('Image Path $_image');
-    });
-  }
-
-  Future uploadPic(BuildContext context) async{
-    String fileName = basename(_image.path);
-    var firebaseStorageRef = FirebaseStorage.instance.ref().child(fileName);
-    var uploadTask = firebaseStorageRef.putFile(_image);
-    var taskSnapshot=await uploadTask;
-    setState(() {
-      print("Profile Picture uploaded");
-      Scaffold.of(context).showSnackBar(SnackBar(content: Text('Profile Picture Uploaded')));
-    });
-  }*/
-
   @override
   void initState(){
     super.initState();
-    print("hi");  //ㄷㅂㄱ
-    print(uid);   //ㄷㅂㄱ
   }
 
+  //Kopo result
   String addressJSON = '';
-  // Future<http.Response> fetchPhotos(http.Client client) async {
-  //   return client.get('url');
-  // }
   final ScrollController _scrollController = ScrollController();
   var _controller = TextEditingController();
   SwiperController controller;
   Color myHexColor = Color(0xFFE3F2FD);
   Color myThemeColor = Color(0xFFBBDEFB);
+
   List choices = const[
     const Choice(
         space: '인하대 hidden places',
@@ -198,39 +124,6 @@ class _MainPageState extends State<MainPage> {
           child:SingleChildScrollView(
               child: Column(
                 children: <Widget>[
-                  // Padding(
-                  //   padding: const EdgeInsets.all(18.0),
-                  //   child: TextField(
-                  //     onChanged:(value){
-
-                  //     },
-                  //     controller: _controller,
-                  //     decoration: InputDecoration(
-                  //       labelText: "Search",
-                  //       labelStyle: TextStyle(
-                  //           color: Colors.grey
-                  //       ),
-                  //       prefixIcon: IconButton(
-                  //         icon: Icon(Icons.search),
-                  //         color: Colors.grey,
-                  //       ),
-                  //       suffixIcon: IconButton(
-                  //         onPressed: ()=> _controller.clear(),
-                  //         icon: Icon(Icons.clear),
-                  //         color : Colors.grey,
-                  //       ),
-                  //       enabledBorder: OutlineInputBorder(
-                  //           borderRadius: BorderRadius.all(Radius.circular(25.0)),
-                  //           borderSide: BorderSide(color: Colors.grey)
-                  //       ),
-                  //       focusedBorder: OutlineInputBorder(
-                  //           borderRadius: BorderRadius.all(Radius.circular(25.0)),
-                  //           borderSide: BorderSide(color: Colors.grey)
-                  //       ),
-                  //     ),
-
-                  //   ),
-                  // ),
                   Padding(
                       padding: EdgeInsets.only(left:25, bottom: 16),
                       child: Row(
@@ -303,18 +196,6 @@ class _MainPageState extends State<MainPage> {
                           }),
                     ),
                   ),
-                  /*
-                  new ListView(
-                      shrinkWrap: true,
-                      scrollDirection: Axis.vertical,
-                      controller: _scrollController,
-                      padding: const EdgeInsets.all(20.0),
-                      children: List.generate(choices1.length,(index){
-                        return Center(
-                          child: ChoiceCard1(choice: choices1[index],item:choices1[index]),
-                        );
-                      })
-                  ),*/
                   Padding(
                       padding: EdgeInsets.only(top:60,right:160,),
                       child: Column(
@@ -356,7 +237,7 @@ class _MainPageState extends State<MainPage> {
                       );
                     }),
                   ),
-                  new ListView(
+                  ListView(
                       shrinkWrap: true,
                       scrollDirection: Axis.vertical,
                       controller: _scrollController,
@@ -389,7 +270,7 @@ class _MainPageState extends State<MainPage> {
                       children: <Widget>[
                         //new Image.network('https://i.ytimg.com/vi/fq4N0hgOWzU/maxresdefault.jpg'),
                         Image.asset('lib/images/map1.png', width:380,height:380),
-                        new Padding(
+                        Padding(
                             padding: EdgeInsets.only(top:1,left:12,bottom:15),
                           child: new Row(
                             children: <Widget>[
@@ -417,14 +298,6 @@ class _MainPageState extends State<MainPage> {
         child: ListView(
           padding: EdgeInsets.zero,
           children: <Widget>[
-            /*
-            DrawerHeader(
-              child: Text('Drawer Header'),
-              decoration: BoxDecoration(
-                color: Colors.grey,
-              )
-
-            ),*/
             UserAccountsDrawerHeader(
               currentAccountPicture: CircleAvatar(
                 backgroundImage: NetworkImage(loggeduser.photoURL.toString()),
@@ -451,8 +324,7 @@ class _MainPageState extends State<MainPage> {
               },
 
               accountName: new Container(
-                  child: Text(
-                      loggeduser.displayName, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15, color: Colors.black))),
+                  child: Text(loggeduser.displayName, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15, color: Colors.black))),
 
               accountEmail: Text(loggeduser.email,style: TextStyle(color: Colors.black),),
 
@@ -460,18 +332,18 @@ class _MainPageState extends State<MainPage> {
                 color: myHexColor,
               ),
             ),
-            /*
-            Divider(
-                color: Colors.grey,
-            ),*/
             ListTile(
                 leading: Icon(Icons.person,
                   color: Colors.grey[850],
                 ),
                 title: Text('My Page'),
                 onTap:(){
-                  Navigator.of(context).pop();
-                  Navigator.pushNamed(context,'/ToMyPage');
+                  Navigator.of(context).popUntil((route) => route.isFirst);
+                  Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => MyPage(uid: this.uid,loggeduser: this.loggeduser,),
+                      ));
                 }
             ),
             ListTile(
@@ -480,21 +352,21 @@ class _MainPageState extends State<MainPage> {
                 ),
                 title: Text('지도로 가기'),
                 onTap:() async{
-                  Navigator.of(context).pop();
-                  //Navigator.pushNamed(context,'/errorPage');
-                  Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => MapPage(uid: this.uid)));
+                  Navigator.of(context).popUntil((route) => route.isFirst);
+                  Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => MapPage(uid: this.uid, loggeduser: this.loggeduser,)));
                 }
             ),
-            ListTile(
-                leading: Icon(Icons.my_location,
-                  color: Colors.grey[850],
-                ),
-                title: Text('AR로 가기'),
-                onTap:(){
-                  Navigator.of(context).pop();
-                  Navigator.pushNamed(context,'/errorPage');
-                }
-            ),
+            // AR은 아직 고려사항이 아님.
+            // ListTile(
+            //     leading: Icon(Icons.my_location,
+            //       color: Colors.grey[850],
+            //     ),
+            //     title: Text('AR로 가기'),
+            //     onTap:(){
+            //       Navigator.of(context).pop();
+            //       Navigator.pushNamed(context,'/errorPage');
+            //     }
+            // ),
             ListTile(
                 leading: Icon(Icons.apps,
                   color: Colors.grey[850],
@@ -528,6 +400,8 @@ class _MainPageState extends State<MainPage> {
       ),
     );
   }
+
+
   void _popupDialog(BuildContext context) {
     showDialog(
         context: context,
@@ -556,6 +430,7 @@ class _MainPageState extends State<MainPage> {
 
   //여기서부터 우리 drawer에 있는 배경화면 변경하는거.
   File imageFile;
+
   Future <void> _showChoiceDialog(BuildContext context) {
     return showDialog(context: context, builder: (BuildContext context) {
       return AlertDialog(
@@ -604,9 +479,6 @@ class _MainPageState extends State<MainPage> {
   }
 
 }
-
-
-
 
 class Choice{
   final String space;
@@ -708,11 +580,6 @@ class ChoiceCard extends StatelessWidget {
                     ),),
                     Row(
                         children: [
-                          /*
-                    IconButton(
-                      icon: Icon(EvaIcons.heart , color: Colors.red,),
-                      iconSize: 20,
-                    ),*/
                           Text(choice.like, style: GoogleFonts.inter(
                             fontSize: 18,
                             fontWeight: FontWeight.w500,
@@ -727,4 +594,17 @@ class ChoiceCard extends StatelessWidget {
         )
     );
   }
+}
+class UserInfo {
+  final String user_id;
+  final String user_password;
+  final String user_name;
+  final String user_picture;
+  final List<String> theme_id;
+  final List<String> my_course;
+  final List<String> my_spot;
+  final List<int> my_position;
+
+  UserInfo({this.user_id, this.user_password, this.user_name, this.user_picture,
+    this.theme_id, this.my_course, this.my_spot, this.my_position});
 }
