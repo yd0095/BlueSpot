@@ -9,16 +9,18 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 class SpotMakePage extends StatefulWidget {
   final String uid;
   final User loggeduser;
   final File file1;
   final String address;
+  final String marker_id;
 
-  SpotMakePage({Key key, @required this.uid, this.loggeduser,this.file1,this.address}) : super(key: key);
+  SpotMakePage({Key key, @required this.uid, this.loggeduser,this.file1,this.address,this.marker_id}) : super(key: key);
   @override
-  _SpotMakePageState createState() => _SpotMakePageState(uid,loggeduser,file1,address);
+  _SpotMakePageState createState() => _SpotMakePageState(uid,loggeduser,file1,address,marker_id);
 
 }
 /*
@@ -34,8 +36,9 @@ class _SpotMakePageState extends State<SpotMakePage> {
   final User loggeduser;
   final File file1;
   final String address;
+  final String marker_id;
 
-  _SpotMakePageState(this.uid,this.loggeduser,this.file1,this.address);
+  _SpotMakePageState(this.uid,this.loggeduser,this.file1,this.address,this.marker_id);
 
   //firebase에 추가될 정보들
   String spotName;
@@ -178,7 +181,9 @@ class _SpotMakePageState extends State<SpotMakePage> {
                                       'Content_Address':address,
                                     } ,
                                     'From' : uid,
-                                    'Post_Date' : now
+                                    'Post_Date' : now,
+                                    'Marker_id' : marker_id
+
                                   });
                                   //
                                   _popupDialog(context);

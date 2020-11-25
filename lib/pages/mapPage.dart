@@ -57,6 +57,7 @@ class _MapPageState extends State<MapPage> {
   }
 
   var mid;
+  var sendMid;
   String addressJSON = '';
   GoogleMapController googleMapController;
   Map<MarkerId, Marker> markers = <MarkerId, Marker>{};
@@ -102,6 +103,15 @@ class _MapPageState extends State<MapPage> {
       position:
       // LatLng(specify['location'].latitude, specify['location'].longitude),
       LatLng(specify['lat, long'][0], specify['lat, long'][1]),
+        onTap: () {
+          Navigator.of(context).popUntil((route) => route.isFirst);
+          Navigator.of(context).pushReplacement(
+              MaterialPageRoute(builder: (context) =>
+                  SpotPage(uid: this.uid,
+                      loggeduser: this.loggeduser,
+                      marker_id: specify['Marker_id'])));
+        }
+
     );
     setState(() {
       this.mid = markerId;
@@ -131,14 +141,7 @@ class _MapPageState extends State<MapPage> {
         icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueCyan),
         //infoWindow: InfoWindow(snippet: addressLocation)
         infoWindow: InfoWindow(title: "input", snippet: "data"),
-        onTap: () {
-          Navigator.of(context).popUntil((route) => route.isFirst);
-          Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (context) =>
-                  SpotPage(uid: this.uid,
-                      loggeduser: this.loggeduser,
-                      marker_id: markerId)));
-        }
+        onTap: () {}
     );
     setState(() {
       markers[markerId] = _marker;
@@ -190,7 +193,8 @@ class _MapPageState extends State<MapPage> {
           builder: (context) => SpotMakePage(uid: this.uid,
               loggeduser: this.loggeduser,
               file1: _image,
-              address: addr)));
+              address: addr,
+              marker_id: sendMid)));
 
       return _image;
     }
@@ -270,6 +274,8 @@ class _MapPageState extends State<MapPage> {
                     'Address': firstAddress.addressLine,
                     //전체주소
                   });
+
+                  sendMid = markers.keys.toString();
                   /*
                     String myaddr = "";
                     String name = firstAddress.countryName;

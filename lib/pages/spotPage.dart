@@ -35,7 +35,6 @@ class _SpotPageState extends State<SpotPage> {
   _SpotPageState(this.uid, this.loggeduser, this.marker_id);
 
   Color lightSkyblue = Color(0xFFBBDEFB);
-  File imageFile;
 
   //firestore에서 받아온 정보
   var reply_id;
@@ -82,22 +81,26 @@ class _SpotPageState extends State<SpotPage> {
 
 
   }
-  Widget _decideImageView(){
-    if(imageFile == null){
-      return Container( //spot photo
-        margin: EdgeInsets.only(left:25,right:25),
-        height:200,
-        width:360,
-        decoration: BoxDecoration(
-          color: lightSkyblue,
-          border: Border.all(width: 0.1),
-        ),
-      );
-    }
-    else{
-      Image.file(imageFile,width: 360,height:200);
-    }
-  }
+  // Widget _decideImageView(){
+  //   if(content_picture == null){
+  //     return Container( //spot photo
+  //       margin: EdgeInsets.only(left:25,right:25),
+  //       height:200,
+  //       width:360,
+  //       decoration: BoxDecoration(
+  //         color: lightSkyblue,
+  //         border: Border.all(width: 0.1),
+  //       ),
+  //     );
+  //   }
+  //   else{
+  //     // Image.network(content_picture,width: 360,height:200);
+  //     print(content_picture);
+  //     return BoxDecoration(
+  //       image: NetworkImage(content_picture),
+  //     );
+  //   }
+  // }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -160,7 +163,7 @@ class _SpotPageState extends State<SpotPage> {
                                       child: Row(
                                         children:<Widget> [
                                           Text(
-                                            '비룡',
+                                            '$user_name',
                                             textAlign: TextAlign.left,
                                             style: TextStyle(
                                               fontSize: 20
@@ -177,7 +180,7 @@ class _SpotPageState extends State<SpotPage> {
                                         MainAxisAlignment.spaceBetween,
                                         children: <Widget>[
                                           Text(
-                                            '12172919@inha.edu',
+                                            '$user_email',
                                             style: TextStyle(
                                               fontSize:17, color:Colors.grey
                                             )
@@ -195,7 +198,12 @@ class _SpotPageState extends State<SpotPage> {
                         )
                       )
                     ),
-                    _decideImageView(),
+                    //_decideImageView(),
+                    Container(
+                      decoration: BoxDecoration(
+                        image: DecorationImage(image: NetworkImage(content_picture)),
+                      ),
+                    ),
                     Container( //number of heart
                       margin: EdgeInsets.only(left:25,right:25),
                       height:70,
@@ -218,7 +226,7 @@ class _SpotPageState extends State<SpotPage> {
                                   icon: Icon(EvaIcons.heart , color: Colors.red,),
                                   iconSize: 20,
                                 ),
-                                Text('109',style: GoogleFonts.inter(
+                                Text('$like',style: GoogleFonts.inter(
                                   fontSize:18,
                                   fontWeight: FontWeight.w500,
                                 ), ),
@@ -238,12 +246,12 @@ class _SpotPageState extends State<SpotPage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                        '해운대 앞 바다',style: GoogleFonts.inter(
+                        content_title,style: GoogleFonts.inter(
                         fontSize:20,
                         fontWeight: FontWeight.bold,
                           ),),
                           Text(
-                            '부산 해운대구 우동',style: GoogleFonts.inter(
+                            '아직 미구현',style: GoogleFonts.inter(
                             fontSize:17,
                             color: Colors.grey,
                             fontWeight: FontWeight.w500,
@@ -252,7 +260,7 @@ class _SpotPageState extends State<SpotPage> {
                             padding:EdgeInsets.all(10)
                           ),
                           Text(
-                            '부산 해운대구 중동, 좌동, 우동에 걸쳐 있는 해수욕장. 수심이 얕고 조수의 변화도 심하지 않아 해수욕장으로서의 조건이 좋다.',
+                            content_info,
                             style: GoogleFonts.inter(
                             fontSize:18,
                             fontWeight: FontWeight.w500,
@@ -274,12 +282,12 @@ class _SpotPageState extends State<SpotPage> {
                           Padding(
                             padding: EdgeInsets.all(10)
                           ),
-                          Text('린다G', style: GoogleFonts.inter(
+                          Text(reply_id, style: GoogleFonts.inter(
                               fontSize: 18,
                               fontWeight: FontWeight.bold
                           )),
                           Text(
-                              '저도 코로나 끝나면 가보고 싶어요!', style: GoogleFonts.inter(
+                              '여기도 없음', style: GoogleFonts.inter(
                               fontSize: 16,
                               fontWeight: FontWeight.w500,
                           ),),
