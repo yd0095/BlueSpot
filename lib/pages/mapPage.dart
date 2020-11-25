@@ -13,6 +13,7 @@ import 'package:bluespot/pages/mainPage.dart';
 import 'package:kopo/kopo.dart';
 import 'package:bluespot/pages/loginPage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:bluespot/pages/spotPage.dart';
 
 // 중요! GCP 환경설정에서 direction api, maps sdk for android를 허용해야한다.
 // 중요! direction을 이용하기전에 해당 기기의 위치를 사용하는 것에 대해서 권한을 받아야 한다.
@@ -45,7 +46,6 @@ class _MapPageState extends State<MapPage> {
       getMarkerData();
       getCurrentSubLocality();
     });
-    print("$markers hh");
     super.initState();
   }
 
@@ -57,6 +57,9 @@ class _MapPageState extends State<MapPage> {
   String addressLocation;
   String country;
   var myCurrentSubLocality;
+
+
+
 
   //여기서부터 내실시간 위치.
   Completer<GoogleMapController> _controllerGoogleMap = Completer();
@@ -97,14 +100,13 @@ class _MapPageState extends State<MapPage> {
 
 
   getMarkerData() async {
-    //원래는 현재위치 받아야함 ->핸드폰에서 myCurrentSubLocality를 getCurrentSubLocality를 통해 받을거
+    //원래는 현재위치 받아야함 ->핸드폰에서 myCurrentSubLocality를 getCurrentSubLocality를 통해 받을거임
     var myCurrentSubLocality = "Incheon";
     await FirebaseFirestore.instance.collectionGroup(myCurrentSubLocality).get().then((myMockDoc) {
-      var deb= myMockDoc.docs.length;
       for (int i = 0; i < myMockDoc.docs.length; i++) {
         initMarker(myMockDoc.docs[i].data(), myMockDoc.docs[i].id);
       }
-    });임
+    });
   }
 
   void getMarkers(double lat, double long,) {
@@ -115,7 +117,12 @@ class _MapPageState extends State<MapPage> {
         position: LatLng(lat, long),
         icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueCyan),
         //infoWindow: InfoWindow(snippet: addressLocation)
-        infoWindow: InfoWindow(title: "input", snippet: "data")
+        infoWindow: InfoWindow(title: "input", snippet: "data"),
+        onTap: () {
+          Navigator.of(context).popUntil((route) => route.isFirst);
+          Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) =>
+              SpotPage(uid: this.uid, loggeduser: this.loggeduser, marker_id: markerId)));
+        }
     );
     setState(() {
       markers[markerId] = _marker;
@@ -139,7 +146,6 @@ class _MapPageState extends State<MapPage> {
       myCurrentSubLocality = firstAddress.subLocality;
     });
   }
-
   @override
   Widget build(BuildContext context) {
     print(mid);
@@ -203,7 +209,8 @@ class _MapPageState extends State<MapPage> {
                   initialCameraPosition: CameraPosition(
                       target: LatLng(37.5172,127.0473),
                       zoom: 15.0),
-                  markers: Set<Marker>.of(markers.values)),
+                  markers: Set<Marker>.of(markers.values),
+              ),
             ),
             Positioned(
               top: 40,

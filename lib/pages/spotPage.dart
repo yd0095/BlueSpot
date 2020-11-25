@@ -5,22 +5,82 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:bluespot/pages/mainPage.dart';
+import 'package:google_maps_controller/google_maps_controller.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:bluespot/pages/mapPage.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class SpotPage extends StatefulWidget {
+  final String uid;
+  final User loggeduser;
+  final MarkerId marker_id;
+
+  SpotPage({Key key, @required this.uid, this.loggeduser,this.marker_id}) : super(key: key);
+
   @override
-  _SpotPageState createState() => _SpotPageState();
+  _SpotPageState createState() => _SpotPageState(uid, loggeduser, marker_id);
 }
 
 class _SpotPageState extends State<SpotPage> {
+
+  FirebaseFirestore firestore = FirebaseFirestore.instance;
+  Stream<QuerySnapshot> currentStream;
+
+  final String uid;
+  final User loggeduser;
+  final MarkerId marker_id;
+  _SpotPageState(this.uid, this.loggeduser, this.marker_id);
+
   Color lightSkyblue = Color(0xFFBBDEFB);
   File imageFile;
+
+  //firestore에서 받아온 정보
+  var reply_id;
+  var content_info;
+  var content_title;
+  var content_picture;
+  var like;
+  var From;
+  var user_email;
+  var user_name;
+  var user_profile_pic;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+
+    //위에꺼가 원래
+    //currentStream = firestore.collection('Spot').where("Marker_id", isEqualTo: this.marker_id).snapshots();
+    currentStream = firestore.collection('Spot').where("Marker_id", isEqualTo: "(MarkerId{value: 1ADFkty9ChLVUfFsa2bb}, MarkerId{value: 6voxAoeZh67dSpfLfw26}, MarkerId{value: 9KDktTqB5D1wo9bEVQhW}, ..., MarkerId{value: 37.44814187497613126.65155369788408}, MarkerId{value: 37.44705666323565126.65093779563904})").snapshots();
+    currentStream.forEach((field) {
+      field.docs.asMap().forEach((index, data) {
+        setState(() {
+          reply_id = field.docs[index]["Content"]["Comment"]["Reply_ID"];
+          content_info = field.docs[index]["Content"]["Content_Info"];
+          content_title = field.docs[index]["Content"]["Content_Title"];
+          content_picture = field.docs[index]["Content"]["Content_picture"];
+          like = field.docs[index]["Like"];
+          From = field.docs[index]["From"];
+        });
+      });
+    });
+
+    currentStream = firestore.collection('UserData').where("uid", isEqualTo: From).snapshots();
+    currentStream.forEach((field) {
+      field.docs.asMap().forEach((index, data) {
+        setState(() {
+          user_email = field.docs[index]["email"];
+          user_name = field.docs[index]["name"];
+          user_profile_pic = field.docs[index]["profile_pic"];
+        });
+      });
+    });
+
+
   }
   Widget _decideImageView(){
     if(imageFile == null){
@@ -42,7 +102,14 @@ class _SpotPageState extends State<SpotPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back, color: Colors.black),
+            onPressed: () {
+              Navigator.of(context).popUntil((route) => route.isFirst);
+              Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) =>
+                  MapPage(uid: this.uid,loggeduser: this.loggeduser,)));
+            },
+          ),
           title: Text('Spot Page', style: TextStyle(
               color: Colors.blue, fontWeight: FontWeight.bold)),
           centerTitle: true,
@@ -79,7 +146,7 @@ class _SpotPageState extends State<SpotPage> {
                               width: 65,
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
-                                image: DecorationImage(image: AssetImage('lib/images/b.jpg'), fit: BoxFit.contain),
+                                image: DecorationImage(image: NetworkImage(user_profile_pic), fit: BoxFit.contain),
                                 //color: Colors.blue
                               ),
                             ),
