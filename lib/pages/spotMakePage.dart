@@ -7,16 +7,18 @@ import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:bluespot/pages/mainPage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 class SpotMakePage extends StatefulWidget {
   final String uid;
   final User loggeduser;
-  //final File file1;
+  final File file1;
   final String address;
 
-  SpotMakePage({Key key, @required this.uid, this.loggeduser,this.address}) : super(key: key);
+  SpotMakePage({Key key, @required this.uid, this.loggeduser,this.address,this.file1}) : super(key: key);
   @override
-  _SpotMakePageState createState() => _SpotMakePageState(uid,loggeduser,address);
+  _SpotMakePageState createState() => _SpotMakePageState(uid,loggeduser,address,file1);
 }
 /*
 class Arguments{
@@ -26,12 +28,20 @@ class Arguments{
 }*/
 class _SpotMakePageState extends State<SpotMakePage> {
   Color lightSkyblue = Color(0xFFBBDEFB);
+  //map페이지에서 받아온 정보들
   final String uid;
   final User loggeduser;
-  //final File file1;
+  final File file1;
   final String address;
 
-  _SpotMakePageState(this.uid,this.loggeduser,this.address);
+  //firebase에 추가될 정보들
+  String spotName;
+  String spotInfo;
+  FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+  var now = DateTime.now();
+
+  _SpotMakePageState(this.uid,this.loggeduser,this.address,this.file1);
 
   @override
   Widget build(BuildContext context) {
@@ -46,12 +56,7 @@ class _SpotMakePageState extends State<SpotMakePage> {
           elevation: 0.0,
           backgroundColor: Colors.white,
           iconTheme: new IconThemeData(color: Colors.grey),
-          actions: [
-            Icon(Icons.more_vert,),
-            Padding(
-                padding: EdgeInsets.symmetric(horizontal: 8)
-            ),
-          ]
+
       ),
       body: Stack(
           children: <Widget>[
@@ -71,11 +76,11 @@ class _SpotMakePageState extends State<SpotMakePage> {
                             decoration: BoxDecoration(
                               color: lightSkyblue,
                               border: Border.all(width: 0.1),
-/*
+
                               image: DecorationImage(
                                 image: FileImage(File(file1.path)),
                                 fit: BoxFit.fill
-                              )*/
+                              )
                             ),
                           ),/*
                           Container( //number of heart
@@ -124,15 +129,9 @@ class _SpotMakePageState extends State<SpotMakePage> {
                                     decoration: InputDecoration(
                                       hintText: 'spot명을 작성하세요.',
                                     ),
+                                    onChanged: (value){spotName = value;},
                                   ),
-
-                                  TextField(
-                                    maxLength: 40,
-                                    decoration: InputDecoration(
-                                      hintText: 'spot의 주소를 작성하세요.',
-                                    ),
-                                  ),
-                                  //Text(args['photo']),
+                                  Text(address),
                                   Padding(
                                       padding:EdgeInsets.all(10)
                                   ),
@@ -157,6 +156,7 @@ class _SpotMakePageState extends State<SpotMakePage> {
                                             borderSide: BorderSide(color:Colors.white),
                                           ),
                                         ),
+                                        onChanged: (value){spotInfo = value;},
                                       )
                                     )
                                   ),
@@ -168,13 +168,19 @@ class _SpotMakePageState extends State<SpotMakePage> {
                             height: 45,
                             margin: EdgeInsets.only(left: 76,right: 76),
                               child: GestureDetector(
-                                onTap: () {/*
-                                  Navigator.pushNamed(context,
-                                      '/clickSpot',
-                                      arguments: <String, File>{
-                                        'photo' : _file
-                                      }
-                                  );*/
+                                onTap: () {
+                                  firestore.collection('Spot').doc().set({
+                                    'Content':{
+                                      'Content_Info': spotInfo,
+                                      'Content_Title': spotName,
+                                      'Content_picture':file1.path,
+                                      'Content_Address':address,
+                                    } ,
+                                    'From' : uid,
+                                    'Post_Date' : now
+                                  });
+                                  //
+                                  _popupDialog(context);
                                 },
                                   child: Stack(
                                       alignment: Alignment.center,
@@ -237,5 +243,29 @@ class _SpotMakePageState extends State<SpotMakePage> {
           ]
       )
     );
+  }
+  void _popupDialog(BuildContext context) async {
+    var alertStyle = AlertStyle(
+      isCloseButton: false,
+    );
+    Alert(
+      context: context,
+      style:alertStyle,
+      //type: AlertType.error,
+      title: "스팟이 성공적으로",
+      desc: "등록되었습니다.",
+      buttons: [
+        DialogButton(
+          child: Text(
+            "확인",
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          ),
+          onPressed: (){
+            Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => MainPage(uid: this.uid, loggeduser: this.loggeduser,)));
+          },
+          width: 120,
+        ),
+      ],
+    ).show();
   }
 }

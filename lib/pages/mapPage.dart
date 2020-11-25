@@ -143,16 +143,17 @@ class _MapPageState extends State<MapPage> {
             'photo' : _image
           },
       );*/
-      Navigator.of(context).pop((route) => route.isFirst);
-      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => SpotMakePage(uid: this.uid, loggeduser: this.loggeduser,address:addr)));
+      Navigator.of(context).popUntil((route) => route.isFirst);
+      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => SpotMakePage(uid: this.uid, loggeduser: this.loggeduser,address:addr,file1: _image,)));
       return _image;
     }
     return null;
   }
 
-  Future<File> _openCamera() async{
+  Future<File> _openCamera(String address) async{
     File _image;
     final picker = ImagePicker();
+    address = addr;
 
     final pickedFile = await picker.getImage(source: ImageSource.camera);
     print('PickedFile: ${pickedFile.toString()}');
@@ -161,12 +162,14 @@ class _MapPageState extends State<MapPage> {
       _image = File(pickedFile.path);
     });
     if (_image != null) {
-      Navigator.pushReplacementNamed(context,
-          '/toSpotMakePage',
-          arguments: <String, File>{
-            'photo' : _image
-          }
-      );
+      // Navigator.pushReplacementNamed(context,
+      //     '/toSpotMakePage',
+      //     arguments: <String, File>{
+      //       'photo' : _image
+      //     }
+      // );
+      Navigator.of(context).popUntil((route) => route.isFirst);
+      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => SpotMakePage(uid: this.uid, loggeduser: this.loggeduser,address:addr,file1: _image,)));
       return _image;
     }
     return null;
@@ -290,7 +293,7 @@ class _MapPageState extends State<MapPage> {
             style: TextStyle(color: Colors.white, fontSize: 20),
           ),
           onPressed: (){
-            //_openCamera();
+            _openCamera(addr);
 
           },
           width: 120,
