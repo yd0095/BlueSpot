@@ -12,6 +12,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:bluespot/pages/mainPage.dart';
+import 'package:bluespot/pages/mapPage.dart';
 
 class selectedImage{
   File myImage;
@@ -512,8 +513,8 @@ class _MyPageState extends State<MyPage> {
     Alert(
       context: context,
       //type: AlertType.error,
-      title: "어디로 이동하시겠습니까?",
-      //desc: "스팟 등록을 위해 이동할 곳을 선택하시오.",
+      title: "스팟 사진 등록을 위해",
+      desc: "어디로 이동하시겠습니까?",
       buttons: [
         DialogButton(
           child: Text(
