@@ -1,3 +1,6 @@
+import 'dart:ui';
+
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'dart:core';
@@ -12,6 +15,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:bluespot/pages/mapPage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 class SpotPage extends StatefulWidget {
   final String uid;
@@ -27,6 +31,7 @@ class SpotPage extends StatefulWidget {
 class _SpotPageState extends State<SpotPage> {
 
   FirebaseFirestore firestore = FirebaseFirestore.instance;
+  FirebaseStorage firestorage = FirebaseStorage.instance;
   Stream<QuerySnapshot> currentStream;
 
   final String uid;
@@ -46,6 +51,15 @@ class _SpotPageState extends State<SpotPage> {
   var user_email;
   var user_name;
   var user_profile_pic;
+
+  var imageUrl;
+  String url;
+
+  Future<String> addImageToFirebase() async {
+    var ref = firestorage.ref().child('images/spot_images/$content_picture');
+    imageUrl = await ref.getDownloadURL();
+    return imageUrl;
+  }
 
   @override
   void initState() {
@@ -78,7 +92,6 @@ class _SpotPageState extends State<SpotPage> {
         });
       });
     });
-
 
   }
   // Widget _decideImageView(){
@@ -201,7 +214,7 @@ class _SpotPageState extends State<SpotPage> {
                     //_decideImageView(),
                     Container(
                       decoration: BoxDecoration(
-                        image: DecorationImage(image: NetworkImage(content_picture)),
+                        image: DecorationImage(image: NetworkImage(url)),
                       ),
                     ),
                     Container( //number of heart

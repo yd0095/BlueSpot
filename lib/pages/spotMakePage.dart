@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'dart:core';
@@ -40,12 +42,47 @@ class _SpotMakePageState extends State<SpotMakePage> {
 
   _SpotMakePageState(this.uid,this.loggeduser,this.file1,this.address,this.marker_id);
 
+
   //firebase에 추가될 정보들
   String spotName;
   String spotInfo;
   FirebaseFirestore firestore = FirebaseFirestore.instance;
+  FirebaseStorage firestorage = FirebaseStorage.instance;
+
+  //firebase storage;
+  var picURL;
 
   var now = DateTime.now();
+
+  Future<String> addImageToFirebase() async {
+
+    var ref = firestorage.ref().child('images/spot_images/');
+    var name = "${now.millisecondsSinceEpoch}.png";
+
+    setState(() {
+      picURL = name;
+    });
+
+    var storageUploadTask = ref.child(name).putFile(file1);
+    await storageUploadTask.whenComplete(() async {
+      try{
+        var url = Uri.parse(await ref.getDownloadURL() as String);
+        print(url);
+      }catch(onError){
+        print("Error");
+      }
+      print("$picURL  hh");
+    });
+
+  }
+  @override
+  void initState() {
+    // TODO: implement initState
+    addImageToFirebase();
+    super.initState();
+
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -177,15 +214,13 @@ class _SpotMakePageState extends State<SpotMakePage> {
                                     'Content':{
                                       'Content_Info': spotInfo,
                                       'Content_Title': spotName,
-                                      'Content_picture':file1.path,
+                                      'Content_picture':picURL,
                                       'Content_Address':address,
                                     } ,
                                     'From' : uid,
                                     'Post_Date' : now,
                                     'Marker_id' : marker_id
-
                                   });
-                                  //
                                   _popupDialog(context);
                                 },
                                   child: Stack(
