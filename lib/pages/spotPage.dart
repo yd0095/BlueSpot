@@ -20,7 +20,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 class SpotPage extends StatefulWidget {
   final String uid;
   final User loggeduser;
-  final MarkerId marker_id;
+  final String marker_id;
 
   SpotPage({Key key, @required this.uid, this.loggeduser,this.marker_id}) : super(key: key);
 
@@ -36,7 +36,7 @@ class _SpotPageState extends State<SpotPage> {
 
   final String uid;
   final User loggeduser;
-  final MarkerId marker_id;
+  final String marker_id;
   _SpotPageState(this.uid, this.loggeduser, this.marker_id);
 
   Color lightSkyblue = Color(0xFFBBDEFB);
@@ -53,12 +53,14 @@ class _SpotPageState extends State<SpotPage> {
   var user_profile_pic;
 
   var imageUrl;
-  String url;
 
   Future<String> addImageToFirebase() async {
+    String url;
     var ref = firestorage.ref().child('images/spot_images/$content_picture');
-    imageUrl = await ref.getDownloadURL();
-    return imageUrl;
+    url = (await ref.getDownloadURL());
+    return url;
+
+    print("$imageUrl is imageUrl");
   }
 
   @override
@@ -66,13 +68,16 @@ class _SpotPageState extends State<SpotPage> {
     // TODO: implement initState
     super.initState();
 
+    print("$marker_id is marker_id");
+
     //위에꺼가 원래
-    //currentStream = firestore.collection('Spot').where("Marker_id", isEqualTo: this.marker_id).snapshots();
-    currentStream = firestore.collection('Spot').where("Marker_id", isEqualTo: "(MarkerId{value: 1ADFkty9ChLVUfFsa2bb}, MarkerId{value: 6voxAoeZh67dSpfLfw26}, MarkerId{value: 9KDktTqB5D1wo9bEVQhW}, ..., MarkerId{value: 37.44814187497613126.65155369788408}, MarkerId{value: 37.44705666323565126.65093779563904})").snapshots();
+    currentStream = firestore.collection('Spot').where("Marker_id", isEqualTo: this.marker_id).snapshots();
+    //currentStream = firestore.collection('Spot').where("Marker_id", isEqualTo: "(MarkerId{value: 1ADFkty9ChLVUfFsa2bb}, MarkerId{value: 6voxAoeZh67dSpfLfw26}, MarkerId{value: 9KDktTqB5D1wo9bEVQhW}, ..., MarkerId{value: 37.44814187497613126.65155369788408}, MarkerId{value: 37.44705666323565126.65093779563904})").snapshots();
+    print("$currentStream is currentStream");
     currentStream.forEach((field) {
       field.docs.asMap().forEach((index, data) {
         setState(() {
-          reply_id = field.docs[index]["Content"]["Comment"]["Reply_ID"];
+          //reply_id = field.docs[index]["Content"]["Comment"]["Reply_ID"];
           content_info = field.docs[index]["Content"]["Content_Info"];
           content_title = field.docs[index]["Content"]["Content_Title"];
           content_picture = field.docs[index]["Content"]["Content_picture"];
@@ -92,7 +97,6 @@ class _SpotPageState extends State<SpotPage> {
         });
       });
     });
-
   }
   // Widget _decideImageView(){
   //   if(content_picture == null){
@@ -198,7 +202,6 @@ class _SpotPageState extends State<SpotPage> {
                                               fontSize:17, color:Colors.grey
                                             )
                                           ),
-
                                         ]
                                       ),
                                       height: 25,
@@ -212,45 +215,104 @@ class _SpotPageState extends State<SpotPage> {
                       )
                     ),
                     //_decideImageView(),
-                    Container(
-                      decoration: BoxDecoration(
-                        image: DecorationImage(image: NetworkImage(url)),
-                      ),
+                    // Container(
+                    //   decoration: BoxDecoration(
+                    //     image: DecorationImage(image: NetworkImage(imageUrl)),
+                    //   ),
+                    // ),
+                    FutureBuilder<Object>(
+                        future: addImageToFirebase(),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData == false) {
+                            return CircularProgressIndicator();
+                          }
+                          else if (snapshot.hasError) {
+                            return Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(
+                                'Error: ${snapshot.error}',
+                                style: TextStyle(fontSize: 15),
+                              ),
+                            );
+                          }
+                          else{
+                            return Container( //number of heart
+                                margin: EdgeInsets.only(left:25,right:25),
+                                height:200,
+                                width:360,
+                                decoration: BoxDecoration(
+                                    boxShadow: <BoxShadow>[
+                                      BoxShadow(
+                                          color: Colors.black54,
+                                          blurRadius: 1.0,
+                                          offset: Offset(0, 0)
+                                      )
+                                    ],
+                                    color: Colors.white,
+                                    border: Border.all(width: 0.2),
+                                    image: DecorationImage(image:
+                                    (snapshot.data.toString() == null) ? AssetImage('lib/images/60.jpg') : NetworkImage(snapshot.data.toString()),fit: BoxFit.cover)
+                                ),
+                            );
+
+                          }
+                        }
                     ),
-                    Container( //number of heart
-                      margin: EdgeInsets.only(left:25,right:25),
-                      height:70,
-                      width:360,
-                      decoration: BoxDecoration(
-                        boxShadow: <BoxShadow>[
-                          BoxShadow(
-                              color: Colors.black54,
-                              blurRadius: 1.0,
-                              offset: Offset(0, 0)
-                          )
-                        ],
-                        color: Colors.white,
-                        border: Border.all(width: 0.2),
-                        //image: DecorationImage(image:Image,fit: BoxFit.contain)
-                      ),
-                      child: Row(
-                              children:[
-                                IconButton(
-                                  icon: Icon(EvaIcons.heart , color: Colors.red,),
-                                  iconSize: 20,
-                                ),
-                                Text('$like',style: GoogleFonts.inter(
-                                  fontSize:18,
-                                  fontWeight: FontWeight.w500,
-                                ), ),
-                                IconButton(
-                                  icon: Icon(Icons.more_vert , color: Colors.black,),
-                                  iconSize: 20,
-                                  padding: EdgeInsets.only(left:250)
-                                ),
-                              ]
-                          )
-                      ),
+                    FutureBuilder<Object>(
+                      future: addImageToFirebase(),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData == false) {
+                          return CircularProgressIndicator();
+                        }
+                        else if (snapshot.hasError) {
+                          return Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              'Error: ${snapshot.error}',
+                              style: TextStyle(fontSize: 15),
+                            ),
+                          );
+                        }
+                        else{
+                          return Container( //number of heart
+                              margin: EdgeInsets.only(left:25,right:25),
+                              height:70,
+                              width:360,
+                              decoration: BoxDecoration(
+                                  boxShadow: <BoxShadow>[
+                                    BoxShadow(
+                                        color: Colors.black54,
+                                        blurRadius: 1.0,
+                                        offset: Offset(0, 0)
+                                    )
+                                  ],
+                                  color: Colors.white,
+                                  border: Border.all(width: 0.2),
+                                  // image: DecorationImage(image:
+                                  // (snapshot.data.toString() == null) ? AssetImage('lib/images/60.jpg') : NetworkImage(snapshot.data.toString()),fit: BoxFit.contain)
+                              ),
+                              child: Row(
+                                  children:[
+                                    IconButton(
+                                      icon: Icon(EvaIcons.heart , color: Colors.red,),
+                                      iconSize: 20,
+                                    ),
+                                    Text('$like',style: GoogleFonts.inter(
+                                      fontSize:18,
+                                      fontWeight: FontWeight.w500,
+                                    ), ),
+                                    IconButton(
+                                        icon: Icon(Icons.more_vert , color: Colors.black,),
+                                        iconSize: 20,
+                                        padding: EdgeInsets.only(left:250)
+                                    ),
+                                  ]
+                              )
+                          );
+
+                        }
+                      }
+                    ),
                     Container( //spot name, location, explanation
                       height: 250,
                       margin: EdgeInsets.only(top:30,left:30,right:30),
@@ -282,34 +344,34 @@ class _SpotPageState extends State<SpotPage> {
                         ]
                       ),
                     ),
-                    Padding( //comment
-                      padding: EdgeInsets.only(left:25),
-                      child:Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children:<Widget>[
-                          Text('COMMENT', style: GoogleFonts.inter(
-                            fontSize: 22,
-                            fontWeight: FontWeight.bold,
-                            color:Colors.blue
-                          )),
-                          Padding(
-                            padding: EdgeInsets.all(10)
-                          ),
-                          Text(reply_id, style: GoogleFonts.inter(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold
-                          )),
-                          Text(
-                              '여기도 없음', style: GoogleFonts.inter(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w500,
-                          ),),
-                          Padding(
-                              padding: EdgeInsets.all(5)
-                          )
-                        ]
-                      )
-                    )
+                    // Padding( //comment
+                    //   padding: EdgeInsets.only(left:25),
+                    //   child:Column(
+                    //     crossAxisAlignment: CrossAxisAlignment.start,
+                    //     children:<Widget>[
+                    //       Text('COMMENT', style: GoogleFonts.inter(
+                    //         fontSize: 22,
+                    //         fontWeight: FontWeight.bold,
+                    //         color:Colors.blue
+                    //       )),
+                    //       Padding(
+                    //         padding: EdgeInsets.all(10)
+                    //       ),
+                    //       // Text(reply_id, style: GoogleFonts.inter(
+                    //       //     fontSize: 18,
+                    //       //     fontWeight: FontWeight.bold
+                    //       // )),
+                    //       Text(
+                    //           '여기도 없음', style: GoogleFonts.inter(
+                    //           fontSize: 16,
+                    //           fontWeight: FontWeight.w500,
+                    //       ),),
+                    //       Padding(
+                    //           padding: EdgeInsets.all(5)
+                    //       )
+                    //     ]
+                    //   )
+                    // )
                   ]
                 ))
           ),

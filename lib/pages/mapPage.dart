@@ -107,11 +107,8 @@ class _MapPageState extends State<MapPage> {
           Navigator.of(context).popUntil((route) => route.isFirst);
           Navigator.of(context).pushReplacement(
               MaterialPageRoute(builder: (context) =>
-                  SpotPage(uid: this.uid,
-                      loggeduser: this.loggeduser,
-                      marker_id: specify['Marker_id'])));
+                  SpotPage(uid: this.uid, loggeduser: this.loggeduser, marker_id: specify['markerId'])));
         }
-
     );
     setState(() {
       this.mid = markerId;
