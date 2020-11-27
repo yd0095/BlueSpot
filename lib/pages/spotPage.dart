@@ -54,6 +54,8 @@ class _SpotPageState extends State<SpotPage> {
 
   var imageUrl;
 
+
+  //Future는 그 자체를 리턴하면 Future<String>으로 리턴 되기에 무조건! Future Builder를 사용해서 구간 처리해줘야함.
   Future<String> addImageToFirebase() async {
     String url;
     var ref = firestorage.ref().child('images/spot_images/$content_picture');
