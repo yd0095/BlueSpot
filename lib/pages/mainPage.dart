@@ -1,5 +1,6 @@
 import 'dart:developer';
 //import 'dart:html';
+import 'package:bluespot/pages/makeCourseAPI.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -353,7 +354,8 @@ class _MainPageState extends State<MainPage> {
                 title: Text('지도로 가기'),
                 onTap:() async{
                   Navigator.of(context).popUntil((route) => route.isFirst);
-                  Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => MapPage(uid: this.uid, loggeduser: this.loggeduser,)));
+                  // Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => MakeCourse(uid: this.uid, loggeduser: this.loggeduser,)));
+                  Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => MakeCourse(uid: this.uid,loggeduser: this.loggeduser,)));
                 }
             ),
             // AR은 아직 고려사항이 아님.

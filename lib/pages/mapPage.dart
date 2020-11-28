@@ -318,8 +318,7 @@ class _MapPageState extends State<MapPage> {
                   Navigator.of(context).popUntil((route) => route.isFirst);
                   Navigator.of(context).pushReplacement(
                       MaterialPageRoute(builder: (context) =>
-                          MainPage(uid: this.uid, loggeduser: this
-                              .loggeduser,)));
+                          MainPage(uid: this.uid, loggeduser: this.loggeduser,)));
                 },
               ),
             ),
