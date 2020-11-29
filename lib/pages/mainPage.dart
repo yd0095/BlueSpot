@@ -472,7 +472,7 @@ class _MainPageState extends State<MainPage> {
                 onTap:() async{
                   Navigator.of(context).popUntil((route) => route.isFirst);
                   // Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => MakeCourse(uid: this.uid, loggeduser: this.loggeduser,)));
-                  Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => MapPage(uid: this.uid,loggeduser: this.loggeduser,)));
+                  Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => MakeCourse(uid: this.uid,loggeduser: this.loggeduser,)));
                 }
             ),
             // AR은 아직 고려사항이 아님.

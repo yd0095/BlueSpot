@@ -1,8 +1,10 @@
 import 'dart:ui';
 
+import 'package:bluespot/pages/makeCourseAPI.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'dart:core';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
@@ -20,12 +22,12 @@ import 'package:firebase_storage/firebase_storage.dart';
 class SpotPage extends StatefulWidget {
   final String uid;
   final User loggeduser;
-  final String marker_id;
+  final LatLng location;
 
-  SpotPage({Key key, @required this.uid, this.loggeduser,this.marker_id}) : super(key: key);
+  SpotPage({Key key, @required this.uid, this.loggeduser,this.location}) : super(key: key);
 
   @override
-  _SpotPageState createState() => _SpotPageState(uid, loggeduser, marker_id);
+  _SpotPageState createState() => _SpotPageState(uid, loggeduser, location);
 }
 
 class _SpotPageState extends State<SpotPage> {
@@ -33,11 +35,12 @@ class _SpotPageState extends State<SpotPage> {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   FirebaseStorage firestorage = FirebaseStorage.instance;
   Stream<QuerySnapshot> currentStream;
+  Stream<QuerySnapshot> currentStream2;
 
   final String uid;
   final User loggeduser;
-  final String marker_id;
-  _SpotPageState(this.uid, this.loggeduser, this.marker_id);
+  final LatLng location;
+  _SpotPageState(this.uid, this.loggeduser, this.location);
 
   Color lightSkyblue = Color(0xFFBBDEFB);
 
@@ -53,7 +56,7 @@ class _SpotPageState extends State<SpotPage> {
   var user_profile_pic;
 
   var imageUrl;
-
+  List<String> markerId = [];
 
   //Future는 그 자체를 리턴하면 Future<String>으로 리턴 되기에 무조건! Future Builder를 사용해서 구간 처리해줘야함.
   Future<String> addImageToFirebase() async {
@@ -70,32 +73,47 @@ class _SpotPageState extends State<SpotPage> {
     // TODO: implement initState
     super.initState();
 
-    print("$marker_id is marker_id");
+    // //위에꺼가 원래
+    // currentStream = firestore.collection('Spot').where("Marker_id", isEqualTo: this.marker_id).snapshots();
+    // //currentStream = firestore.collection('Spot').where("Marker_id", isEqualTo: "(MarkerId{value: 1ADFkty9ChLVUfFsa2bb}, MarkerId{value: 6voxAoeZh67dSpfLfw26}, MarkerId{value: 9KDktTqB5D1wo9bEVQhW}, ..., MarkerId{value: 37.44814187497613126.65155369788408}, MarkerId{value: 37.44705666323565126.65093779563904})").snapshots();
+    // print("$currentStream is currentStream");
+    // currentStream.forEach((field) {
+    //   field.docs.asMap().forEach((index, data) {
+    //     setState(() {
+    //       //reply_id = field.docs[index]["Content"]["Comment"]["Reply_ID"];
+    //       content_info = field.docs[index]["Content"]["Content_Info"];
+    //       content_title = field.docs[index]["Content"]["Content_Title"];
+    //       content_picture = field.docs[index]["Content"]["Content_picture"];
+    //       like = field.docs[index]["Like"];
+    //       From = field.docs[index]["From"];
+    //     });
+    //   });
+    // });
 
-    //위에꺼가 원래
-    currentStream = firestore.collection('Spot').where("Marker_id", isEqualTo: this.marker_id).snapshots();
-    //currentStream = firestore.collection('Spot').where("Marker_id", isEqualTo: "(MarkerId{value: 1ADFkty9ChLVUfFsa2bb}, MarkerId{value: 6voxAoeZh67dSpfLfw26}, MarkerId{value: 9KDktTqB5D1wo9bEVQhW}, ..., MarkerId{value: 37.44814187497613126.65155369788408}, MarkerId{value: 37.44705666323565126.65093779563904})").snapshots();
-    print("$currentStream is currentStream");
+    var myCurrentLocality = "Incheon";
+    var lnglatlist = [location.latitude,location.longitude];
+
+    currentStream = firestore.collectionGroup(myCurrentLocality).where("lat, long", isEqualTo: lnglatlist).snapshots();
     currentStream.forEach((field) {
       field.docs.asMap().forEach((index, data) {
         setState(() {
-          //reply_id = field.docs[index]["Content"]["Comment"]["Reply_ID"];
-          content_info = field.docs[index]["Content"]["Content_Info"];
-          content_title = field.docs[index]["Content"]["Content_Title"];
-          content_picture = field.docs[index]["Content"]["Content_picture"];
-          like = field.docs[index]["Like"];
-          From = field.docs[index]["From"];
-        });
-      });
-    });
+          markerId.add(field.docs[index]["markerId"]);
+          print("${field.docs[index]["markerId"]} is it");
 
-    currentStream = firestore.collection('UserData').where("uid", isEqualTo: From).snapshots();
-    currentStream.forEach((field) {
-      field.docs.asMap().forEach((index, data) {
-        setState(() {
-          user_email = field.docs[index]["email"];
-          user_name = field.docs[index]["name"];
-          user_profile_pic = field.docs[index]["profile_pic"];
+          currentStream2 = firestore.collection('Spot')
+              .where("Marker_id", isEqualTo: field.docs[index]["markerId"])
+              .snapshots();
+          currentStream2.forEach((field) {
+            field.docs.asMap().forEach((index, data) {
+              setState(() {
+                content_info = field.docs[index]["Content"]["Content_Info"];
+                content_title = field.docs[index]["Content"]["Content_Title"];
+                content_picture = field.docs[index]["Content"]["Content_picture"];
+                like = field.docs[index]["Like"];
+                From = field.docs[index]["From"];
+              });
+            });
+          });
         });
       });
     });
@@ -129,7 +147,7 @@ class _SpotPageState extends State<SpotPage> {
             onPressed: () {
               Navigator.of(context).popUntil((route) => route.isFirst);
               Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) =>
-                  MapPage(uid: this.uid,loggeduser: this.loggeduser,)));
+                  MakeCourse(uid: this.uid,loggeduser: this.loggeduser,)));
             },
           ),
           title: Text('Spot Page', style: TextStyle(
@@ -168,7 +186,7 @@ class _SpotPageState extends State<SpotPage> {
                               width: 65,
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
-                                image: DecorationImage(image: NetworkImage(user_profile_pic), fit: BoxFit.contain),
+                                image: DecorationImage(image: NetworkImage('${loggeduser.photoURL}'), fit: BoxFit.contain),
                                 //color: Colors.blue
                               ),
                             ),
@@ -182,7 +200,7 @@ class _SpotPageState extends State<SpotPage> {
                                       child: Row(
                                         children:<Widget> [
                                           Text(
-                                            '$user_name',
+                                            '${loggeduser.displayName}',
                                             textAlign: TextAlign.left,
                                             style: TextStyle(
                                               fontSize: 20
@@ -199,7 +217,7 @@ class _SpotPageState extends State<SpotPage> {
                                         MainAxisAlignment.spaceBetween,
                                         children: <Widget>[
                                           Text(
-                                            '$user_email',
+                                            '${loggeduser.email}',
                                             style: TextStyle(
                                               fontSize:17, color:Colors.grey
                                             )
