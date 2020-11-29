@@ -72,6 +72,7 @@ dependencies {
     //map관련
     implementation 'com.android.support:multidex:1.0.3' //DB관련
     implementation 'androidx.multidex:multidex:2.0.1'   //android X일경우.
+    implementation 'com.google.firebase:firebase-core:16.0.1'
 }
 
 //로그인.

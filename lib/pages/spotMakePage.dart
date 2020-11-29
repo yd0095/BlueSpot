@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'dart:core';
@@ -9,16 +11,19 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 class SpotMakePage extends StatefulWidget {
   final String uid;
   final User loggeduser;
   final File file1;
   final String address;
+  final String marker_id;
 
-  SpotMakePage({Key key, @required this.uid, this.loggeduser,this.address,this.file1}) : super(key: key);
+  SpotMakePage({Key key, @required this.uid, this.loggeduser,this.file1,this.address,this.marker_id}) : super(key: key);
   @override
-  _SpotMakePageState createState() => _SpotMakePageState(uid,loggeduser,address,file1);
+  _SpotMakePageState createState() => _SpotMakePageState(uid,loggeduser,file1,address,marker_id);
+
 }
 /*
 class Arguments{
@@ -33,15 +38,51 @@ class _SpotMakePageState extends State<SpotMakePage> {
   final User loggeduser;
   final File file1;
   final String address;
+  final String marker_id;
+
+  _SpotMakePageState(this.uid,this.loggeduser,this.file1,this.address,this.marker_id);
+
 
   //firebase에 추가될 정보들
   String spotName;
   String spotInfo;
   FirebaseFirestore firestore = FirebaseFirestore.instance;
+  FirebaseStorage firestorage = FirebaseStorage.instance;
+
+  //firebase storage;
+  var picURL;
 
   var now = DateTime.now();
 
-  _SpotMakePageState(this.uid,this.loggeduser,this.address,this.file1);
+  Future<String> addImageToFirebase() async {
+
+    var ref = firestorage.ref().child('images/spot_images/');
+    var name = "${now.millisecondsSinceEpoch}.png";
+
+    setState(() {
+      picURL = name;
+    });
+
+    var storageUploadTask = ref.child(name).putFile(file1);
+    await storageUploadTask.whenComplete(() async {
+      try{
+        var url = Uri.parse(await ref.getDownloadURL() as String);
+        print(url);
+      }catch(onError){
+        print("Error");
+      }
+      print("$picURL  hh");
+    });
+
+  }
+  @override
+  void initState() {
+    // TODO: implement initState
+    addImageToFirebase();
+    super.initState();
+
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -173,13 +214,13 @@ class _SpotMakePageState extends State<SpotMakePage> {
                                     'Content':{
                                       'Content_Info': spotInfo,
                                       'Content_Title': spotName,
-                                      'Content_picture':file1.path,
+                                      'Content_picture':picURL,
                                       'Content_Address':address,
                                     } ,
                                     'From' : uid,
-                                    'Post_Date' : now
+                                    'Post_Date' : now,
+                                    'Marker_id' : marker_id
                                   });
-                                  //
                                   _popupDialog(context);
                                 },
                                   child: Stack(
