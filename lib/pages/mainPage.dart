@@ -1,6 +1,8 @@
+import 'dart:core';
 import 'dart:developer';
 //import 'dart:html';
 import 'package:bluespot/pages/makeCourseAPI.dart';
+import 'package:bluespot/pages/spotFromMainPage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +14,7 @@ import 'package:bluespot/pages/myPage.dart';
 import 'package:bluespot/pages/errorPage.dart';
 import 'package:bluespot/pages/spotPage.dart';
 import 'package:bluespot/pages/manageCoursePage.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:kopo/kopo.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -24,6 +27,9 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'package:path/path.dart';
+import 'package:geocoder/geocoder.dart' as geoCo;
+import 'package:geolocator/geolocator.dart';
+
 
 class MainPage extends StatefulWidget {
 
@@ -43,13 +49,78 @@ class _MainPageState extends State<MainPage> {
   final User loggeduser;
   _MainPageState(this.uid, this.loggeduser);
 
+  //위치
+  Position currentPosition; //내현재위치
+  String myCurrentSubLocality;
+
+
+
+  FirebaseFirestore firestore = FirebaseFirestore.instance;
+  FirebaseStorage firestorage = FirebaseStorage.instance;
+  Stream<QuerySnapshot> currentStream;
+  Stream<QuerySnapshot> currentStream2;
+
+  //메인화면에 띄워줄 가까운 것. sublocality 기준
+  List<String> markerId = [];
+  
+
+  
   @override
   void initState(){
+    //현재위치 파악 => currentPosition;
+    getData();
     super.initState();
   }
 
-  //Kopo result
-  String addressJSON = '';
+  Future<List<String>> addImageToFirebase(List imageLinks) async {
+    List<String> urlList= [];
+    for(int i = 0; i< imageLinks.length; i++) {
+      var ref = firestorage.ref().child('images/spot_images/${imageLinks[i]}');
+      var v = await ref.getDownloadURL();
+      urlList.add(v);
+    }
+    return urlList;
+  }
+
+  getData() async{
+    currentlocatePosition();
+    //구 주소 확인 => myCurrentSubLocality;
+    getCurrentSubLocality();
+
+    //삭제
+    var myCurrentLocality = "Incheon";
+    myCurrentSubLocality = "Nam-gu";
+
+    currentStream = firestore.collectionGroup(myCurrentLocality).where("sublocality", isEqualTo: myCurrentSubLocality).snapshots();
+    currentStream.forEach((field) {
+      field.docs.asMap().forEach((index, data) {
+        setState(() {
+          markerId.add(field.docs[index]["markerId"]);
+          print("${field.docs[index]["markerId"]} is it");
+
+          currentStream2 = firestore.collection('Spot')
+              .where("Marker_id", isEqualTo: field.docs[index]["markerId"])
+              .snapshots();
+          currentStream2.forEach((field) {
+            field.docs.asMap().forEach((index, data) {
+              setState(() {
+                itemList.add(field.docs[index]["Content"]["Content_picture"]);
+                titleList.add(field.docs[index]["Content"]["Content_Title"]);
+                print("${field.docs[index]["Content"]["Content_picture"]} is pic");
+              });
+            });
+          });
+        });
+      });
+    });
+  }
+
+
+  //itemList => pic , titleList => title
+  List<String> itemList = [];
+  List<String> titleList = [];
+
+
   final ScrollController _scrollController = ScrollController();
   var _controller = TextEditingController();
   SwiperController controller;
@@ -90,6 +161,36 @@ class _MainPageState extends State<MainPage> {
   ];
   final List<String> theme = ['데이트','먹방','힐링','오락','건강'];
 
+
+
+  //실제위치 받아오는 함수.
+  void currentlocatePosition() async {
+    //Accuracy.bestForNavigation도 굳.
+    Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
+    currentPosition = position; //position에서 lat,lng를 받아온다.
+  }
+
+  void getCurrentSubLocality() async {
+    final coordinated = geoCo.Coordinates(
+        currentPosition.latitude, currentPosition.longitude);
+    var address = await geoCo.Geocoder.local.findAddressesFromCoordinates(
+        coordinated);
+    var firstAddress = address.first;
+    setState(() {
+      myCurrentSubLocality = firstAddress.subLocality;
+    });
+  }
+  // Future<List<String>> addImageToFirebase(List imageLinks) async {
+  //   List<String> urlList= [];
+  //   for(int i = 0; i< imageLinks.length; i++) {
+  //     var ref = firestorage.ref().child('images/spot_images/${imageLinks[i]}');
+  //     var v = await ref.getDownloadURL();
+  //     urlList.add(v);
+  //   }
+  //   return urlList;
+  // }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -100,26 +201,6 @@ class _MainPageState extends State<MainPage> {
           elevation: 0.0,
           backgroundColor: Colors.white,
           iconTheme: new IconThemeData(color: Colors.grey),
-          actions:<Widget>[
-            IconButton(
-              icon: Icon(Icons.map),
-              tooltip: '맵세팅',
-              onPressed: () async {
-                KopoModel model = await Navigator.push(
-                  context,
-                  CupertinoPageRoute(
-                    builder: (context) => Kopo(), 
-                  )
-                );
-                print(model.toJson());
-                setState(() {
-                  addressJSON =
-                  '${model.address} ${model.buildingName}${model.apartment == 'Y' ? '아파트' : ''} ${model.zonecode} ';
-                });
-              },
-            ),
-            Text('$addressJSON'),
-          ]
       ),
       body: Container(
           child:SingleChildScrollView(
@@ -139,63 +220,99 @@ class _MainPageState extends State<MainPage> {
                   ),
                   Container(
                     height: 320,
-                    child: GestureDetector(
-                      onTap: () {
-                        Navigator.pushNamed(context, '/clickSpot');
-                      },
-                      child: ListView.builder(
+                    child: ListView.builder(
                           scrollDirection: Axis.horizontal,
                           padding: EdgeInsets.only(left:16, right:6),
-                          itemCount: 3,
+                          itemCount: markerId.length,
                           itemBuilder: (context,index){
-                            return Container(
-                              margin: EdgeInsets.only(right:10),
-                              height:199,
-                              width:360,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(20),
-                                color: Colors.white,
-                                border: Border.all(width: 0.1),
-                              ),
+                            return GestureDetector(
+                              onTap: () {
+                                print("$markerId is mark id");
+                                Navigator.of(context).popUntil((route) => route.isFirst);
+                                Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) =>
+                                    SpotPage2(uid: this.uid,loggeduser: this.loggeduser, marker_id: markerId[index],)));
+                              },
+                              child: Container(
+                                margin: EdgeInsets.only(right:10),
+                                height:199,
+                                width:360,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(20),
+                                  color: Colors.white,
+                                  border: Border.all(width: 0.1),
+                                ),
 
-                              child: Stack(
-                                  children:<Widget>[
-                                    Positioned(
-                                        left:15,
-                                        child:Image.network('https://i2.wp.com/blog.allstay.com/wp-content/uploads/2019/07/2_122623_02-1.jpg?w=1024&ssl=1',
-                                          width: 330,
-                                          height:250,)
-                                    ),
-                                    Positioned(
-                                      left:25,
-                                      top:242,
-                                      child:Text('해운대 앞 바다',style: GoogleFonts.inter(
-                                        fontSize:22,
-                                        fontWeight: FontWeight.bold,
-                                      ),),
-                                    ),
-                                    Positioned(
-                                        left:15,
-                                        top:270,
-                                        child: Row(
-                                            children:[
-
-                                              IconButton(
-                                                icon: Icon(EvaIcons.heart , color: Colors.red,),
-                                                iconSize: 20,
+                                child: Stack(
+                                    children:<Widget>[
+                                      FutureBuilder(
+                                        future: addImageToFirebase(itemList),
+                                        builder: (context, snapshot) {
+                                          if (snapshot.hasData == false) {
+                                            return CircularProgressIndicator();
+                                          }
+                                          else if (snapshot.hasError) {
+                                            return Padding(
+                                              padding: const EdgeInsets.all(8.0),
+                                              child: Text(
+                                                'Error: ${snapshot.error}',
+                                                style: TextStyle(fontSize: 15),
                                               ),
-                                              Text('109',style: GoogleFonts.inter(
-                                                fontSize:18,
-                                                fontWeight: FontWeight.w500,
-                                              ), )
-                                            ]
-                                        )
-                                    )
-                                  ]
+                                            );
+                                          }
+                                          else {
+                                            return Positioned(
+                                                left: 15,
+                                                child: Column(
+                                                  children: [
+                                                    //padding
+                                                    Container(
+                                                      height: 15,
+                                                    ),
+                                                    Image.network(snapshot.data[index],
+                                                      width: MediaQuery.of(context).size.width*0.80,
+                                                      height: 250,
+                                                      fit: BoxFit.fill,),
+                                                    Padding(
+                                                      padding: EdgeInsets.fromLTRB(16.0, 12.0, 16.0, 8.0),
+                                                      child: Column(
+                                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                                        children: [
+                                                          Row(
+                                                              children:[
+                                                                Text(
+                                                                  titleList[index],
+                                                                  textAlign: TextAlign.center,
+                                                                ),
+                                                                IconButton(
+                                                                  icon: Icon(EvaIcons.heart , color: Colors.red,),
+                                                                  iconSize: 20,
+                                                                ),
+                                                                Text('109',style: GoogleFonts.inter(
+                                                                  fontSize:18,
+                                                                  fontWeight: FontWeight.w500,
+                                                                ), )
+                                                              ]
+                                                          )
+                                                        ],
+                                                      ),
+                                                    ),
+                                                    // Text(titleList[index],style: GoogleFonts.inter(
+                                                    //   fontSize:22,
+                                                    //   fontWeight: FontWeight.bold,
+                                                    // )),
+
+                                                  ],
+                                                ),
+
+                                            );
+                                          }
+                                        }
+                                      ),
+                                    ]
+                                ),
                               ),
                             );
                           }),
-                    ),
                   ),
                   Padding(
                       padding: EdgeInsets.only(top:60,right:160,),
@@ -355,7 +472,7 @@ class _MainPageState extends State<MainPage> {
                 onTap:() async{
                   Navigator.of(context).popUntil((route) => route.isFirst);
                   // Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => MakeCourse(uid: this.uid, loggeduser: this.loggeduser,)));
-                  Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => MakeCourse(uid: this.uid,loggeduser: this.loggeduser,)));
+                  Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => MapPage(uid: this.uid,loggeduser: this.loggeduser,)));
                 }
             ),
             // AR은 아직 고려사항이 아님.

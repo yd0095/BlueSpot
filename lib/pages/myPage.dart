@@ -15,7 +15,6 @@ import 'package:bluespot/pages/mainPage.dart';
 import 'package:bluespot/pages/mapPage.dart';
 import 'package:http/http.dart' as http;
 
-
 class selectedImage{
   File myImage;
 }
@@ -52,52 +51,7 @@ class _MyPageState extends State<MyPage> {
     });
   }
 
-  // Future<void> downloadFile() async {
-  //
-  //   var ref = firestorage.ref().child('images/spot_images/${imageLinks[i]}');
-  //   final String url = await ref.getDownloadURL();
-  //   final http.Response downloadData = await http.get(url);
-  //   final Directory systemTempDir = Directory.systemTemp;
-  //   final File tempFile = File('${systemTempDir.path}/tmp.jpg');
-  //   if (tempFile.existsSync()) {
-  //     await tempFile.delete();
-  //   }
-  //   await tempFile.create();
-  //   final dynamic task = ref.writeToFile(tempFile);
-  //   final int byteCount = (await task.future).totalByteCount;
-  //   var bodyBytes = downloadData.bodyBytes;
-  //   final String name = await ref.getName();
-  //   final String path = await ref.getPath();
-  //   print(
-  //     'Success!\nDownloaded $name \nUrl: $url'
-  //         '\npath: $path \nBytes Count :: $byteCount',
-  //   );
-  //   _scaffoldKey.currentState.showSnackBar(
-  //     SnackBar(
-  //       backgroundColor: Colors.white,
-  //       content: Image.memory(
-  //         bodyBytes,
-  //         fit: BoxFit.fill,
-  //       ),
-  //     ),
-  //   );
-  // }
-
-
-  // Future<List<String>> addImageToFirebase() async {
-  //   List<String> url_list;
-  //
-  //   for (int i = 0; i< itemList.length; i++) {
-  //     var ref = firestorage.ref().child('images/spot_images/${itemList[i]}');
-  //     url_list.add(await ref.getDownloadURL());
-  //     print("$url_list is list");
-  //   }
-  //
-  //   return url_list;
-  // }
-
-
-  //여기에 큰 문제가 있음 리스트로 안넘어감.... 하나하나씩은 넘길수있는데 방안이 필요함..
+  //list 넘기는법. 파일하나는 스팟페이지에있음.
   Future<List<String>> addImageToFirebase(List imageLinks) async {
     List<String> urlList= [];
     for(int i = 0; i< imageLinks.length; i++) {
@@ -409,9 +363,11 @@ class _MyPageState extends State<MyPage> {
                               mainAxisSpacing: 10,
                             ),
                             itemBuilder: (BuildContext context, int index) {
+                              //loading
                               if (snapshot.hasData == false) {
                                 return CircularProgressIndicator();
                               }
+                              //error
                               else if (snapshot.hasError) {
                                 return Padding(
                                   padding: const EdgeInsets.all(8.0),
@@ -421,6 +377,7 @@ class _MyPageState extends State<MyPage> {
                                   ),
                                 );
                               }
+                              //execute
                               else{
                                 //이렇게 따로받아오면 무조건 에러남 주의!!
                                 //List<String> 자체가 Future로 받아와져서 파싱이 안돼있음 주의!!
@@ -430,7 +387,7 @@ class _MyPageState extends State<MyPage> {
                                     children: [
                                       AspectRatio(aspectRatio:18.0 / 13.0,
                                       child: Image.network(snapshot.data[index],
-                                        fit: BoxFit.fill,),
+                                        fit: BoxFit.contain,),
                                       ),
                                       Padding(
                                         padding: EdgeInsets.fromLTRB(16.0, 12.0, 16.0, 8.0),
