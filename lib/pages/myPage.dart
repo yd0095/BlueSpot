@@ -13,6 +13,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:bluespot/pages/mainPage.dart';
 import 'package:bluespot/pages/mapPage.dart';
+import 'package:http/http.dart' as http;
 
 class selectedImage{
   File myImage;
@@ -31,6 +32,7 @@ class MyPage extends StatefulWidget {
 class _MyPageState extends State<MyPage> {
 
   FirebaseFirestore firestore = FirebaseFirestore.instance;
+  FirebaseStorage firestorage = FirebaseStorage.instance;
   Stream<QuerySnapshot> currentStream;
 
   @override
@@ -43,10 +45,23 @@ class _MyPageState extends State<MyPage> {
         setState(() {
           itemList.add(field.docs[index]["Content"]["Content_picture"]);
           titleList.add(field.docs[index]["Content"]["Content_Title"]);
+          print(itemList);
         });
       });
     });
   }
+
+  //list 넘기는법. 파일하나는 스팟페이지에있음.
+  Future<List<String>> addImageToFirebase(List imageLinks) async {
+    List<String> urlList= [];
+    for(int i = 0; i< imageLinks.length; i++) {
+      var ref = firestorage.ref().child('images/spot_images/${imageLinks[i]}');
+      var v = await ref.getDownloadURL();
+      urlList.add(v);
+    }
+    return urlList;
+  }
+  
 
   List<String> itemList = [];
   List<String> titleList = [];
@@ -333,33 +348,68 @@ class _MyPageState extends State<MyPage> {
                 height: 20,
               ),
               //GridView
-              Container(
-                      width: MediaQuery.of(context).size.width,
-                      height: MediaQuery.of(context).size.height/2,
-
-                      child: GridView.builder(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: itemList.length,
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          crossAxisSpacing: 10,
-                          mainAxisSpacing: 10,
-                        ),
-                        itemBuilder: (BuildContext context, int index) {
-                          return Card(
-                            child: Column(
-                              children: [
-                                //Image.asset(imageList[_currentSelection][index],
-                                Image.network(itemList[index],
-                                width: 300,
-                                height: 100,),
-                               Text(titleList[index]),
-
-                              ],
+              FutureBuilder(
+                future: addImageToFirebase(itemList),
+                builder: (context, snapshot) {
+                  return Container(
+                          width: MediaQuery.of(context).size.width,
+                          height: MediaQuery.of(context).size.height/2,
+                          child: GridView.builder(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: itemList.length,
+                            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2,
+                              crossAxisSpacing: 10,
+                              mainAxisSpacing: 10,
                             ),
-                          );
-                        },
-                      )
+                            itemBuilder: (BuildContext context, int index) {
+                              //loading
+                              if (snapshot.hasData == false) {
+                                return CircularProgressIndicator();
+                              }
+                              //error
+                              else if (snapshot.hasError) {
+                                return Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text(
+                                    'Error: ${snapshot.error}',
+                                    style: TextStyle(fontSize: 15),
+                                  ),
+                                );
+                              }
+                              //execute
+                              else{
+                                //이렇게 따로받아오면 무조건 에러남 주의!!
+                                //List<String> 자체가 Future로 받아와져서 파싱이 안돼있음 주의!!
+                               //List<String> list = snapshot.data.toList(); xxxx
+                                return Card(
+                                  child: Column(
+                                    children: [
+                                      AspectRatio(aspectRatio:18.0 / 13.0,
+                                      child: Image.network(snapshot.data[index],
+                                        fit: BoxFit.contain,),
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.fromLTRB(16.0, 12.0, 16.0, 8.0),
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              titleList[index],
+                                              textAlign: TextAlign.center,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      //무조건 이렇게
+                                    ],
+                                  ),
+                                );
+                              }
+                            },
+                          )
+                  );
+                }
               ),
               Container(
                   width: 250,

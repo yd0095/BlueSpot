@@ -116,7 +116,6 @@ class _MapPageState extends State<MapPage> {
     });
   }
 
-
   getMarkerData() async {
     //원래는 현재위치 받아야함 ->핸드폰에서 myCurrentSubLocality를 getCurrentSubLocality를 통해 받을거임
     var myCurrentSubLocality = "Incheon";
@@ -318,8 +317,7 @@ class _MapPageState extends State<MapPage> {
                   Navigator.of(context).popUntil((route) => route.isFirst);
                   Navigator.of(context).pushReplacement(
                       MaterialPageRoute(builder: (context) =>
-                          MainPage(uid: this.uid, loggeduser: this
-                              .loggeduser,)));
+                          MainPage(uid: this.uid, loggeduser: this.loggeduser,)));
                 },
               ),
             ),
