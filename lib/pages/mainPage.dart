@@ -448,7 +448,13 @@ class _MainPageState extends State<MainPage> {
                 ),
               ],
               onDetailsPressed: (){
-                Navigator.pushNamed(context, '/ToMyPage');
+               // Navigator.pushNamed(context, '/ToMyPage');
+                Navigator.of(context).popUntil((route) => route.isFirst);
+                Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => MyPage(uid: this.uid,loggeduser: this.loggeduser,),
+                    ));
                 //인하 혹은 이메일을 눌러도 마이페이지로 이동 가능
               },
 

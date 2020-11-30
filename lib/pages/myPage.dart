@@ -35,6 +35,9 @@ class _MyPageState extends State<MyPage> {
   FirebaseStorage firestorage = FirebaseStorage.instance;
   Stream<QuerySnapshot> currentStream;
 
+  var numOfMine; //내가 올린 스팟 개수
+  var numOfLike; //내가 좋아하는 스팟 개수
+
   @override
   void initState() {
     super.initState();
@@ -45,10 +48,12 @@ class _MyPageState extends State<MyPage> {
         setState(() {
           itemList.add(field.docs[index]["Content"]["Content_picture"]);
           titleList.add(field.docs[index]["Content"]["Content_Title"]);
+          numOfMine = titleList.length;
           print(itemList);
         });
       });
     });
+
   }
 
   //list 넘기는법. 파일하나는 스팟페이지에있음.
@@ -79,7 +84,6 @@ class _MyPageState extends State<MyPage> {
   Map<int, Widget> _children = {
     0: Text('     MINE     '),
     1: Text('LIKE'),
-    2: Text('VISIT'),
   };
 
   Future<File> _openGallary() async{
@@ -205,18 +209,8 @@ class _MyPageState extends State<MyPage> {
                         ),
                       ),
                     ),
-                    Spacer(),
-                    Text(
-                      "안녕하세요!  전국 각지의 hot한 spot및 코스들을 \n다 방문하고 싶습니다.",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontFamily: "Arial",
-                        fontWeight: FontWeight.w400,
-                        fontSize: 14,
-                        height: 1.71429,
-                      ),
-                    ),
+                    //Spacer(),
+
                   ],
                 ),
               ),
@@ -239,7 +233,7 @@ class _MyPageState extends State<MyPage> {
                               child: Container(
                                 margin: EdgeInsets.only(left: 19),
                                 child: Text(
-                                  "140",
+                                  numOfMine.toString(),
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                     color: Colors.black,
@@ -539,27 +533,6 @@ class _MyPageState extends State<MyPage> {
     );
   }
   void _popupDialog(BuildContext context) async {
-    Future<File> photo;
-    /*
-    showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: Text('로그아웃 하시겠습니까?',),
-            //content: Text('Alert Dialog Body Goes Here  ..'),
-            actions: <Widget>[
-              FlatButton(
-                  onPressed: (){
-                    Navigator.of(context).pop();
-                    Navigator.pushNamed(context,'/AfterSplash');
-                  },
-                  child: Text('YES')),
-              FlatButton(
-                  onPressed: () => Navigator.of(context).pop(),
-                  child: Text('CANCEL')),
-            ],
-          );
-        });*/
     Alert(
       context: context,
       //type: AlertType.error,
