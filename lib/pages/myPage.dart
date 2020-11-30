@@ -34,6 +34,7 @@ class _MyPageState extends State<MyPage> {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   FirebaseStorage firestorage = FirebaseStorage.instance;
   Stream<QuerySnapshot> currentStream;
+  Stream<QuerySnapshot> currentStream2;
 
   var numOfMine; //내가 올린 스팟 개수
   var numOfLike; //내가 좋아하는 스팟 개수
@@ -53,7 +54,17 @@ class _MyPageState extends State<MyPage> {
         });
       });
     });
+    currentStream2 = firestore.collection('Spot').where("Who_Like", arrayContains: this.uid).snapshots();
+    currentStream2.forEach((field) {
+      field.docs.asMap().forEach((index, data) {
+        setState(() {
+          itemList2.add(field.docs[index]["Content"]["Content_picture"]);
+          titleList2.add(field.docs[index]["Content"]["Content_Title"]);
+          numOfLike = titleList2.length;
 
+        });
+      });
+    });
   }
 
   //list 넘기는법. 파일하나는 스팟페이지에있음.
@@ -67,9 +78,13 @@ class _MyPageState extends State<MyPage> {
     return urlList;
   }
   
-
+  //내가 올린 spot을 위한 list
   List<String> itemList = [];
   List<String> titleList = [];
+
+  //내가 좋아하는 spot을 위한 list
+  List<String> itemList2 = [];
+  List<String> titleList2 = [];
 
   //uid => Auth, loggeduser => google login information
   final String uid;
@@ -131,6 +146,10 @@ class _MyPageState extends State<MyPage> {
   }
   @override
   Widget build(BuildContext context) {
+    //분기에 사용하는 변수들. 이를 통해 사진을 각 항목에 맞게 띄워준다.
+    var key = _children.keys.firstWhere(
+            (element) => _children[element].toString() == 'LIKE',orElse: ()=>null);
+
 
     return Scaffold(
       appBar: AppBar(
@@ -284,7 +303,7 @@ class _MyPageState extends State<MyPage> {
                               child: Container(
                                 margin: EdgeInsets.only(right: 40),
                                 child: Text(
-                                  "140",
+                                  numOfLike.toString(),
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                     color: Colors.black,
@@ -372,16 +391,13 @@ class _MyPageState extends State<MyPage> {
                                 );
                               }
                               //execute
-                              else{
-                                //이렇게 따로받아오면 무조건 에러남 주의!!
-                                //List<String> 자체가 Future로 받아와져서 파싱이 안돼있음 주의!!
-                               //List<String> list = snapshot.data.toList(); xxxx
+                              else if(true){
                                 return Card(
                                   child: Column(
                                     children: [
                                       AspectRatio(aspectRatio:18.0 / 13.0,
-                                      child: Image.network(snapshot.data[index],
-                                        fit: BoxFit.contain,),
+                                        child: Image.network(snapshot.data[index],
+                                          fit: BoxFit.contain,),
                                       ),
                                       Padding(
                                         padding: EdgeInsets.fromLTRB(16.0, 12.0, 16.0, 8.0),
@@ -400,6 +416,34 @@ class _MyPageState extends State<MyPage> {
                                   ),
                                 );
                               }
+                              // else{
+                              //   //이렇게 따로받아오면 무조건 에러남 주의!!
+                              //   //List<String> 자체가 Future로 받아와져서 파싱이 안돼있음 주의!!
+                              //  //List<String> list = snapshot.data.toList(); xxxx
+                              //   return Card(
+                              //     child: Column(
+                              //       children: [
+                              //         AspectRatio(aspectRatio:18.0 / 13.0,
+                              //         child: Image.network(snapshot.data[index],
+                              //           fit: BoxFit.contain,),
+                              //         ),
+                              //         Padding(
+                              //           padding: EdgeInsets.fromLTRB(16.0, 12.0, 16.0, 8.0),
+                              //           child: Column(
+                              //             crossAxisAlignment: CrossAxisAlignment.start,
+                              //             children: [
+                              //               Text(
+                              //                 titleList[index],
+                              //                 textAlign: TextAlign.center,
+                              //               ),
+                              //             ],
+                              //           ),
+                              //         ),
+                              //         //무조건 이렇게
+                              //       ],
+                              //     ),
+                              //   );
+                              // }
                             },
                           )
                   );
@@ -471,6 +515,7 @@ class _MyPageState extends State<MyPage> {
                   margin: EdgeInsets.only(left: 16, top: 13, right: 16),
                   child: GestureDetector(
                     onTap: () {
+
                     Navigator.pushNamed(context, '/manageCoursePage');
                     //Navigator.pushNamed(context, '/toSpotMakePage');
                   },
@@ -562,5 +607,4 @@ class _MyPageState extends State<MyPage> {
       ],
     ).show();
   }
-
 }
