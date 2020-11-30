@@ -106,6 +106,7 @@ class _MainPageState extends State<MainPage> {
               setState(() {
                 itemList.add(field.docs[index]["Content"]["Content_picture"]);
                 titleList.add(field.docs[index]["Content"]["Content_Title"]);
+                likeList.add(field.docs[index]["Content"]["Content_Like"]);
                 print("${field.docs[index]["Content"]["Content_picture"]} is pic");
               });
             });
@@ -119,7 +120,7 @@ class _MainPageState extends State<MainPage> {
   //itemList => pic , titleList => title
   List<String> itemList = [];
   List<String> titleList = [];
-
+  List<int> likeList = [];
 
   final ScrollController _scrollController = ScrollController();
   var _controller = TextEditingController();
@@ -219,7 +220,7 @@ class _MainPageState extends State<MainPage> {
                       )
                   ),
                   Container(
-                    height: 320,
+                    height: 360,
                     child: ListView.builder(
                           scrollDirection: Axis.horizontal,
                           padding: EdgeInsets.only(left:16, right:6),
@@ -263,6 +264,7 @@ class _MainPageState extends State<MainPage> {
                                             return Positioned(
                                                 left: 15,
                                                 child: Column(
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
                                                   children: [
                                                     //padding
                                                     Container(
@@ -273,24 +275,33 @@ class _MainPageState extends State<MainPage> {
                                                       height: 250,
                                                       fit: BoxFit.fill,),
                                                     Padding(
-                                                      padding: EdgeInsets.fromLTRB(16.0, 12.0, 16.0, 8.0),
+                                                      padding: EdgeInsets.fromLTRB(2.0, 12.0, 16.0, 8.0),
                                                       child: Column(
                                                         crossAxisAlignment: CrossAxisAlignment.start,
-                                                        children: [
-                                                          Row(
+                                                        //mainAxisAlignment: MainAxisAlignment.end,
+                                                        children:<Widget> [
+                                                          Column(
                                                               children:[
                                                                 Text(
                                                                   titleList[index],
-                                                                  textAlign: TextAlign.center,
+                                                                  textAlign: TextAlign.start,
+                                                                  style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),
                                                                 ),
-                                                                IconButton(
-                                                                  icon: Icon(EvaIcons.heart , color: Colors.red,),
-                                                                  iconSize: 20,
-                                                                ),
-                                                                Text('109',style: GoogleFonts.inter(
-                                                                  fontSize:18,
-                                                                  fontWeight: FontWeight.w500,
-                                                                ), )
+                                                                Container(
+                                                                  margin: EdgeInsets.only(right:35),
+                                                                  child:Row(
+                                                                    children: <Widget>[
+                                                                      IconButton(
+                                                                        icon: Icon(EvaIcons.heart , color: Colors.red,),
+                                                                        iconSize: 25,
+                                                                      ),
+                                                                      Text(likeList[index].toString(),style: GoogleFonts.inter(
+                                                                        fontSize:20,
+                                                                        fontWeight: FontWeight.w400,),
+                                                                      )
+                                                                    ]
+                                                                  )
+                                                                )
                                                               ]
                                                           )
                                                         ],
