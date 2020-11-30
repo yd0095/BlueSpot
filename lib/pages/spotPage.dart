@@ -83,7 +83,7 @@ class _SpotPageState extends State<SpotPage> {
           content_info = field.docs[index]["Content"]["Content_Info"];
           content_title = field.docs[index]["Content"]["Content_Title"];
           content_picture = field.docs[index]["Content"]["Content_picture"];
-          like = field.docs[index]["Like"];
+          like = field.docs[index]["Content"]["Content_Like"];
           From = field.docs[index]["From"];
         });
       });

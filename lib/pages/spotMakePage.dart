@@ -216,6 +216,7 @@ class _SpotMakePageState extends State<SpotMakePage> {
                                       'Content_Title': spotName,
                                       'Content_picture':picURL,
                                       'Content_Address':address,
+                                      'Content_Like' : 0
                                     } ,
                                     'From' : uid,
                                     'Post_Date' : now,

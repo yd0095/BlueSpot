@@ -46,6 +46,7 @@ class _SpotPage2State extends State<SpotPage2> {
   var content_info;
   var content_title;
   var content_picture;
+  var content_address;
   var like;
   var From;
   var user_email;
@@ -83,8 +84,10 @@ class _SpotPage2State extends State<SpotPage2> {
           content_info = field.docs[index]["Content"]["Content_Info"];
           content_title = field.docs[index]["Content"]["Content_Title"];
           content_picture = field.docs[index]["Content"]["Content_picture"];
-          like = field.docs[index]["Like"];
+          content_address = field.docs[index]["Content"]["Content_Address"];
+          like = field.docs[index]["Content"]["Content_Like"];
           From = field.docs[index]["From"];
+
         });
       });
     });
@@ -298,6 +301,36 @@ class _SpotPage2State extends State<SpotPage2> {
                                               IconButton(
                                                 icon: Icon(EvaIcons.heart , color: Colors.red,),
                                                 iconSize: 20,
+                                                onPressed: (){
+                                                  String docID;
+                                                  setState(() {
+                                                    like = like + 1;
+                                                  });
+                                                  firestore.collection('Spot').where("Marker_id", isEqualTo: this.marker_id)
+                                                  .get().then((querySnapshot){
+
+                                                    querySnapshot.docs.forEach((element) {
+                                                      //docID = element.id;
+                                                      element.reference.update({
+                                                        'Content':{
+                                                          'Content_Like':like,
+                                                          'Content_Address':content_address ,
+                                                          'Content_Info': content_info,
+                                                          'Content_Title' : content_title,
+                                                          'Content_picture':content_picture                                                    }
+                                                      });
+                                                      //print(element.data());
+                                                    });
+                                                  });
+
+
+                                                  print('docID is $docID');
+                                                  firestore.collection('Spot').doc(docID).update({
+                                                    'Content':{
+                                                      'Content_Like' : like
+                                                    }
+                                                  });
+                                                },
                                               ),
                                               Text('$like',style: GoogleFonts.inter(
                                                 fontSize:18,
@@ -306,7 +339,7 @@ class _SpotPage2State extends State<SpotPage2> {
                                               IconButton(
                                                   icon: Icon(Icons.more_vert , color: Colors.black,),
                                                   iconSize: 20,
-                                                  padding: EdgeInsets.only(left:250)
+                                                  padding: EdgeInsets.only(left:250),
                                               ),
                                             ]
                                         )
@@ -328,12 +361,12 @@ class _SpotPage2State extends State<SpotPage2> {
                                       fontSize:20,
                                       fontWeight: FontWeight.bold,
                                     ),),
-                                    Text(
-                                      '아직 미구현',style: GoogleFonts.inter(
-                                      fontSize:17,
-                                      color: Colors.grey,
-                                      fontWeight: FontWeight.w500,
-                                    ),),
+                                    // Text(
+                                    //   '아직 미구현',style: GoogleFonts.inter(
+                                    //   fontSize:17,
+                                    //   color: Colors.grey,
+                                    //   fontWeight: FontWeight.w500,
+                                    // ),),
                                     Padding(
                                         padding:EdgeInsets.all(10)
                                     ),
