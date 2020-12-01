@@ -59,6 +59,7 @@ class _MainPageState extends State<MainPage> {
   FirebaseStorage firestorage = FirebaseStorage.instance;
   Stream<QuerySnapshot> currentStream;
   Stream<QuerySnapshot> currentStream2;
+  Stream<QuerySnapshot> currentStream3;
 
   //메인화면에 띄워줄 가까운 것. sublocality 기준
   List<String> markerId = [];
@@ -111,6 +112,26 @@ class _MainPageState extends State<MainPage> {
               });
             });
           });
+          // currentStream3 = firestore.collection('Course').where("From", isEqualTo: this.uid).snapshots();
+          // currentStream3.forEach((field) {
+          //   field.docs.asMap().forEach((index, data) {
+          //     setState(() {
+          //       addressList.add(field.docs[index]["course_info"]["course_addr"]);
+          //       courseNameList.add(field.docs[index]["course_info"]["course_name"]);
+          //       print("${field.docs[index]["course_info"]["course_addr"]} is pick");
+          //     });
+          //   });
+          // });
+        });
+      });
+    });
+    currentStream3 = firestore.collection('Course').where("From", isEqualTo: this.uid).snapshots();
+    currentStream3.forEach((field) {
+      field.docs.asMap().forEach((index, data) {
+        setState(() {
+          addressList.add(field.docs[index]["course_info"]["course_addr"]);
+          courseNameList.add(field.docs[index]["course_info"]["course_name"]);
+          print("${field.docs[index]["course_info"]["course_addr"]} is pick");
         });
       });
     });
@@ -121,6 +142,9 @@ class _MainPageState extends State<MainPage> {
   List<String> itemList = [];
   List<String> titleList = [];
   List<int> likeList = [];
+
+  List<String> addressList = []; //코스 시작주소 저장하는 리스트
+  List<String> courseNameList = []; //코스 이름 저장하는 리스트
 
   final ScrollController _scrollController = ScrollController();
   var _controller = TextEditingController();
@@ -208,7 +232,7 @@ class _MainPageState extends State<MainPage> {
               child: Column(
                 children: <Widget>[
                   Padding(
-                      padding: EdgeInsets.only(left:25, bottom: 16),
+                      padding: EdgeInsets.only(left:25, bottom: 16,top:10),
                       child: Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children:<Widget>[
@@ -342,39 +366,39 @@ class _MainPageState extends State<MainPage> {
                       )
 
                   ),
-                  Container(
-                    padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
-                    height: MediaQuery.of(context).size.height * 0.12,
-
-                    child: ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: theme.length, itemBuilder: (context, index) {
-                      return Container(
-                        width: MediaQuery.of(context).size.width * 0.3,
-                        child: Card(
-                          elevation: 0,
-                          color: myThemeColor,
-                          child: InkWell(
-                            onTap: (){
-                              Navigator.pushNamed(context, '/clickCourseThemeSetting');
-                            },
-                          child: Container(
-                            child: Center(child: Text(theme[index].toString(), style: TextStyle(color: Colors.black, fontSize: 17.0),)),
-                          ),
-                          )
-                        ),
-                      );
-                    }),
-                  ),
+                  // Container(
+                  //   padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+                  //   height: MediaQuery.of(context).size.height * 0.12,
+                  //
+                  //   child: ListView.builder(
+                  //       scrollDirection: Axis.horizontal,
+                  //       itemCount: theme.length, itemBuilder: (context, index) {
+                  //     return Container(
+                  //       width: MediaQuery.of(context).size.width * 0.3,
+                  //       child: Card(
+                  //         elevation: 0,
+                  //         color: myThemeColor,
+                  //         child: InkWell(
+                  //           onTap: (){
+                  //             Navigator.pushNamed(context, '/clickCourseThemeSetting');
+                  //           },
+                  //         child: Container(
+                  //           child: Center(child: Text(theme[index].toString(), style: TextStyle(color: Colors.black, fontSize: 17.0),)),
+                  //         ),
+                  //         )
+                  //       ),
+                  //     );
+                  //   }),
+                  // ),
                   ListView(
                       shrinkWrap: true,
                       scrollDirection: Axis.vertical,
                       controller: _scrollController,
                       //padding: const EdgeInsets.all(20.0),
                       padding: EdgeInsets.only(top:3,right:20, left:20,bottom:20),
-                      children: List.generate(choices.length,(index){
+                      children: List.generate(addressList.length,(index){
                         return Center(
-                          child: ChoiceCard(choice: choices[index],item:choices[index]),
+                          child: _ChoiceCard(choice: courseNameList[index],item:addressList[index]),
                         );
                       })
                   ),
@@ -721,6 +745,54 @@ class ChoiceCard extends StatelessWidget {
                     Row(
                         children: [
                           Text(choice.like, style: GoogleFonts.inter(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w500,
+                          ),)
+                        ]
+                    )
+                  ]
+              ),
+            )
+          ],
+          crossAxisAlignment: CrossAxisAlignment.start,
+        )
+    );
+  }
+}
+class _ChoiceCard extends StatelessWidget {
+  const _ChoiceCard({Key key, this.choice, this.onTap, @required this.item,
+    this.selected: false}) : super(key: key);
+  final String choice; //title
+  final VoidCallback onTap;
+  final String item; //address
+  final bool selected;
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15.0),
+        ),
+        color: Colors.white,
+        child: Column(
+          children: [
+            new Container(
+                padding: const EdgeInsets.all(8.0),
+                child: Image.network('https://image.edaily.co.kr/images/photo/files/NP/S/2018/06/PS18062101013.jpg')
+            ),
+            new Container(
+              padding: const EdgeInsets.all(10.0),
+              child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(choice, style: GoogleFonts.inter(
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                    ),),
+                    Row(
+                        children: [
+                          Text(choice, style: GoogleFonts.inter(
                             fontSize: 18,
                             fontWeight: FontWeight.w500,
                           ),)
