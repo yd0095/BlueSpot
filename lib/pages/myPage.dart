@@ -373,7 +373,7 @@ class _MyPageState extends State<MyPage> {
                             // ignore: missing_return
                             itemBuilder: (BuildContext context, int index) {
                               //loading
-                              if (snapshot.hasData == false) {
+                              if (snapshot.hasData == false || snapshot.data.length == 0) {
                                 return CircularProgressIndicator();
                               }
                               //error

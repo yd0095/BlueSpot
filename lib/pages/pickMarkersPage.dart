@@ -339,12 +339,12 @@ class _PickPageState extends State<PickPage> {
                     googleMapController = controller;
                     //밑2개 현재 실시간위치
                     _controllerGoogleMap.complete(controller);
-                   // currentlocatePosition();
+                   currentlocatePosition();
                   });
                 },
                 initialCameraPosition: CameraPosition(
-                    //target: LatLng(37.5172, 127.0473),
-                    target: markers[mid].position,
+                    target: LatLng(37.5172, 127.0473),
+                    // target: markers[mid].position,
                     zoom: 15.0),
                 markers: Set<Marker>.of(markers.values),
               ),

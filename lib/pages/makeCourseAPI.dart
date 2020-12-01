@@ -313,6 +313,9 @@ class _MakeCourseState extends State<MakeCourse> {
 
     return BitmapDescriptor.fromBytes(data.buffer.asUint8List());
   }
+  _fetchoffer(){
+    return Future.delayed(Duration(seconds: 1));
+  }
 
 
   @override
@@ -392,8 +395,10 @@ class _MakeCourseState extends State<MakeCourse> {
                   });
                 },
                 initialCameraPosition: _parisCameraPosition,
-                onCameraIdle: _manager.updateMap,
-                onCameraMove: _manager.onCameraMove,
+                onCameraIdle: (){
+                  return _manager.updateMap;
+                },
+                onCameraMove: (value){return _manager.onCameraMove;},
                 markers: markers,
               ),
             ),
@@ -439,6 +444,8 @@ class _MakeCourseState extends State<MakeCourse> {
       ),
     );
   }
+
+
   void _popupDialog(BuildContext context) async {
     Alert(
       context: context,

@@ -58,12 +58,14 @@ class _RecommendState extends State<Recommend> {
 
   Map<PolylineId, Polyline> _poly = {};
   List<LatLng> polylineCoordinates = [];
+  List<LatLng> polylineCoordinates2 = [];
   PolylinePoints polylinePoints = PolylinePoints();
   String googleAPiKey = 'AIzaSyC0vAxFsUvf3bafFQlG-3y3Pe1y94KBbi8';
 
 
   var pos;
-
+  LatLng _center;
+  bool swi;
 
   int i = 0;
   @override
@@ -73,7 +75,8 @@ class _RecommendState extends State<Recommend> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       // getCurrentLocation();
       _getPolyline();
-      // getCurrentSubLocality();
+      _getPolyline2();
+
     });
 
   }
@@ -116,6 +119,20 @@ class _RecommendState extends State<Recommend> {
         CameraUpdate.newCameraPosition(cameraPosition));
   }
 
+  void _cameraUpdate() async{
+
+    LatLng latPosition = LatLng(_originLat, _originLon);
+
+    CameraPosition cameraPosition = new CameraPosition(
+        target: latPosition, zoom: 15.0);
+
+    googleMapController.animateCamera(
+        CameraUpdate.newCameraPosition(cameraPosition));
+
+  }
+
+
+
   //init amrker, getMarker가 retrieve function. -> 실행안댐.
   //처음 실행하면 마커를 불러오기위해서 초기화하는 함수.
   initMarker(specify, specifyId) async {
@@ -135,6 +152,7 @@ class _RecommendState extends State<Recommend> {
           mid1 = markerId;
           _originLat = marker.position.latitude;
           _originLon = marker.position.longitude;
+          _cameraUpdate();
         }
         else if(mid2 == null) {
           mid2 = markerId;
@@ -194,9 +212,16 @@ class _RecommendState extends State<Recommend> {
   }
 
   _addPolyLine() {
-    PolylineId id = PolylineId("poly");
+    PolylineId id = PolylineId("poly1");
     Polyline polyline = Polyline(
         polylineId: id, color: Colors.red, points: polylineCoordinates);
+    _poly[id] = polyline;
+    setState(() {});
+  }
+  _addPolyLine2() {
+    PolylineId id = PolylineId("poly2");
+    Polyline polyline = Polyline(
+        polylineId: id, color: Colors.blue, points: polylineCoordinates2);
     _poly[id] = polyline;
     setState(() {});
   }
@@ -223,15 +248,12 @@ class _RecommendState extends State<Recommend> {
 
       PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
         'AIzaSyC0vAxFsUvf3bafFQlG-3y3Pe1y94KBbi8',
-        // PointLatLng(srt.latitude.toDouble(), srt.longitude.toDouble()),
-        // PointLatLng(dst.latitude.toDouble(), dst.longitude.toDouble()),
-        // PointLatLng(_originLat, _originLon),
-        // PointLatLng(_destLat, _destLon),
         PointLatLng(_originLat, _originLon),
         PointLatLng(_destLat, _destLon),
 
         travelMode: TravelMode.transit,
-          //wayPoints: [PolylineWayPoint(location: "-34.92788%2C138.60008,")]
+          wayPoints: [PolylineWayPoint(location:'')]
+
       );
       print("${result.points} 1 is success");
       if (result.points.isNotEmpty) {
@@ -240,6 +262,28 @@ class _RecommendState extends State<Recommend> {
         });
       }
       _addPolyLine();
+    }
+    );
+  }
+  void _getPolyline2() async {
+    await getMarkerData().then((value) async{
+
+      PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
+        'AIzaSyC0vAxFsUvf3bafFQlG-3y3Pe1y94KBbi8',
+
+        PointLatLng(_wayLat, _wayLon),
+        PointLatLng(_destLat, _destLon),
+
+        travelMode: TravelMode.transit,
+        //wayPoints: [PolylineWayPoint(location:'$_wayLat$_wayLon,')]
+      );
+      print("${result.points} 1 is success");
+      if (result.points.isNotEmpty) {
+        result.points.forEach((PointLatLng point) {
+          polylineCoordinates2.add(LatLng(point.latitude, point.longitude));
+        });
+      }
+      _addPolyLine2();
     }
     );
   }
@@ -280,12 +324,8 @@ class _RecommendState extends State<Recommend> {
                         });
                       },
                       initialCameraPosition: CameraPosition(
-                        //todo 현재위치로 바꿔야함.
-                        //   target: markers[mid1].position,
-                        //   target: ,
-                          target: LatLng(_originLat, _originLon), zoom: 15),
-                          // zoom: 15.0),
-
+                          target: LatLng(37.5172, 127.0473),
+                          zoom: 15),
                       markers: Set<Marker>.of(markers.values),
                       polylines: Set<Polyline>.of(_poly.values),
                     )
