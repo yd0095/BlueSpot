@@ -369,12 +369,13 @@ class _MyPageState extends State<MyPage> {
                           height: MediaQuery.of(context).size.height/2,
                           child: GridView.builder(
                             scrollDirection: Axis.horizontal,
-                            itemCount: itemList.length,
+                            itemCount: _choose(),
                             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                               crossAxisCount: 2,
                               crossAxisSpacing: 10,
                               mainAxisSpacing: 10,
                             ),
+                            // ignore: missing_return
                             itemBuilder: (BuildContext context, int index) {
                               //loading
                               if (snapshot.hasData == false) {
@@ -391,7 +392,7 @@ class _MyPageState extends State<MyPage> {
                                 );
                               }
                               //execute
-                              else if(true){
+                              else if(_currentSelection == 0){
                                 return Card(
                                   child: Column(
                                     children: [
@@ -416,34 +417,34 @@ class _MyPageState extends State<MyPage> {
                                   ),
                                 );
                               }
-                              // else{
-                              //   //이렇게 따로받아오면 무조건 에러남 주의!!
-                              //   //List<String> 자체가 Future로 받아와져서 파싱이 안돼있음 주의!!
-                              //  //List<String> list = snapshot.data.toList(); xxxx
-                              //   return Card(
-                              //     child: Column(
-                              //       children: [
-                              //         AspectRatio(aspectRatio:18.0 / 13.0,
-                              //         child: Image.network(snapshot.data[index],
-                              //           fit: BoxFit.contain,),
-                              //         ),
-                              //         Padding(
-                              //           padding: EdgeInsets.fromLTRB(16.0, 12.0, 16.0, 8.0),
-                              //           child: Column(
-                              //             crossAxisAlignment: CrossAxisAlignment.start,
-                              //             children: [
-                              //               Text(
-                              //                 titleList[index],
-                              //                 textAlign: TextAlign.center,
-                              //               ),
-                              //             ],
-                              //           ),
-                              //         ),
-                              //         //무조건 이렇게
-                              //       ],
-                              //     ),
-                              //   );
-                              // }
+                              else if(_currentSelection == 1){
+                                //이렇게 따로받아오면 무조건 에러남 주의!!
+                                //List<String> 자체가 Future로 받아와져서 파싱이 안돼있음 주의!!
+                               //List<String> list = snapshot.data.toList(); xxxx
+                                return Card(
+                                  child: Column(
+                                    children: [
+                                      AspectRatio(aspectRatio:18.0 / 13.0,
+                                      child: Image.network(snapshot.data[index],
+                                        fit: BoxFit.contain,),
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.fromLTRB(16.0, 12.0, 16.0, 8.0),
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              titleList2[index],
+                                              textAlign: TextAlign.center,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      //무조건 이렇게
+                                    ],
+                                  ),
+                                );
+                              }
                             },
                           )
                   );
@@ -606,5 +607,12 @@ class _MyPageState extends State<MyPage> {
         )
       ],
     ).show();
+  }
+  int _choose(){
+    if(_currentSelection == 0){
+      return numOfMine;
+    }
+    else
+      return numOfLike;
   }
 }
