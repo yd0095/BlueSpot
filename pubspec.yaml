@@ -58,6 +58,8 @@ dependencies:
   permission:
   geocoding:
   google_maps_cluster_manager:
+  flutter_polyline_points:
+  provider:
 
   #여기부터 검색창
   geolocator:
