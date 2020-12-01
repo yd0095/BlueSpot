@@ -317,7 +317,8 @@ class _SpotPage2State extends State<SpotPage2> {
                                                           'Content_Address':content_address ,
                                                           'Content_Info': content_info,
                                                           'Content_Title' : content_title,
-                                                          'Content_picture':content_picture                                                    }
+                                                          'Content_picture':content_picture},
+
                                                       });
                                                       //print(element.data());
                                                     });
