@@ -146,11 +146,6 @@ class _MyPageState extends State<MyPage> {
   }
   @override
   Widget build(BuildContext context) {
-    //분기에 사용하는 변수들. 이를 통해 사진을 각 항목에 맞게 띄워준다.
-    var key = _children.keys.firstWhere(
-            (element) => _children[element].toString() == 'LIKE',orElse: ()=>null);
-
-
     return Scaffold(
       appBar: AppBar(
           leading: IconButton(

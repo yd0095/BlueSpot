@@ -1,17 +1,38 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 
+import 'mainPage.dart';
+import 'myEnrolledPage.dart';
+
 class ManageCoursePage extends StatefulWidget {
+  final String uid;
+  final User loggeduser;
+
+  ManageCoursePage({Key key, @required this.uid, this.loggeduser,}) : super(key: key);
   @override
-  _ManageCoursePageState createState() => _ManageCoursePageState();
+  _ManageCoursePageState createState() => _ManageCoursePageState(uid, loggeduser);
 }
 
 class _ManageCoursePageState extends State<ManageCoursePage> {
+  final String uid;
+  final User loggeduser;
+
+  _ManageCoursePageState(this.uid, this.loggeduser);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomPadding: false,
       appBar: AppBar(
+          leading: IconButton(
+              icon: Icon(Icons.arrow_back, color: Colors.black),
+              onPressed: () {
+                Navigator.of(context).popUntil((route) => route.isFirst);
+                Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) =>
+                    MainPage(uid: this.uid, loggeduser: this.loggeduser,)));
+              }
+          ),
           title: Text('코스 관리하기',
               style: TextStyle(
                   color: Colors.blue,
@@ -168,7 +189,12 @@ class _ManageCoursePageState extends State<ManageCoursePage> {
               margin: EdgeInsets.only(left: 16, top: 29, right: 16),
               child: GestureDetector(
                 onTap: () {
-                  Navigator.pushNamed(context, '/clickMyEnrolledPage');
+                  Navigator.of(context).popUntil((route) => route.isFirst);
+                  Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => MyEnrolledPage(uid: this.uid,loggeduser: this.loggeduser,),
+                      ));
                 },
                 child: Stack(
                   alignment: Alignment.center,

@@ -509,8 +509,12 @@ class _MainPageState extends State<MainPage> {
                 ),
                 title: Text('코스 관리하기'),
                 onTap:(){
-                  Navigator.of(context).pop();
-                  Navigator.pushNamed(context,'/manageCoursePage');
+                  Navigator.of(context).popUntil((route) => route.isFirst);
+                  Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ManageCoursePage(uid: this.uid,loggeduser: this.loggeduser,),
+                      ));
                 }
             ),
             ListTile(
