@@ -104,10 +104,10 @@ class _MapPageState extends State<MapPage> {
       // LatLng(specify['location'].latitude, specify['location'].longitude),
       LatLng(specify['lat, long'][0], specify['lat, long'][1]),
         onTap: () {
-          Navigator.of(context).popUntil((route) => route.isFirst);
-          Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (context) =>
-                  SpotPage(uid: this.uid, loggeduser: this.loggeduser, marker_id: specify['markerId'])));
+          // Navigator.of(context).popUntil((route) => route.isFirst);
+          // Navigator.of(context).pushReplacement(
+          //     MaterialPageRoute(builder: (context) =>
+          //         SpotPage(uid: this.uid, loggeduser: this.loggeduser, marker_id: specify['markerId'])));
         }
     );
     setState(() {
@@ -137,7 +137,6 @@ class _MapPageState extends State<MapPage> {
         icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueCyan),
         //infoWindow: InfoWindow(snippet: addressLocation)
         infoWindow: InfoWindow(title: "input", snippet: "data"),
-        onTap: () {}
     );
     setState(() {
       markers[markerId] = _marker;

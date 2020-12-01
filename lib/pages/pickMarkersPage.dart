@@ -9,7 +9,7 @@ import 'package:geocoder/geocoder.dart' as geoCo;
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
-import 'package:search_map_place/search_map_place.dart' as smp;
+import 'package:search_map_place/search_map_place.dart';
 import 'package:permission/permission.dart';
 import 'dart:async';
 import 'package:bluespot/pages/mainPage.dart';
@@ -19,59 +19,42 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:bluespot/pages/spotPage.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
-import 'package:google_maps_cluster_manager/google_maps_cluster_manager.dart';
-import 'dart:ui';
-import 'place.dart';
-
 
 
 // 중요! GCP 환경설정에서 direction api, maps sdk for android를 허용해야한다.
 // 중요! direction을 이용하기전에 해당 기기의 위치를 사용하는 것에 대해서 권한을 받아야 한다.
 //  -> location이 enabled되어 있는지 확인을 해야하고 유저에게 해당 기기의 현재 위치 사용 권한을 허락 받아야 한다.
 
-class Place {
-  final String name;
-  final bool isClosed;
 
-  const Place({this.name, this.isClosed = false});
-
-  @override
-  String toString() {
-    // TODO: implement toString
-    return 'Place $name (closed : $isClosed)';
-  }
-}
-
-class MakeCourse extends StatefulWidget {
+class PickPage extends StatefulWidget {
   final String uid;
   final User loggeduser;
-  MakeCourse({Key key, @required this.uid, this.loggeduser}) : super(key: key);
+  PickPage({Key key, @required this.uid, this.loggeduser}) : super(key: key);
 
   @override
-  _MakeCourseState createState() => _MakeCourseState(uid,loggeduser);
+  _PickPageState createState() => _PickPageState(uid,loggeduser);
 }
 
-class _MakeCourseState extends State<MakeCourse> {
+class _PickPageState extends State<PickPage> {
 
   final String uid;
   final User loggeduser;
 
-  _MakeCourseState(this.uid, this.loggeduser); //현재위치
+  _PickPageState(this.uid, this.loggeduser); //현재위치
 
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   Stream<QuerySnapshot> currentStream;
 
-  var now;
-
   @override
   void initState() {
-    now = DateTime.now();
-    getMarkerData();
+    // getMarkerData();
+    _c = new TextEditingController();
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _manager = _initClusterManager();
+      getCurrentLocation();
+      getMarkerData();
       getCurrentSubLocality();
     });
-
     super.initState();
   }
 
@@ -79,8 +62,7 @@ class _MakeCourseState extends State<MakeCourse> {
   var sendMid;
   String addressJSON = '';
   GoogleMapController googleMapController;
-   // Map<MarkerId, Marker> markers = <MarkerId, Marker>{};
-  Set<Marker> markers = Set();
+  Map<MarkerId, Marker> markers = <MarkerId, Marker>{};
   Position position;
   String addressLocation;
   String country;
@@ -88,6 +70,7 @@ class _MakeCourseState extends State<MakeCourse> {
   var myCurrentSubLocality;
 
   String addr; //spotMakePage로 넘겨줄 스팟의 전체 주소(인천광역시 미추홀구 용현동...)
+  TextEditingController _c;
 
 
   //여기서부터 내실시간 위치.
@@ -95,9 +78,6 @@ class _MakeCourseState extends State<MakeCourse> {
   Position currentPosition; //내현재위치
   var geoLocator = Geolocator();
 
-
-  final CameraPosition _parisCameraPosition =
-  CameraPosition(target: LatLng(37.44868128474313, 126.65725607424974), zoom: 12.0);
 
   //실제위치 받아오는 함수.
   void currentlocatePosition() async {
@@ -115,21 +95,33 @@ class _MakeCourseState extends State<MakeCourse> {
     googleMapController.animateCamera(
         CameraUpdate.newCameraPosition(cameraPosition));
   }
+
+  List<String> threeMarkers=[];
+
   //init amrker, getMarker가 retrieve function. -> 실행안댐.
   //처음 실행하면 마커를 불러오기위해서 초기화하는 함수.
-   initMarker(specify, specifyId) async {
+  void initMarker(specify, specifyId) async {
     var markerIdVal = specifyId;
     final MarkerId markerId = MarkerId(markerIdVal);
     final Marker marker = Marker(
         markerId: markerId,
-        position: LatLng(specify['lat, long'][0], specify['lat, long'][1]),
+        position:
+        // LatLng(specify['location'].latitude, specify['location'].longitude),
+        LatLng(specify['lat, long'][0], specify['lat, long'][1]),
+        onTap: (){
+          if(threeMarkers.length < 3) {
+            threeMarkers.add(specify['markerId']);
+          }
+          else{
+            _popupDialog2(context);
+          }
+        }
     );
     setState(() {
-      items.add(ClusterItem(LatLng(marker.position.latitude, marker.position.longitude),
-          item: Place(name: 'Place')));
+      this.mid = markerId;
+      markers[markerId] = marker;
     });
   }
-
 
   getMarkerData() async {
     //원래는 현재위치 받아야함 ->핸드폰에서 myCurrentSubLocality를 getCurrentSubLocality를 통해 받을거임
@@ -147,14 +139,14 @@ class _MakeCourseState extends State<MakeCourse> {
     MarkerId markerId = MarkerId(lat.toString() + long.toString());
     mid = markerId;
     Marker _marker = Marker(
-        markerId: markerId,
-        position: LatLng(lat, long),
-        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueCyan),
-        //infoWindow: InfoWindow(snippet: addressLocation)
-        infoWindow: InfoWindow(title: "input", snippet: "data"),
+      markerId: markerId,
+      position: LatLng(lat, long),
+      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueCyan),
+      //infoWindow: InfoWindow(snippet: addressLocation)
+      infoWindow: InfoWindow(title: "input", snippet: "data"),
     );
     setState(() {
-      // markers[markerId] = _marker;
+      markers[markerId] = _marker;
       print(markerId); //ㄷㅂㄱ
       //print(markerId.toString() + '__________________________');
     });
@@ -198,14 +190,13 @@ class _MakeCourseState extends State<MakeCourse> {
             'photo' : _image
           },
       );*/
-      print("$addr is addr");
       Navigator.of(context).popUntil((route) => route.isFirst);
       Navigator.of(context).pushReplacement(MaterialPageRoute(
           builder: (context) => SpotMakePage(uid: this.uid,
               loggeduser: this.loggeduser,
               file1: _image,
               address: addr,
-              marker_id: now.toString(),)));
+              marker_id: sendMid)));
 
       return _image;
     }
@@ -235,83 +226,41 @@ class _MakeCourseState extends State<MakeCourse> {
           builder: (context) => SpotMakePage(uid: this.uid,
             loggeduser: this.loggeduser,
             address: addr,
-            file1: _image,
-            marker_id: now.toString(),)));
+            file1: _image,)));
       return _image;
     }
     return null;
   }
 
-  void _updateMarkers(Set<Marker> markers) {
-    print('Updated ${markers.length} markers');
-    setState(() {
-      this.markers = markers;
+  String text ="error";
+
+  Future<void> _enrollCourse() async {
+    getCurrentLocation();
+
+    final coordinated = new geoCo.Coordinates(
+        position.latitude, position.longitude);
+    var address = await geoCo.Geocoder.local
+        .findAddressesFromCoordinates(coordinated);
+    var firstAddress = address.first;
+
+    await FirebaseFirestore.instance.collection('Course').add({
+      'From': this.uid,
+      //uid 출력.
+      'course_info' : {
+        'course_addr' : firstAddress.addressLine,
+        'course_name' : text,
+        'course_writer' : loggeduser.displayName,
+      },
+      'course_markers' : [threeMarkers[0],threeMarkers[1],threeMarkers[2]],
     });
+    _popupDialog3(context);
   }
 
-  //cluster
-  ClusterManager _manager;
-  List<ClusterItem<Place>> items = [];
-
-  ClusterManager _initClusterManager() {
-    //initial zoom 변경해야함 todo
-    return ClusterManager<Place>(items, _updateMarkers,
-        markerBuilder: _markerBuilder, );
-  }
-
-  Future<Marker> Function(Cluster<Place>) get _markerBuilder =>
-          (cluster) async {
-        return Marker(
-          markerId: MarkerId(cluster.getId()),
-          position: cluster.location,
-          onTap: () {
-            print('${cluster.location} location');
-            print('---- $cluster');
-            cluster.items.forEach((p) => print(p));
-
-            Navigator.of(context).popUntil((route) => route.isFirst);
-            Navigator.of(context).pushReplacement(
-                MaterialPageRoute(builder: (context) =>
-                    SpotPage(uid: this.uid, loggeduser: this.loggeduser, location: cluster.location)));
-
-          },
-          icon: await _getMarkerBitmap(cluster.isMultiple ? 125 : 75,
-              text: cluster.isMultiple ? cluster.count.toString() : null),
-        );
-      };
-
-  Future<BitmapDescriptor> _getMarkerBitmap(int size, {String text}) async {
-    assert(size != null);
-
-    final PictureRecorder pictureRecorder = PictureRecorder();
-    final Canvas canvas = Canvas(pictureRecorder);
-    final Paint paint1 = Paint()..color = Colors.red;
-    final Paint paint2 = Paint()..color = Colors.white;
-
-    canvas.drawCircle(Offset(size / 2, size / 2), size / 2.0, paint1);
-    canvas.drawCircle(Offset(size / 2, size / 2), size / 2.2, paint2);
-    canvas.drawCircle(Offset(size / 2, size / 2), size / 2.8, paint1);
-
-    if (text != null) {
-      TextPainter painter = TextPainter(textDirection: TextDirection.ltr);
-      painter.text = TextSpan(
-        text: text,
-        style: TextStyle(
-            fontSize: size / 3,
-            color: Colors.white,
-            fontWeight: FontWeight.normal),
-      );
-      painter.layout();
-      painter.paint(
-        canvas,
-        Offset(size / 2 - painter.width / 2, size / 2 - painter.height / 2),
-      );
-    }
-
-    final img = await pictureRecorder.endRecording().toImage(size, size);
-    final data = await img.toByteData(format: ImageByteFormat.png);
-
-    return BitmapDescriptor.fromBytes(data.buffer.asUint8List());
+  Future<void> _toMain() async {
+    Navigator.of(context).popUntil((route) => route.isFirst);
+    Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (context) =>
+            MainPage(uid: this.uid, loggeduser: this.loggeduser,)));
   }
 
 
@@ -345,7 +294,7 @@ class _MakeCourseState extends State<MakeCourse> {
                       .add({
                     'uid': this.uid,
                     //uid 출력.
-                    'markerId': now.toString(),
+                    'markerId': markers.keys.toString(),
                     //markerId
                     'lat, long': [tapped.latitude, tapped.longitude],
                     //위도와 경도를 배열로 출력
@@ -360,6 +309,8 @@ class _MakeCourseState extends State<MakeCourse> {
                     'Address': firstAddress.addressLine,
                     //전체주소
                   });
+
+                  sendMid = markers.keys.toString();
                   /*
                     String myaddr = "";
                     String name = firstAddress.countryName;
@@ -388,14 +339,14 @@ class _MakeCourseState extends State<MakeCourse> {
                     googleMapController = controller;
                     //밑2개 현재 실시간위치
                     _controllerGoogleMap.complete(controller);
-                    currentlocatePosition();
-                    _manager.setMapController((controller));
+                   // currentlocatePosition();
                   });
                 },
-                initialCameraPosition: _parisCameraPosition,
-                onCameraIdle: _manager.updateMap,
-                onCameraMove: _manager.onCameraMove,
-                markers: markers,
+                initialCameraPosition: CameraPosition(
+                    //target: LatLng(37.5172, 127.0473),
+                    target: markers[mid].position,
+                    zoom: 15.0),
+                markers: Set<Marker>.of(markers.values),
               ),
             ),
             Positioned(
@@ -414,16 +365,17 @@ class _MakeCourseState extends State<MakeCourse> {
             Positioned(
               left: 40,
               top: 35,
-              child: smp.SearchMapPlaceWidget(
+              child: SearchMapPlaceWidget(
+                //language: 'ko' 되잖아악
                 language: 'ko',
                 hasClearButton: true,
                 //삭제버튼
-                placeType: smp.PlaceType.address,
+                placeType: PlaceType.address,
                 placeholder: '주소입력',
                 apiKey: 'AIzaSyC0vAxFsUvf3bafFQlG-3y3Pe1y94KBbi8',
                 //geolocation은 future이니까 async하고 await필요.
-                onSelected: (smp.Place place) async {
-                  smp.Geolocation geolocation = await place.geolocation;
+                onSelected: (Place place) async {
+                  Geolocation geolocation = await place.geolocation;
                   googleMapController.animateCamera(
                       CameraUpdate.newLatLng(
                           geolocation.coordinates
@@ -440,6 +392,54 @@ class _MakeCourseState extends State<MakeCourse> {
       ),
     );
   }
+
+  void _popupDialog2(BuildContext context) async {
+    Alert(
+      context: context,
+      //type: AlertType.error,
+      title: "등록완료!",
+      desc: "제목을 입력해주세요.",
+      content: TextField(
+        decoration: new InputDecoration(hintText: "제목"),
+        controller: _c,
+      ),
+      buttons: [
+        DialogButton(
+          child: Text(
+            "확인",
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          ),
+          onPressed: () {
+            setState(() {
+              text = _c.text;
+            });
+            _enrollCourse();
+          },
+          width: 120,
+        ),
+      ],
+    ).show();
+  }
+  void _popupDialog3(BuildContext context) async {
+    Alert(
+      context: context,
+      //type: AlertType.error,
+      title: "완료!",
+      buttons: [
+        DialogButton(
+          child: Text(
+            "확인",
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          ),
+          onPressed: () {
+            _toMain();
+          },
+          width: 120,
+        ),
+      ],
+    ).show();
+  }
+
   void _popupDialog(BuildContext context) async {
     Alert(
       context: context,
@@ -474,3 +474,7 @@ class _MakeCourseState extends State<MakeCourse> {
     super.dispose();
   }
 }
+
+
+
+

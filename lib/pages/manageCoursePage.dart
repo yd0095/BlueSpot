@@ -1,17 +1,24 @@
+
+import 'package:bluespot/pages/mapPage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:bluespot/pages/recommend.dart';
+import 'package:bluespot/pages/pickMarkersPage.dart';
+
 
 import 'mainPage.dart';
 import 'myEnrolledPage.dart';
 
 class ManageCoursePage extends StatefulWidget {
+
   final String uid;
   final User loggeduser;
 
   ManageCoursePage({Key key, @required this.uid, this.loggeduser,}) : super(key: key);
   @override
   _ManageCoursePageState createState() => _ManageCoursePageState(uid, loggeduser);
+
 }
 
 class _ManageCoursePageState extends State<ManageCoursePage> {
@@ -61,7 +68,9 @@ class _ManageCoursePageState extends State<ManageCoursePage> {
               margin: EdgeInsets.only(left: 16, top: 32, right: 16),
               child: GestureDetector(
                 onTap: () {
-                  Navigator.pushNamed(context, '/clickCourseMake');
+                  Navigator.of(context).popUntil((route) => route.isFirst);
+                  Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) =>
+                      PickPage(uid: this.uid,loggeduser: this.loggeduser,)));
                 },
                 child: Stack(
                   alignment: Alignment.center,
@@ -259,7 +268,12 @@ class _ManageCoursePageState extends State<ManageCoursePage> {
               margin: EdgeInsets.only(left: 16, top: 31, right: 16),
               child: GestureDetector(
                 onTap: () {
-
+                  // Navigator.of(context).popUntil((route) => route.isFirst);
+                  // Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) =>
+                  //     Recommend(uid: this.uid,loggeduser: this.loggeduser,)));
+                  Navigator.of(context).popUntil((route) => route.isFirst);
+                  Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) =>
+                      Recommend(uid: this.uid,loggeduser: this.loggeduser,)));
                 },
                 child: Stack(
                   alignment: Alignment.center,
