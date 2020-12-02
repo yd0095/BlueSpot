@@ -272,6 +272,7 @@ class _MainPageState extends State<MainPage> {
                                       FutureBuilder(
                                         future: addImageToFirebase(itemList),
                                         builder: (context, snapshot) {
+
                                           if (snapshot.hasData == false || snapshot.data.length == 0) {
                                             return CircularProgressIndicator();
                                           }
@@ -796,8 +797,8 @@ class _ChoiceCard extends StatelessWidget {
                     ),),
                     Row(
                         children: [
-                          Text(choice, style: GoogleFonts.inter(
-                            fontSize: 18,
+                          Text(item, style: GoogleFonts.inter(
+                            fontSize: 15,
                             fontWeight: FontWeight.w500,
                           ),)
                         ]

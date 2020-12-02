@@ -248,10 +248,20 @@ class _RecommendState extends State<Recommend> {
 
       PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
         'AIzaSyC0vAxFsUvf3bafFQlG-3y3Pe1y94KBbi8',
+
+        //wayPoints: [PolylineWayPoint(location: "Sabo, Yaba Lagos Nigeria")]
+
+        // PointLatLng(srt.latitude.toDouble(), srt.longitude.toDouble()),
+        // PointLatLng(dst.latitude.toDouble(), dst.longitude.toDouble()),
+        // PointLatLng(_originLat, _originLon),
+        // PointLatLng(_destLat, _destLon),
+
         PointLatLng(_originLat, _originLon),
         PointLatLng(_destLat, _destLon),
 
         travelMode: TravelMode.transit,
+
+          //wayPoints: [PolylineWayPoint(location: "-34.92788%2C138.60008,")]
           wayPoints: [PolylineWayPoint(location:'')]
 
       );
