@@ -53,7 +53,7 @@ class _MainPageState extends State<MainPage> {
   Position currentPosition; //내현재위치
   String myCurrentSubLocality;
 
-
+  var numOfMarker;
 
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   FirebaseStorage firestorage = FirebaseStorage.instance;
@@ -126,16 +126,17 @@ class _MainPageState extends State<MainPage> {
         });
       });
     });
-    currentStream4 = firestore.collection('Spot').orderBy('Content_Like',descending:true).snapshots();
+    currentStream4 = firestore.collection('Spot').orderBy("Content.Content_Like", descending: true).limit(3).snapshots();
     currentStream4.forEach((field) {
       field.docs.asMap().forEach((index, data) {
         setState(() {
-          markerId.add(field.docs[index]["markerId"]);
+          markerId.add(field.docs[index]["Marker_id"]);
           itemList.add(field.docs[index]["Content"]["Content_picture"]);
           titleList.add(field.docs[index]["Content"]["Content_Title"]);
           likeList.add(field.docs[index]["Content"]["Content_Like"]);
+          numOfMarker = markerId.length;
           print("${field.docs[index]["Content"]["Content_picture"]} is pic");
-          print(markerId);
+          print('this is $markerId');
         });
       });
     });
@@ -190,8 +191,6 @@ class _MainPageState extends State<MainPage> {
   ];
   final List<String> theme = ['데이트','먹방','힐링','오락','건강'];
 
-
-
   //실제위치 받아오는 함수.
   void currentlocatePosition() async {
     //Accuracy.bestForNavigation도 굳.
@@ -240,7 +239,7 @@ class _MainPageState extends State<MainPage> {
                       child: Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children:<Widget>[
-                            Text('#오늘의 Hot 스팟', style: GoogleFonts.inter(
+                            Text('#오늘의 Hot 스팟 \n Top$numOfMarker를 만나보세요', style: GoogleFonts.inter(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
                             ))
