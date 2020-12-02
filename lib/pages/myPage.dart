@@ -38,6 +38,7 @@ class _MyPageState extends State<MyPage> {
 
   var numOfMine; //내가 올린 스팟 개수
   var numOfLike; //내가 좋아하는 스팟 개수
+  var userName;
 
   @override
   void initState() {
@@ -65,6 +66,7 @@ class _MyPageState extends State<MyPage> {
         });
       });
     });
+    userName = loggeduser.displayName;
   }
 
   //list 넘기는법. 파일하나는 스팟페이지에있음.
@@ -77,7 +79,7 @@ class _MyPageState extends State<MyPage> {
     }
     return urlList;
   }
-  
+
   //내가 올린 spot을 위한 list
   List<String> itemList = [];
   List<String> titleList = [];
@@ -223,8 +225,19 @@ class _MyPageState extends State<MyPage> {
                         ),
                       ),
                     ),
-                    //Spacer(),
-
+                    Spacer(),
+                    Text(
+                      "환영합니다.\n BlueSpot의 $userName 님!",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontFamily: "Arial",
+                        fontWeight: FontWeight.w500,
+                        fontSize: 14,
+                        height: 1.71429,
+                      ),
+                    ),
+                    Spacer(),
                   ],
                 ),
               ),
@@ -247,7 +260,7 @@ class _MyPageState extends State<MyPage> {
                               child: Container(
                                 margin: EdgeInsets.only(left: 19),
                                 child: Text(
-                                  numOfMine.toString(),
+                                  _myEnrolled(),
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                     color: Colors.black,
@@ -259,6 +272,7 @@ class _MyPageState extends State<MyPage> {
                               ),
                             ),
                             Spacer(),
+
                             Align(
                               alignment: Alignment.topLeft,
                               child: Text(
@@ -298,7 +312,7 @@ class _MyPageState extends State<MyPage> {
                               child: Container(
                                 margin: EdgeInsets.only(right: 40),
                                 child: Text(
-                                  numOfLike.toString(),
+                                  _myLike(),
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                     color: Colors.black,
@@ -373,7 +387,8 @@ class _MyPageState extends State<MyPage> {
                             // ignore: missing_return
                             itemBuilder: (BuildContext context, int index) {
                               //loading
-                              if (snapshot.hasData == false  || snapshot.data.length == 0) {
+
+                              if (snapshot.hasData == false || snapshot.data.length == 0) {
                                 return CircularProgressIndicator();
                               }
                               //error
@@ -609,5 +624,20 @@ class _MyPageState extends State<MyPage> {
     }
     else
       return numOfLike;
+  }
+  //내가 올린 spot과 내가 좋아하는 spot이 null일때 0으로 표시해주기 위한 함수
+  String _myLike(){
+    if(numOfLike == null){
+      return "0";
+    }
+    else
+      return numOfLike.toString();
+  }
+  String _myEnrolled(){
+    if(numOfMine == null){
+      return "0";
+    }
+    else
+      return numOfMine.toString();
   }
 }

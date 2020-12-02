@@ -272,7 +272,8 @@ class _MainPageState extends State<MainPage> {
                                       FutureBuilder(
                                         future: addImageToFirebase(itemList),
                                         builder: (context, snapshot) {
-                                          if (snapshot.hasData == false|| snapshot.data.length == 0) {
+
+                                          if (snapshot.hasData == false || snapshot.data.length == 0) {
                                             return CircularProgressIndicator();
                                           }
                                           else if (snapshot.hasError) {

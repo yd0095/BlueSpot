@@ -97,6 +97,7 @@ class _PickPageState extends State<PickPage> {
   }
 
   List<String> threeMarkers=[];
+  LatLng firstMarker;
 
   //init amrker, getMarker가 retrieve function. -> 실행안댐.
   //처음 실행하면 마커를 불러오기위해서 초기화하는 함수.
@@ -111,6 +112,9 @@ class _PickPageState extends State<PickPage> {
         onTap: (){
           if(threeMarkers.length < 3) {
             threeMarkers.add(specify['markerId']);
+            if(threeMarkers.length == 1) {
+              firstMarker = LatLng(specify['lat, long'][0], specify['lat, long'][1]);
+            }
           }
           else{
             _popupDialog2(context);
@@ -171,74 +175,13 @@ class _PickPageState extends State<PickPage> {
     });
   }
 
-  Future<File> _openGallary(String address) async {
-    File _image;
-    final picker = ImagePicker();
-    address = addr;
-
-    final pickedFile = await picker.getImage(source: ImageSource.gallery);
-    print('PickedFile: ${pickedFile.toString()}');
-
-    setState(() {
-      _image = File(pickedFile.path);
-    });
-    if (_image != null) {
-      /*
-      Navigator.pushReplacementNamed(context,
-          '/toSpotMakePage',
-          arguments: <String, File>{
-            'photo' : _image
-          },
-      );*/
-      Navigator.of(context).popUntil((route) => route.isFirst);
-      Navigator.of(context).pushReplacement(MaterialPageRoute(
-          builder: (context) => SpotMakePage(uid: this.uid,
-              loggeduser: this.loggeduser,
-              file1: _image,
-              address: addr,
-              marker_id: sendMid)));
-
-      return _image;
-    }
-    return null;
-  }
-
-  Future<File> _openCamera(String address) async {
-    File _image;
-    final picker = ImagePicker();
-    address = addr;
-
-    final pickedFile = await picker.getImage(source: ImageSource.camera);
-    print('PickedFile: ${pickedFile.toString()}');
-
-    setState(() {
-      _image = File(pickedFile.path);
-    });
-    if (_image != null) {
-      // Navigator.pushReplacementNamed(context,
-      //     '/toSpotMakePage',
-      //     arguments: <String, File>{
-      //       'photo' : _image
-      //     }
-      // );
-      Navigator.of(context).popUntil((route) => route.isFirst);
-      Navigator.of(context).pushReplacement(MaterialPageRoute(
-          builder: (context) => SpotMakePage(uid: this.uid,
-            loggeduser: this.loggeduser,
-            address: addr,
-            file1: _image,)));
-      return _image;
-    }
-    return null;
-  }
-
   String text ="error";
 
   Future<void> _enrollCourse() async {
     getCurrentLocation();
 
     final coordinated = new geoCo.Coordinates(
-        position.latitude, position.longitude);
+        firstMarker.latitude, firstMarker.longitude);
     var address = await geoCo.Geocoder.local
         .findAddressesFromCoordinates(coordinated);
     var firstAddress = address.first;
@@ -281,52 +224,6 @@ class _PickPageState extends State<PickPage> {
               child: GoogleMap(
                 //padding은 MyLocationButton을 위치조정 하기 위한 방안임.
                 padding: EdgeInsets.only(top: 100.0,),
-                onTap: (tapped) async {
-                  final coordinated = new geoCo.Coordinates(
-                      tapped.latitude, tapped.longitude);
-                  var address = await geoCo.Geocoder.local
-                      .findAddressesFromCoordinates(coordinated);
-                  var firstAddress = address.first;
-                  getMarkers(tapped.latitude, tapped.longitude);
-                  await FirebaseFirestore.instance.collection('Marker')
-                      .doc(firstAddress.countryName)
-                      .collection(firstAddress.adminArea)
-                      .add({
-                    'uid': this.uid,
-                    //uid 출력.
-                    'markerId': markers.keys.toString(),
-                    //markerId
-                    'lat, long': [tapped.latitude, tapped.longitude],
-                    //위도와 경도를 배열로 출력
-                    'Country': firstAddress.countryName,
-                    //나라
-                    'admin': firstAddress.adminArea,
-                    //시
-                    'sublocality': firstAddress.subLocality,
-                    //구
-                    'thoroughfare': firstAddress.thoroughfare,
-                    //도로명
-                    'Address': firstAddress.addressLine,
-                    //전체주소
-                  });
-
-                  sendMid = markers.keys.toString();
-                  /*
-                    String myaddr = "";
-                    String name = firstAddress.countryName;
-                    String subLocality = firstAddress.subLocality;
-                    String Locality = firstAddress.locality;
-                    myaddr = "${name}, ${Locality}, ${subLocality}";
-                    print(myaddr);
-                     */
-
-                  setState(() {
-                    country = firstAddress.countryName;
-                    addressLocation = firstAddress.addressLine;
-                    addr = firstAddress.addressLine;
-                  });
-                  _popupDialog(context);
-                },
                 //compassEnabled: true,
                 //trafficEnabled: true,
                 //밑에4개 유저위치 실시간~
@@ -339,12 +236,12 @@ class _PickPageState extends State<PickPage> {
                     googleMapController = controller;
                     //밑2개 현재 실시간위치
                     _controllerGoogleMap.complete(controller);
-                   // currentlocatePosition();
+                   //currentlocatePosition();
                   });
                 },
                 initialCameraPosition: CameraPosition(
-                    //target: LatLng(37.5172, 127.0473),
-                    target: markers[mid].position,
+                    target: LatLng(37.5172, 127.0473),
+                    // target: markers[mid].position,
                     zoom: 15.0),
                 markers: Set<Marker>.of(markers.values),
               ),
@@ -440,35 +337,6 @@ class _PickPageState extends State<PickPage> {
     ).show();
   }
 
-  void _popupDialog(BuildContext context) async {
-    Alert(
-      context: context,
-      //type: AlertType.error,
-      title: "스팟 사진 등록을 위해",
-      desc: "어디로 이동하시겠습니까?",
-      buttons: [
-        DialogButton(
-          child: Text(
-            "카메라",
-            style: TextStyle(color: Colors.white, fontSize: 20),
-          ),
-          onPressed: () {
-            _openCamera(addr);
-          },
-          width: 120,
-        ), DialogButton(
-          child: Text(
-            "갤러리",
-            style: TextStyle(color: Colors.white, fontSize: 20),
-          ),
-          onPressed: () {
-            _openGallary(addr);
-          },
-          width: 120,
-        )
-      ],
-    ).show();
-  }
   @override
   void dispose() {
     super.dispose();
