@@ -368,7 +368,6 @@ class _MakeCourseState extends State<MakeCourse> {
                     myaddr = "${name}, ${Locality}, ${subLocality}";
                     print(myaddr);
                      */
-
                   setState(() {
                     country = firstAddress.countryName;
                     addressLocation = firstAddress.addressLine;

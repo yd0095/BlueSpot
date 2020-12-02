@@ -72,10 +72,10 @@ class _RecommendState extends State<Recommend> {
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       // getCurrentLocation();
-      getMarkerData();
+      _getPolyline();
       // getCurrentSubLocality();
     });
-    _getPolyline(markers[mid1].position, markers[mid2].position);
+
   }
 
 
@@ -128,22 +128,25 @@ class _RecommendState extends State<Recommend> {
         LatLng(specify['lat, long'][0], specify['lat, long'][1]),
     );
     setState(() {
-      if (markers.length<2) {
+      if (markers.length<3) {
         mid = markerId;
         //midList.add(markerId);
         if(mid1 == null){
           mid1 = markerId;
+          _originLat = marker.position.latitude;
+          _originLon = marker.position.longitude;
         }
         else if(mid2 == null) {
           mid2 = markerId;
+          _destLat = marker.position.latitude;
+          _destLon = marker.position.longitude;
         }
         else{
           mid3 = markerId;
+          _wayLat = marker.position.latitude;
+          _wayLon = marker.position.longitude;
         }
         markers[markerId] = marker;
-      }
-      else if(markers.length==3){
-        print("$mid1 mid1 $mid2 mid2 $mid3 mid3");
       }
     });
   }
@@ -198,27 +201,48 @@ class _RecommendState extends State<Recommend> {
     setState(() {});
   }
 
-  void _getPolyline(LatLng srt,LatLng dst) async {
-    getMarkerData().then((value) async{
-      print("works");
+  // LatLng srt;
+  // LatLng dst;
+  double _originLat, _originLon;
+  double _destLat, _destLon;
+  double _wayLat, _wayLon;
+
+
+
+  // double _originLatitude = 6.5212402, _originLongitude = 3.3679965;
+  // double _destLatitude = 6.849660, _destLongitude = 3.648190;
+
+  // double _originLatitude = 43.623880, _originLongitude = 3.898790;
+  // double _destLatitude = 43.623880, _destLongitude = 3.91256;
+
+
+  void _getPolyline() async {
+    await getMarkerData().then((value) async{
+      print("$_originLat,$_originLon");
+      print("$_destLat,$_destLon");
+
       PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
         'AIzaSyC0vAxFsUvf3bafFQlG-3y3Pe1y94KBbi8',
-        PointLatLng(srt.latitude, srt.longitude),
-        PointLatLng(dst.latitude, dst.longitude),
-        travelMode: TravelMode.driving,
         //wayPoints: [PolylineWayPoint(location: "Sabo, Yaba Lagos Nigeria")]
+
+        // PointLatLng(srt.latitude.toDouble(), srt.longitude.toDouble()),
+        // PointLatLng(dst.latitude.toDouble(), dst.longitude.toDouble()),
+        // PointLatLng(_originLat, _originLon),
+        // PointLatLng(_destLat, _destLon),
+        PointLatLng(_originLat, _originLon),
+        PointLatLng(_destLat, _destLon),
+
+        travelMode: TravelMode.transit,
+          //wayPoints: [PolylineWayPoint(location: "-34.92788%2C138.60008,")]
+
       );
+      print("${result.points} 1 is success");
       if (result.points.isNotEmpty) {
         result.points.forEach((PointLatLng point) {
           polylineCoordinates.add(LatLng(point.latitude, point.longitude));
         });
       }
-      PolylineId id = PolylineId("poly");
-      Polyline polyline = Polyline(
-          polylineId: id, color: Colors.red, points: polylineCoordinates);
-      setState(() {
-        _poly[id] = polyline;
-      });
+      _addPolyLine();
     }
     );
   }
@@ -261,8 +285,9 @@ class _RecommendState extends State<Recommend> {
                       initialCameraPosition: CameraPosition(
                         //todo 현재위치로 바꿔야함.
                         //   target: markers[mid1].position,
-                          target: LatLng(37,27),
-                          zoom: 15.0),
+                        //   target: ,
+                          target: LatLng(_originLat, _originLon), zoom: 15),
+                          // zoom: 15.0),
 
                       markers: Set<Marker>.of(markers.values),
                       polylines: Set<Polyline>.of(_poly.values),

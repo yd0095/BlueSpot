@@ -318,7 +318,7 @@ class _SpotPage2State extends State<SpotPage2> {
                                                           'Content_Info': content_info,
                                                           'Content_Title' : content_title,
                                                           'Content_picture':content_picture},
-
+                                                        'Who_Like': FieldValue.arrayUnion([uid])
                                                       });
                                                       //print(element.data());
                                                     });
