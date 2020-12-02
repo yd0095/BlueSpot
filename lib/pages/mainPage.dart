@@ -60,6 +60,7 @@ class _MainPageState extends State<MainPage> {
   Stream<QuerySnapshot> currentStream;
   Stream<QuerySnapshot> currentStream2;
   Stream<QuerySnapshot> currentStream3;
+  Stream<QuerySnapshot> currentStream4; //spot을 좋아요가 많은 순서대로 보여주기 위함
 
   //메인화면에 띄워줄 가까운 것. sublocality 기준
   List<String> markerId = [];
@@ -92,39 +93,29 @@ class _MainPageState extends State<MainPage> {
     var myCurrentLocality = "Incheon";
     myCurrentSubLocality = "Nam-gu";
 
-    currentStream = firestore.collectionGroup(myCurrentLocality).where("sublocality", isEqualTo: myCurrentSubLocality).snapshots();
-    currentStream.forEach((field) {
-      field.docs.asMap().forEach((index, data) {
-        setState(() {
-          markerId.add(field.docs[index]["markerId"]);
-          print("${field.docs[index]["markerId"]} is it");
-
-          currentStream2 = firestore.collection('Spot')
-              .where("Marker_id", isEqualTo: field.docs[index]["markerId"])
-              .snapshots();
-          currentStream2.forEach((field) {
-            field.docs.asMap().forEach((index, data) {
-              setState(() {
-                itemList.add(field.docs[index]["Content"]["Content_picture"]);
-                titleList.add(field.docs[index]["Content"]["Content_Title"]);
-                likeList.add(field.docs[index]["Content"]["Content_Like"]);
-                print("${field.docs[index]["Content"]["Content_picture"]} is pic");
-              });
-            });
-          });
-          // currentStream3 = firestore.collection('Course').where("From", isEqualTo: this.uid).snapshots();
-          // currentStream3.forEach((field) {
-          //   field.docs.asMap().forEach((index, data) {
-          //     setState(() {
-          //       addressList.add(field.docs[index]["course_info"]["course_addr"]);
-          //       courseNameList.add(field.docs[index]["course_info"]["course_name"]);
-          //       print("${field.docs[index]["course_info"]["course_addr"]} is pick");
-          //     });
-          //   });
-          // });
-        });
-      });
-    });
+    // currentStream = firestore.collectionGroup(myCurrentLocality).where("sublocality", isEqualTo: myCurrentSubLocality).snapshots();
+    // currentStream.forEach((field) {
+    //   field.docs.asMap().forEach((index, data) {
+    //     setState(() {
+    //       markerId.add(field.docs[index]["markerId"]);
+    //       print("${field.docs[index]["markerId"]} is it");
+    //
+    //       currentStream2 = firestore.collection('Spot')
+    //           .where("Marker_id", isEqualTo: field.docs[index]["markerId"])
+    //           .snapshots();
+    //       currentStream2.forEach((field) {
+    //         field.docs.asMap().forEach((index, data) {
+    //           setState(() {
+    //             itemList.add(field.docs[index]["Content"]["Content_picture"]);
+    //             titleList.add(field.docs[index]["Content"]["Content_Title"]);
+    //             likeList.add(field.docs[index]["Content"]["Content_Like"]);
+    //             print("${field.docs[index]["Content"]["Content_picture"]} is pic");
+    //           });
+    //         });
+    //       });
+    //     });
+    //   });
+    // });
     currentStream3 = firestore.collection('Course').where("From", isEqualTo: this.uid).snapshots();
     currentStream3.forEach((field) {
       field.docs.asMap().forEach((index, data) {
@@ -132,6 +123,19 @@ class _MainPageState extends State<MainPage> {
           addressList.add(field.docs[index]["course_info"]["course_addr"]);
           courseNameList.add(field.docs[index]["course_info"]["course_name"]);
           print("${field.docs[index]["course_info"]["course_addr"]} is pick");
+        });
+      });
+    });
+    currentStream4 = firestore.collection('Spot').orderBy('Content_Like',descending:true).snapshots();
+    currentStream4.forEach((field) {
+      field.docs.asMap().forEach((index, data) {
+        setState(() {
+          markerId.add(field.docs[index]["markerId"]);
+          itemList.add(field.docs[index]["Content"]["Content_picture"]);
+          titleList.add(field.docs[index]["Content"]["Content_Title"]);
+          likeList.add(field.docs[index]["Content"]["Content_Like"]);
+          print("${field.docs[index]["Content"]["Content_picture"]} is pic");
+          print(markerId);
         });
       });
     });
