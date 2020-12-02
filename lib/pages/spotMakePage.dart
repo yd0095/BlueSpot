@@ -220,7 +220,8 @@ class _SpotMakePageState extends State<SpotMakePage> {
                                     } ,
                                     'From' : uid,
                                     'Post_Date' : now,
-                                    'Marker_id' : marker_id
+                                    'Marker_id' : marker_id,
+                                    'Who_Like': [],
                                   });
                                   _popupDialog(context);
                                 },
