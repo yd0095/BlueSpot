@@ -66,8 +66,9 @@ class _MakeCourseState extends State<MakeCourse> {
   @override
   void initState() {
     now = DateTime.now();
-    getMarkerData();
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      getMarkerData();
       _manager = _initClusterManager();
       getCurrentSubLocality();
     });

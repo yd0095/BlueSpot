@@ -80,7 +80,7 @@ class _MyEnrolledDetailPageState extends State<MyEnrolledDetailPage> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       // getCurrentLocation();
       _getPolyline();
-      _getPolyline2();
+    //  _getPolyline2();
 
     });
     super.initState();
@@ -115,6 +115,7 @@ class _MyEnrolledDetailPageState extends State<MyEnrolledDetailPage> {
           mid1 = markerId;
           _originLat = marker.position.latitude;
           _originLon = marker.position.longitude;
+          print(mid1);
           _cameraUpdate();
         }
         else if(mid2 == null) {
@@ -139,12 +140,39 @@ class _MyEnrolledDetailPageState extends State<MyEnrolledDetailPage> {
     //myCurrentSubLocality = getCurrentSubLocality();
     // var myCurrentSubLocality = "Nam-gu";
     // await FirebaseFirestore.instance.collectionGroup(myCurrentLocality).where("sublocality", isEqualTo: myCurrentSubLocality)
+
+    var markerid1;
+    var markerid2;
+    var markerid3;
+
     await FirebaseFirestore.instance.collection('Course').where("course_id",isEqualTo: this.course_id)
         .get()
         .then((myMockDoc) {
-      for (int i = 0; i < 3; i++) {
-        initMarker(myMockDoc.docs[i].data(), myMockDoc.docs[i].id);
-      }
+          markerid1 = myMockDoc.docs[0].data()['course_markers'][0];
+          markerid2 = myMockDoc.docs[0].data()['course_markers'][1];
+          markerid3 = myMockDoc.docs[0].data()['course_markers'][2];
+    });
+
+
+    print("$markerid1  id1");
+    print("$markerid2  id2");
+    print("$markerid3  id3");
+
+
+    await FirebaseFirestore.instance.collection('Marker/South Korea/Incheon').where("markerId",isEqualTo: markerid1)
+        .get()
+        .then((myMockDoc) {
+        initMarker(myMockDoc.docs[0].data(), myMockDoc.docs[0].id);
+    });
+    await FirebaseFirestore.instance.collection('Marker/South Korea/Incheon').where("markerId",isEqualTo: markerid2)
+        .get()
+        .then((myMockDoc) {
+      initMarker(myMockDoc.docs[0].data(), myMockDoc.docs[0].id);
+    });
+    await FirebaseFirestore.instance.collection('Marker/South Korea/Incheon').where("markerId",isEqualTo: markerid3)
+        .get()
+        .then((myMockDoc) {
+      initMarker(myMockDoc.docs[0].data(), myMockDoc.docs[0].id);
     });
   }
 
@@ -189,17 +217,18 @@ class _MyEnrolledDetailPageState extends State<MyEnrolledDetailPage> {
         });
       }
       _addPolyLine();
+      _getPolyline2();
     }
     );
   }
   void _getPolyline2() async {
-    await getMarkerData().then((value) async{
+    // await getMarkerData().then((value) async{
 
       PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
         'AIzaSyC0vAxFsUvf3bafFQlG-3y3Pe1y94KBbi8',
 
-        PointLatLng(_wayLat, _wayLon),
         PointLatLng(_destLat, _destLon),
+        PointLatLng(_wayLat, _wayLon),
 
         travelMode: TravelMode.transit,
         //wayPoints: [PolylineWayPoint(location:'$_wayLat$_wayLon,')]
@@ -211,8 +240,8 @@ class _MyEnrolledDetailPageState extends State<MyEnrolledDetailPage> {
         });
       }
       _addPolyLine2();
-    }
-    );
+    // }
+    // );
   }
 
 

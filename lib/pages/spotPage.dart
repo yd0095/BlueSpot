@@ -73,23 +73,6 @@ class _SpotPageState extends State<SpotPage> {
     // TODO: implement initState
     super.initState();
 
-    // //위에꺼가 원래
-    // currentStream = firestore.collection('Spot').where("Marker_id", isEqualTo: this.marker_id).snapshots();
-    // //currentStream = firestore.collection('Spot').where("Marker_id", isEqualTo: "(MarkerId{value: 1ADFkty9ChLVUfFsa2bb}, MarkerId{value: 6voxAoeZh67dSpfLfw26}, MarkerId{value: 9KDktTqB5D1wo9bEVQhW}, ..., MarkerId{value: 37.44814187497613126.65155369788408}, MarkerId{value: 37.44705666323565126.65093779563904})").snapshots();
-    // print("$currentStream is currentStream");
-    // currentStream.forEach((field) {
-    //   field.docs.asMap().forEach((index, data) {
-    //     setState(() {
-    //       //reply_id = field.docs[index]["Content"]["Comment"]["Reply_ID"];
-    //       content_info = field.docs[index]["Content"]["Content_Info"];
-    //       content_title = field.docs[index]["Content"]["Content_Title"];
-    //       content_picture = field.docs[index]["Content"]["Content_picture"];
-    //       like = field.docs[index]["Like"];
-    //       From = field.docs[index]["From"];
-    //     });
-    //   });
-    // });
-
     var myCurrentLocality = "Incheon";
     var lnglatlist = [location.latitude,location.longitude];
 
@@ -98,20 +81,19 @@ class _SpotPageState extends State<SpotPage> {
       field.docs.asMap().forEach((index, data) {
         setState(() {
           markerId.add(field.docs[index]["markerId"]);
-          print("${field.docs[index]["markerId"]} is it");
-
-          currentStream2 = firestore.collection('Spot')
-              .where("Marker_id", isEqualTo: field.docs[index]["markerId"])
-              .snapshots();
-          currentStream2.forEach((field) {
-            field.docs.asMap().forEach((index, data) {
-              setState(() {
-                content_info = field.docs[index]["Content"]["Content_Info"];
-                content_title = field.docs[index]["Content"]["Content_Title"];
-                content_picture = field.docs[index]["Content"]["Content_picture"];
-                like = field.docs[index]["Like"];
-                From = field.docs[index]["From"];
-              });
+        });
+        print("$markerId markerId");
+        currentStream2 = firestore.collection('Spot')
+            .where("Marker_id", isEqualTo: field.docs[index]["markerId"])
+            .snapshots();
+        currentStream2.forEach((field) {
+          field.docs.asMap().forEach((index, data) {
+            setState(() {
+              content_info = field.docs[index]["Content"]["Content_Info"];
+              content_title = field.docs[index]["Content"]["Content_Title"];
+              content_picture = field.docs[index]["Content"]["Content_picture"];
+              like = field.docs[index]["Content"]["Content_Like"];
+              From = field.docs[index]["From"];
             });
           });
         });
