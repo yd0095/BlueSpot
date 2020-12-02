@@ -1,3 +1,5 @@
+import 'package:bluespot/pages/spotFromMainPage.dart';
+import 'package:bluespot/pages/spotFromMyPage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:material_segmented_control/material_segmented_control.dart';
@@ -50,6 +52,7 @@ class _MyPageState extends State<MyPage> {
         setState(() {
           itemList.add(field.docs[index]["Content"]["Content_picture"]);
           titleList.add(field.docs[index]["Content"]["Content_Title"]);
+          markerId1.add(field.docs[index]["Marker_id"]);
           numOfMine = titleList.length;
           print(itemList);
         });
@@ -61,6 +64,7 @@ class _MyPageState extends State<MyPage> {
         setState(() {
           itemList2.add(field.docs[index]["Content"]["Content_picture"]);
           titleList2.add(field.docs[index]["Content"]["Content_Title"]);
+          markerId2.add(field.docs[index]["Marker_id"]);
           numOfLike = titleList2.length;
 
         });
@@ -83,10 +87,12 @@ class _MyPageState extends State<MyPage> {
   //내가 올린 spot을 위한 list
   List<String> itemList = [];
   List<String> titleList = [];
+  List<String> markerId1 = [];
 
   //내가 좋아하는 spot을 위한 list
   List<String> itemList2 = [];
   List<String> titleList2 = [];
+  List<String> markerId2 = [];
 
   //uid => Auth, loggeduser => google login information
   final String uid;
@@ -376,6 +382,7 @@ class _MyPageState extends State<MyPage> {
                   return Container(
                           width: MediaQuery.of(context).size.width,
                           height: MediaQuery.of(context).size.height/2,
+                          margin: EdgeInsets.only(left:20),
                           child: GridView.builder(
                             scrollDirection: Axis.horizontal,
                             itemCount: _choose(),
@@ -404,27 +411,35 @@ class _MyPageState extends State<MyPage> {
                               //execute
                               else if(_currentSelection == 0){
                                 return Card(
-                                  child: Column(
-                                    children: [
-                                      AspectRatio(aspectRatio:18.0 / 13.0,
-                                        child: Image.network(snapshot.data[index],
-                                          fit: BoxFit.contain,),
-                                      ),
-                                      Padding(
-                                        padding: EdgeInsets.fromLTRB(16.0, 12.0, 16.0, 8.0),
-                                        child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              titleList[index],
-                                              textAlign: TextAlign.center,
-                                            ),
-                                          ],
+                                  child: InkWell(
+                                    onTap: (){
+                                      //print('hahaha');
+                                      Navigator.of(context).popUntil((route) => route.isFirst);
+                                      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) =>
+                                          SpotPage3(uid: this.uid,loggeduser: this.loggeduser, marker_id: markerId1[index],)));
+                                    },
+                                    child:Column(
+                                      children: [
+                                        AspectRatio(aspectRatio:18.0 / 13.0,
+                                          child: Image.network(snapshot.data[index],
+                                            fit: BoxFit.fill,),
                                         ),
-                                      ),
-                                      //무조건 이렇게
-                                    ],
-                                  ),
+                                        Padding(
+                                          padding: EdgeInsets.fromLTRB(16.0, 12.0, 16.0, 8.0),
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                titleList[index],
+                                                textAlign: TextAlign.center,
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        //무조건 이렇게
+                                      ],
+                                    ),
+                                  )
                                 );
                               }
                               else if(_currentSelection == 1){
@@ -432,27 +447,34 @@ class _MyPageState extends State<MyPage> {
                                 //List<String> 자체가 Future로 받아와져서 파싱이 안돼있음 주의!!
                                //List<String> list = snapshot.data.toList(); xxxx
                                 return Card(
-                                  child: Column(
-                                    children: [
-                                      AspectRatio(aspectRatio:18.0 / 13.0,
-                                      child: Image.network(snapshot.data[index],
-                                        fit: BoxFit.contain,),
-                                      ),
-                                      Padding(
-                                        padding: EdgeInsets.fromLTRB(16.0, 12.0, 16.0, 8.0),
-                                        child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              titleList2[index],
-                                              textAlign: TextAlign.center,
-                                            ),
-                                          ],
+                                  child: InkWell(
+                                    onTap: (){
+                                      Navigator.of(context).popUntil((route) => route.isFirst);
+                                      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) =>
+                                          SpotPage3(uid: this.uid,loggeduser: this.loggeduser, marker_id: markerId2[index],)));
+                                    },
+                                    child:Column(
+                                      children: [
+                                        AspectRatio(aspectRatio:18.0 / 13.0,
+                                          child: Image.network(snapshot.data[index],
+                                            fit: BoxFit.fill,),
                                         ),
-                                      ),
-                                      //무조건 이렇게
-                                    ],
-                                  ),
+                                        Padding(
+                                          padding: EdgeInsets.fromLTRB(16.0, 12.0, 16.0, 8.0),
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                titleList2[index],
+                                                textAlign: TextAlign.center,
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        //무조건 이렇게
+                                      ],
+                                    ),
+                                  )
                                 );
                               }
                             },
@@ -460,66 +482,66 @@ class _MyPageState extends State<MyPage> {
                   );
                 }
               ),
-              Container(
-                  width: 250,
-                  height: 45,
-                  margin: EdgeInsets.only(left: 16, top: 26, right: 16),
-                  child: GestureDetector(
-                    onTap: ()=> _popupDialog(context),
-                    child: Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        Positioned(
-                            left: 0,
-                            top: 0,
-                            right: 0,
-                            child: Container(
-                              height: 45,
-                              decoration: BoxDecoration(
-                                  color: Color(0xFF2699FB),
-                                  border: Border.all(
-                                    color: Colors.white,
-                                    width: 2.0,
-                                  ),
-                                  borderRadius:
-                                  BorderRadius.all(Radius.circular(10.0))),
-                              child: GestureDetector(
-
-                                child:  Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Container(
-                                      margin: EdgeInsets.only(left: 70),
-                                      child: Text(
-                                        "스팟 등록하기",
-                                        textAlign: TextAlign.left,
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontFamily: "Arial",
-                                          fontWeight: FontWeight.w700,
-                                          fontSize: 15,
-                                        ),
-                                      ),
-
-                                    ),
-                                  ],
-                                ),
-                              )
-
-                            )),
-                        Positioned(
-                          top: 11,
-                          right: 14,
-                          child: Icon(
-                            Icons.arrow_forward,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ],
-                    ),
-                  )
-              ),
+              // Container(
+              //     width: 250,
+              //     height: 45,
+              //     margin: EdgeInsets.only(left: 16, top: 26, right: 16),
+              //     child: GestureDetector(
+              //       onTap: ()=> _popupDialog(context),
+              //       child: Stack(
+              //         alignment: Alignment.center,
+              //         children: [
+              //           Positioned(
+              //               left: 0,
+              //               top: 0,
+              //               right: 0,
+              //               child: Container(
+              //                 height: 45,
+              //                 decoration: BoxDecoration(
+              //                     color: Color(0xFF2699FB),
+              //                     border: Border.all(
+              //                       color: Colors.white,
+              //                       width: 2.0,
+              //                     ),
+              //                     borderRadius:
+              //                     BorderRadius.all(Radius.circular(10.0))),
+              //                 child: GestureDetector(
+              //
+              //                   child:  Column(
+              //                     mainAxisAlignment: MainAxisAlignment.center,
+              //                     crossAxisAlignment: CrossAxisAlignment.start,
+              //                     children: [
+              //                       Container(
+              //                         margin: EdgeInsets.only(left: 70),
+              //                         child: Text(
+              //                           "스팟 등록하기",
+              //                           textAlign: TextAlign.left,
+              //                           style: TextStyle(
+              //                             color: Colors.white,
+              //                             fontFamily: "Arial",
+              //                             fontWeight: FontWeight.w700,
+              //                             fontSize: 15,
+              //                           ),
+              //                         ),
+              //
+              //                       ),
+              //                     ],
+              //                   ),
+              //                 )
+              //
+              //               )),
+              //           Positioned(
+              //             top: 11,
+              //             right: 14,
+              //             child: Icon(
+              //               Icons.arrow_forward,
+              //               color: Colors.white,
+              //             ),
+              //           ),
+              //         ],
+              //       ),
+              //     )
+              // ),
               // Container(
               //     width: 250,
               //     height: 45,
