@@ -434,7 +434,7 @@ class _MainPageState extends State<MainPage> {
                             controller: _scrollController,
                             //padding: const EdgeInsets.all(20.0),
                             padding: EdgeInsets.only(top:3,right:20, left:20,bottom:20),
-                            children: List.generate(addressList.length,(index){
+                            children: List.generate(snapshot.data.length,(index){
                               return Center(
                                 child: _ChoiceCard(picUrl: snapshot.data[index] ,choice: courseNameList[index],item:addressList[index]),
                               );
