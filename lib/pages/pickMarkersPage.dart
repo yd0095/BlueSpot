@@ -239,7 +239,7 @@ class _PickPageState extends State<PickPage> {
                     googleMapController = controller;
                     //밑2개 현재 실시간위치
                     _controllerGoogleMap.complete(controller);
-                   //currentlocatePosition();
+                    currentlocatePosition();
                   });
                 },
                 initialCameraPosition: CameraPosition(
@@ -294,7 +294,11 @@ class _PickPageState extends State<PickPage> {
   }
 
   void _popupDialog2(BuildContext context) async {
+    var alertStyle = AlertStyle(
+      isCloseButton: false,
+    );
     Alert(
+      style: alertStyle,
       context: context,
       //type: AlertType.error,
       title: "등록완료!",
@@ -321,8 +325,12 @@ class _PickPageState extends State<PickPage> {
     ).show();
   }
   void _popupDialog3(BuildContext context) async {
+    var alertStyle = AlertStyle(
+      isCloseButton: false,
+    );
     Alert(
       context: context,
+      style: alertStyle,
       //type: AlertType.error,
       title: "완료!",
       buttons: [

@@ -61,6 +61,9 @@ class _MainPageState extends State<MainPage> {
   Stream<QuerySnapshot> currentStream2;
   Stream<QuerySnapshot> currentStream3;
   Stream<QuerySnapshot> currentStream4; //spot을 좋아요가 많은 순서대로 보여주기 위함
+  //course MainPage
+  Stream<QuerySnapshot> currentStream5;
+  Stream<QuerySnapshot> currentStream6;
 
   //메인화면에 띄워줄 가까운 것. sublocality 기준
   List<String> markerId = [];
@@ -120,9 +123,19 @@ class _MainPageState extends State<MainPage> {
     currentStream3.forEach((field) {
       field.docs.asMap().forEach((index, data) {
         setState(() {
+          firstCourseNode.add(field.docs[index]["course_markers"][0]);
           addressList.add(field.docs[index]["course_info"]["course_addr"]);
           courseNameList.add(field.docs[index]["course_info"]["course_name"]);
           print("${field.docs[index]["course_info"]["course_addr"]} is pick");
+        });
+
+        currentStream5 = firestore.collection('Spot').where("Marker_id", isEqualTo: firstCourseNode[index]).snapshots();
+        currentStream5.forEach((element) {
+          element.docs.asMap().forEach((key, value) {
+            setState(() {
+              picList.add(element.docs[key]["Content"]["Content_picture"]);
+            });
+          });
         });
       });
     });
@@ -140,6 +153,9 @@ class _MainPageState extends State<MainPage> {
         });
       });
     });
+
+
+
   }
 
 
@@ -150,7 +166,9 @@ class _MainPageState extends State<MainPage> {
 
   List<String> addressList = []; //코스 시작주소 저장하는 리스트
   List<String> courseNameList = []; //코스 이름 저장하는 리스트
-
+  List<String> picList = [];
+  List<String> firstCourseNode = [];
+  
   final ScrollController _scrollController = ScrollController();
   var _controller = TextEditingController();
   SwiperController controller;
@@ -394,17 +412,36 @@ class _MainPageState extends State<MainPage> {
                   //     );
                   //   }),
                   // ),
-                  ListView(
-                      shrinkWrap: true,
-                      scrollDirection: Axis.vertical,
-                      controller: _scrollController,
-                      //padding: const EdgeInsets.all(20.0),
-                      padding: EdgeInsets.only(top:3,right:20, left:20,bottom:20),
-                      children: List.generate(addressList.length,(index){
-                        return Center(
-                          child: _ChoiceCard(choice: courseNameList[index],item:addressList[index]),
+                  FutureBuilder(
+                    future: addImageToFirebase(picList),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData == false || snapshot.data.length == 0) {
+                        return CircularProgressIndicator();
+                      }
+                      else if (snapshot.hasError) {
+                        return Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            'Error: ${snapshot.error}',
+                            style: TextStyle(fontSize: 15),
+                          ),
                         );
-                      })
+                      }
+                      else{
+                        return ListView(
+                            shrinkWrap: true,
+                            scrollDirection: Axis.vertical,
+                            controller: _scrollController,
+                            //padding: const EdgeInsets.all(20.0),
+                            padding: EdgeInsets.only(top:3,right:20, left:20,bottom:20),
+                            children: List.generate(snapshot.data.length,(index){
+                              return Center(
+                                child: _ChoiceCard(picUrl: snapshot.data[index] ,choice: courseNameList[index],item:addressList[index]),
+                              );
+                            })
+                        );
+                      }
+                    }
                   ),
                   Padding(
                       padding: EdgeInsets.only(top:40,right:160,bottom:4),
@@ -693,10 +730,12 @@ class ChoiceCard1 extends StatelessWidget{
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children:<Widget>[
-                    Text(choice.space, style: GoogleFonts.inter(
-                      fontSize:22,
-                      fontWeight: FontWeight.bold,
-                    ),),
+                    Flexible(
+                      child: Text(choice.space, style: GoogleFonts.inter(
+                        fontSize:22,
+                        fontWeight: FontWeight.bold,
+                      ),),
+                    ),
                     Row(
                         children:[
 
@@ -768,8 +807,9 @@ class ChoiceCard extends StatelessWidget {
   }
 }
 class _ChoiceCard extends StatelessWidget {
-  const _ChoiceCard({Key key, this.choice, this.onTap, @required this.item,
+  const _ChoiceCard({Key key, this.picUrl, this.choice, this.onTap, @required this.item,
     this.selected: false}) : super(key: key);
+  final String picUrl;
   final String choice; //title
   final VoidCallback onTap;
   final String item; //address
@@ -786,7 +826,10 @@ class _ChoiceCard extends StatelessWidget {
           children: [
             new Container(
                 padding: const EdgeInsets.all(8.0),
-                child: Image.network('https://image.edaily.co.kr/images/photo/files/NP/S/2018/06/PS18062101013.jpg')
+                child: AspectRatio(
+                  aspectRatio: 3/2,
+                  child: Image.network(picUrl, fit: BoxFit.fill,),
+                ),
             ),
             new Container(
               padding: const EdgeInsets.all(10.0),
@@ -800,10 +843,12 @@ class _ChoiceCard extends StatelessWidget {
                     ),),
                     Row(
                         children: [
-                          Text(item, style: GoogleFonts.inter(
-                            fontSize: 15,
-                            fontWeight: FontWeight.w500,
-                          ),)
+                          Flexible(
+                            child: Text(item, style: GoogleFonts.inter(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w500,
+                            ),),
+                          )
                         ]
                     )
                   ]
