@@ -462,14 +462,14 @@ class _MainPageState extends State<MainPage> {
               ),
 
               otherAccountsPictures: <Widget>[
-                new Container(
-                  child: new IconButton(
-                    icon : new Icon(Icons.camera_alt),
-                    onPressed: (){
-                      _showChoiceDialog(context);
-                    },
-                  )
-                ),
+                // new Container(
+                //   child: new IconButton(
+                //     icon : new Icon(Icons.camera_alt),
+                //     onPressed: (){
+                //       _showChoiceDialog(context);
+                //     },
+                //   )
+                // ),
                 CircleAvatar(
                   backgroundImage: AssetImage('lib/images/star.jpg'),
                   backgroundColor: Colors.white,
