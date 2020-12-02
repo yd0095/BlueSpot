@@ -66,8 +66,9 @@ class _MakeCourseState extends State<MakeCourse> {
   @override
   void initState() {
     now = DateTime.now();
-    getMarkerData();
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      getMarkerData();
       _manager = _initClusterManager();
       getCurrentSubLocality();
     });
@@ -395,10 +396,8 @@ class _MakeCourseState extends State<MakeCourse> {
                   });
                 },
                 initialCameraPosition: _parisCameraPosition,
-                onCameraIdle: (){
-                  return _manager.updateMap;
-                },
-                onCameraMove: (value){return _manager.onCameraMove;},
+                onCameraIdle: _manager.updateMap,
+                onCameraMove: _manager.onCameraMove,
                 markers: markers,
               ),
             ),

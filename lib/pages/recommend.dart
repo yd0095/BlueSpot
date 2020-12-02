@@ -75,7 +75,7 @@ class _RecommendState extends State<Recommend> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       // getCurrentLocation();
       _getPolyline();
-      _getPolyline2();
+      //_getPolyline2();
 
     });
 
@@ -272,6 +272,7 @@ class _RecommendState extends State<Recommend> {
         });
       }
       _addPolyLine();
+      _getPolyline2();
     }
     );
   }

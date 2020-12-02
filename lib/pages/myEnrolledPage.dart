@@ -1,3 +1,4 @@
+import 'package:bluespot/pages/myEnrolledDetailPage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -39,12 +40,14 @@ class _MyEnrolledPageState extends State<MyEnrolledPage> {
         setState(() {
           addressList.add(field.docs[index]["course_info"]["course_addr"]);
           titleList.add(field.docs[index]["course_info"]["course_name"]);
+          courseIdList.add(field.docs[index]["course_info"]["course_id"]);
         });
       });
     });
   }
   List<String> addressList = []; //코스 시작주소 저장하는 리스트
   List<String> titleList = []; //코스 이름 저장하는 리스트
+  List<String> courseIdList = [];
 
   Color lightSkyblue = Color(0xFFBBDEFB);
   Color lightblue = Color(0xFFE1F5FE);
@@ -120,7 +123,8 @@ class _MyEnrolledPageState extends State<MyEnrolledPage> {
             padding: EdgeInsets.all(7),
             child: GestureDetector(
               onTap: () {
-                Navigator.pushNamed(context, '/clickMyCourse');
+                Navigator.of(context).popUntil((route) => route.isFirst);
+                Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => MyEnrolledDetailPage(uid: this.uid,loggeduser: this.loggeduser, course_id: this.courseIdList[index])));
               },
               child: Column(
                 children: <CustomListItem>[

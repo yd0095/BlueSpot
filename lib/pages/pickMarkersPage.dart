@@ -45,11 +45,13 @@ class _PickPageState extends State<PickPage> {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   Stream<QuerySnapshot> currentStream;
 
+
+  var now;
   @override
   void initState() {
     // getMarkerData();
     _c = new TextEditingController();
-
+    now = DateTime.now();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       getCurrentLocation();
       getMarkerData();
@@ -188,6 +190,7 @@ class _PickPageState extends State<PickPage> {
 
     await FirebaseFirestore.instance.collection('Course').add({
       'From': this.uid,
+      'course_id' : now.toString(),
       //uid 출력.
       'course_info' : {
         'course_addr' : firstAddress.addressLine,
