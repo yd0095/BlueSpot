@@ -53,6 +53,7 @@ class _PickPageState extends State<PickPage> {
     _c = new TextEditingController();
     now = DateTime.now();
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      getCurrentSubLocality();
       getCurrentLocation();
       getMarkerData();
       getCurrentSubLocality();
@@ -70,6 +71,7 @@ class _PickPageState extends State<PickPage> {
   String country;
 
   var myCurrentSubLocality;
+  var myCurrentLocality;
 
   String addr; //spotMakePage로 넘겨줄 스팟의 전체 주소(인천광역시 미추홀구 용현동...)
   TextEditingController _c;
@@ -131,8 +133,8 @@ class _PickPageState extends State<PickPage> {
 
   getMarkerData() async {
     //원래는 현재위치 받아야함 ->핸드폰에서 myCurrentSubLocality를 getCurrentSubLocality를 통해 받을거임
-    var myCurrentSubLocality = "Incheon";
-    await FirebaseFirestore.instance.collectionGroup(myCurrentSubLocality)
+
+    await FirebaseFirestore.instance.collection('Marker/South Korea/$myCurrentLocality').where("sublocality", isEqualTo: myCurrentSubLocality)
         .get()
         .then((myMockDoc) {
       for (int i = 0; i < myMockDoc.docs.length; i++) {
@@ -173,6 +175,7 @@ class _PickPageState extends State<PickPage> {
         coordinated);
     var firstAddress = address.first;
     setState(() {
+      myCurrentLocality = firstAddress.adminArea;
       myCurrentSubLocality = firstAddress.subLocality;
     });
   }
@@ -194,6 +197,7 @@ class _PickPageState extends State<PickPage> {
       //uid 출력.
       'course_info' : {
         'course_addr' : firstAddress.addressLine,
+        'course_Locality' : firstAddress.adminArea + firstAddress.subLocality,
         'course_name' : text,
         'course_writer' : loggeduser.displayName,
       },

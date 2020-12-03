@@ -222,10 +222,10 @@ class _SpotPageState extends State<SpotPage> {
                     //     image: DecorationImage(image: NetworkImage(imageUrl)),
                     //   ),
                     // ),
-                    FutureBuilder<Object>(
+                    FutureBuilder(
                         future: addImageToFirebase(),
                         builder: (context, snapshot) {
-                          if (snapshot.hasData == false) {
+                          if (snapshot.hasData == false || snapshot.data.length == 0) {
                             return CircularProgressIndicator();
                           }
                           else if (snapshot.hasError) {
@@ -323,7 +323,7 @@ class _SpotPageState extends State<SpotPage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                        content_title,style: GoogleFonts.inter(
+                        content_title ?? "title",style: GoogleFonts.inter(
                         fontSize:20,
                         fontWeight: FontWeight.bold,
                           ),),
@@ -337,7 +337,7 @@ class _SpotPageState extends State<SpotPage> {
                             padding:EdgeInsets.all(10)
                           ),
                           Text(
-                            content_info,
+                            content_info ?? "error",
                             style: GoogleFonts.inter(
                             fontSize:18,
                             fontWeight: FontWeight.w500,

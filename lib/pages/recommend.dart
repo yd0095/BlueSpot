@@ -74,6 +74,7 @@ class _RecommendState extends State<Recommend> {
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       // getCurrentLocation();
+      getCurrentSubLocality();
       _getPolyline();
       //_getPolyline2();
 
@@ -92,6 +93,7 @@ class _RecommendState extends State<Recommend> {
   String country;
 
   var myCurrentSubLocality;
+  var myCurrentLocality;
 
   String addr; //spotMakePage로 넘겨줄 스팟의 전체 주소(인천광역시 미추홀구 용현동...)
 
@@ -171,12 +173,11 @@ class _RecommendState extends State<Recommend> {
 
   getMarkerData() async {
     //원래는 현재위치 받아야함 ->핸드폰에서 myCurrentSubLocality를 getCurrentSubLocality를 통해 받을거임
-    //myCurrentSubLocality = getCurrentLocality();
-    var myCurrentLocality = "Incheon";
-    //myCurrentSubLocality = getCurrentSubLocality();
-    // var myCurrentSubLocality = "Nam-gu";
-    // await FirebaseFirestore.instance.collectionGroup(myCurrentLocality).where("sublocality", isEqualTo: myCurrentSubLocality)
-    await FirebaseFirestore.instance.collectionGroup(myCurrentLocality)
+    // var myCurrentLocality = "Incheon";
+    // await FirebaseFirestore.instance.collectionGroup(myCurrentLocality)
+    // 이거 되면 될듯.
+
+    await FirebaseFirestore.instance.collection('ClickedData/$myCurrentLocality/$myCurrentSubLocality').orderBy('numberOfNodes', descending: true).limit(3)
         .get()
         .then((myMockDoc) {
       for (int i = 0; i < 3; i++) {
@@ -200,6 +201,7 @@ class _RecommendState extends State<Recommend> {
         coordinated);
     var firstAddress = address.first;
     setState(() {
+      myCurrentLocality = firstAddress.adminArea;
       myCurrentSubLocality = firstAddress.subLocality;
     });
   }
@@ -226,19 +228,9 @@ class _RecommendState extends State<Recommend> {
     setState(() {});
   }
 
-  // LatLng srt;
-  // LatLng dst;
   double _originLat, _originLon;
   double _destLat, _destLon;
   double _wayLat, _wayLon;
-
-
-
-  // double _originLatitude = 6.5212402, _originLongitude = 3.3679965;
-  // double _destLatitude = 6.849660, _destLongitude = 3.648190;
-
-  // double _originLatitude = 43.623880, _originLongitude = 3.898790;
-  // double _destLatitude = 43.623880, _destLongitude = 3.91256;
 
 
   void _getPolyline() async {
