@@ -57,9 +57,9 @@ class _MyEnrolledDetailPageState extends State<MyEnrolledDetailPage> {
 
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   Stream<QuerySnapshot> currentStream;
+  Stream<QuerySnapshot> currentStream2; //코스 정보를 받아오기 위함
   GoogleMapController googleMapController;
   Completer<GoogleMapController> _controllerGoogleMap = Completer();
-  
   
   Map<MarkerId, Marker> markers = <MarkerId, Marker>{};
 
@@ -84,8 +84,21 @@ class _MyEnrolledDetailPageState extends State<MyEnrolledDetailPage> {
 
     });
     super.initState();
-  }
 
+    currentStream2 = firestore.collection('Course').where("course_id",isEqualTo:this.course_id).snapshots();
+                currentStream2.forEach((field) {
+                  field.docs.asMap().forEach((index, data) {
+                    setState(() {
+                      course_name = field.docs[index]["course_info"]["course_name"];
+                    course_writer = field.docs[index]["course_info"]["course_writer"];
+                    });
+                  });
+                });
+  }
+  List<String> writerList = [];
+  List<String> titleList = [];
+  var course_name;
+  var course_writer;
 
   void _cameraUpdate() async{
 
@@ -287,7 +300,7 @@ class _MyEnrolledDetailPageState extends State<MyEnrolledDetailPage> {
                 )
             ),
             // Positioned(
-            //   top: MediaQuery.of(context).size.height*0.7,
+            //   //top: MediaQuery.of(context).size.height*0.7,
             //   left: 50,
             //   child: Row(
             //     children: <Widget>[
@@ -376,7 +389,54 @@ class _MyEnrolledDetailPageState extends State<MyEnrolledDetailPage> {
                 },
               ),
             ),
+            Positioned(
+              bottom: 40.0,
+              right: 30.0,
+              left: 30.0,
+              child:Column(
+                children:<Widget>[
+                  Container(
+                    height: 80.0,
+                    //width: double.infinity,
+                    width: 300.0,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(12.0),
+                        color: Colors.grey,
+                        boxShadow:[
+                          BoxShadow(
+                            offset: Offset(6,6),
+                            color:Colors.black38,
+                            blurRadius: 3
 
+                          ),
+                        ]
+                    ),
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                      children:[
+                        Container(
+                          margin: EdgeInsets.all(10),
+                          padding: EdgeInsets.all(10),
+                          child: Column(
+                            children:[
+                              Text(
+                                  '    코스 이름 : $course_name',style: GoogleFonts.inter(
+                                  fontSize:18, fontWeight: FontWeight.bold, color: Colors.white)
+                              ),
+                              Text(
+                                  '코스 등록자 : $course_writer',style: GoogleFonts.inter(
+                                  fontSize:18, fontWeight: FontWeight.bold, color: Colors.white)
+                              ),
+                            ]
+                          )
+                        )
+
+                      ]
+                    )
+                  )
+                ]
+              )
+            )
           ],
         ) ,
       ),

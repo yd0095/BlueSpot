@@ -40,7 +40,7 @@ class _MyEnrolledPageState extends State<MyEnrolledPage> {
         setState(() {
           addressList.add(field.docs[index]["course_info"]["course_addr"]);
           titleList.add(field.docs[index]["course_info"]["course_name"]);
-          courseIdList.add(field.docs[index]["course_info"]["course_id"]);
+          courseIdList.add(field.docs[index]["course_id"]);
         });
       });
     });
