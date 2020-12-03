@@ -177,7 +177,7 @@ class _RecommendState extends State<Recommend> {
     // await FirebaseFirestore.instance.collectionGroup(myCurrentLocality)
     // 이거 되면 될듯.
 
-    await FirebaseFirestore.instance.collection('ClickedData/$myCurrentLocality/$myCurrentSubLocality').orderBy('numberOfNodes', descending: true).limit(3)
+    await FirebaseFirestore.instance.collection('ClickedData/$myCurrentLocality').where("sublocality", isEqualTo: myCurrentSubLocality).orderBy('numberOfNodes', descending: true).limit(3)
         .get()
         .then((myMockDoc) {
       for (int i = 0; i < 3; i++) {
