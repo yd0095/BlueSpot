@@ -93,8 +93,8 @@ getCurrentUser() {
                           return Center(child: CircularProgressIndicator());
                           }
                         );
-                        await loginAction();
-                        Navigator.pushNamed(context, '/AfterLogin');
+                       // await loginAction();
+                       // Navigator.pushNamed(context, '/AfterLogin');
                       },
                       padding: EdgeInsets.all(20),
                       color: Colors.blue,
@@ -154,7 +154,14 @@ getCurrentUser() {
                       height: 42,
                     )
                 ),
-              )
+              ),
+              FlatButton(
+                child: Text('Sign In', style: TextStyle(fontSize: 24)),
+                onPressed: (){},
+                color: Colors.lightBlueAccent,
+                textColor: Colors.white,
+              ),
+
             ]
           )
         )

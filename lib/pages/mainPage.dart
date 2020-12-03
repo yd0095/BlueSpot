@@ -52,6 +52,7 @@ class _MainPageState extends State<MainPage> {
   //위치
   Position currentPosition; //내현재위치
   String myCurrentSubLocality;
+  String myCurrentLocality;
 
   var numOfMarker;
 
@@ -90,36 +91,9 @@ class _MainPageState extends State<MainPage> {
   getData() async{
     currentlocatePosition();
     //구 주소 확인 => myCurrentSubLocality;
-    getCurrentSubLocality();
+    getCurrentLocality();
 
-    //삭제
-    var myCurrentLocality = "Incheon";
-    myCurrentSubLocality = "Nam-gu";
-
-    // currentStream = firestore.collectionGroup(myCurrentLocality).where("sublocality", isEqualTo: myCurrentSubLocality).snapshots();
-    // currentStream.forEach((field) {
-    //   field.docs.asMap().forEach((index, data) {
-    //     setState(() {
-    //       markerId.add(field.docs[index]["markerId"]);
-    //       print("${field.docs[index]["markerId"]} is it");
-    //
-    //       currentStream2 = firestore.collection('Spot')
-    //           .where("Marker_id", isEqualTo: field.docs[index]["markerId"])
-    //           .snapshots();
-    //       currentStream2.forEach((field) {
-    //         field.docs.asMap().forEach((index, data) {
-    //           setState(() {
-    //             itemList.add(field.docs[index]["Content"]["Content_picture"]);
-    //             titleList.add(field.docs[index]["Content"]["Content_Title"]);
-    //             likeList.add(field.docs[index]["Content"]["Content_Like"]);
-    //             print("${field.docs[index]["Content"]["Content_picture"]} is pic");
-    //           });
-    //         });
-    //       });
-    //     });
-    //   });
-    // });
-    currentStream3 = firestore.collection('Course').where("From", isEqualTo: this.uid).snapshots();
+    currentStream3 = firestore.collection('Course').where("course_Locality", isEqualTo: myCurrentLocality+myCurrentSubLocality).snapshots();
     currentStream3.forEach((field) {
       field.docs.asMap().forEach((index, data) {
         setState(() {
@@ -139,6 +113,7 @@ class _MainPageState extends State<MainPage> {
         });
       });
     });
+
     currentStream4 = firestore.collection('Spot').orderBy("Content.Content_Like", descending: true).limit(3).snapshots();
     currentStream4.forEach((field) {
       field.docs.asMap().forEach((index, data) {
@@ -217,13 +192,14 @@ class _MainPageState extends State<MainPage> {
     currentPosition = position; //position에서 lat,lng를 받아온다.
   }
 
-  void getCurrentSubLocality() async {
+  void getCurrentLocality() async {
     final coordinated = geoCo.Coordinates(
         currentPosition.latitude, currentPosition.longitude);
     var address = await geoCo.Geocoder.local.findAddressesFromCoordinates(
         coordinated);
     var firstAddress = address.first;
     setState(() {
+      myCurrentLocality = firstAddress.adminArea;
       myCurrentSubLocality = firstAddress.subLocality;
     });
   }
@@ -443,45 +419,45 @@ class _MainPageState extends State<MainPage> {
                       }
                     }
                   ),
-                  Padding(
-                      padding: EdgeInsets.only(top:40,right:160,bottom:4),
-                      child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children:<Widget>[
-                            Text('#Blue Spot의', style: GoogleFonts.inter(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            )),
-                            Text('추천 코스를 만나보세요', style: GoogleFonts.inter(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            )),
-                          ]
-                      )
-                  ),
-                  new Card(
-                    child: new Column(
-                      children: <Widget>[
-                        //new Image.network('https://i.ytimg.com/vi/fq4N0hgOWzU/maxresdefault.jpg'),
-                        Image.asset('lib/images/map1.png', width:380,height:380),
-                        Padding(
-                            padding: EdgeInsets.only(top:1,left:12,bottom:15),
-                          child: new Row(
-                            children: <Widget>[
-                              new Padding(
-                                padding: new EdgeInsets.all(7.0),
-                                child: new Icon(Icons.thumb_up),
-                              ),
-                              new Padding(
-                                  padding: new EdgeInsets.all(7.0),
-                                child: new Text('내 코스로 등록',style: new TextStyle(fontSize: 18.0))
-                              )
-                            ]
-                          )
-                        )
-                      ]
-                    )
-                  )
+                  // Padding(
+                  //     padding: EdgeInsets.only(top:40,right:160,bottom:4),
+                  //     child: Column(
+                  //         crossAxisAlignment: CrossAxisAlignment.start,
+                  //         children:<Widget>[
+                  //           Text('#Blue Spot의', style: GoogleFonts.inter(
+                  //             fontSize: 20,
+                  //             fontWeight: FontWeight.bold,
+                  //           )),
+                  //           Text('추천 코스를 만나보세요', style: GoogleFonts.inter(
+                  //             fontSize: 20,
+                  //             fontWeight: FontWeight.bold,
+                  //           )),
+                  //         ]
+                  //     )
+                  // ),
+                  // new Card(
+                  //   child: new Column(
+                  //     children: <Widget>[
+                  //       //new Image.network('https://i.ytimg.com/vi/fq4N0hgOWzU/maxresdefault.jpg'),
+                  //       Image.asset('lib/images/map1.png', width:380,height:380),
+                  //       Padding(
+                  //           padding: EdgeInsets.only(top:1,left:12,bottom:15),
+                  //         child: new Row(
+                  //           children: <Widget>[
+                  //             new Padding(
+                  //               padding: new EdgeInsets.all(7.0),
+                  //               child: new Icon(Icons.thumb_up),
+                  //             ),
+                  //             new Padding(
+                  //                 padding: new EdgeInsets.all(7.0),
+                  //               child: new Text('내 코스로 등록',style: new TextStyle(fontSize: 18.0))
+                  //             )
+                  //           ]
+                  //         )
+                  //       )
+                  //     ]
+                  //   )
+                  // )
                 ],
 
               )

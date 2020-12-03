@@ -68,8 +68,12 @@ class _MakeCourseState extends State<MakeCourse> {
     now = DateTime.now();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      getCurrentSubLocality();
       getMarkerData();
+      _fetchoffer();
       _manager = _initClusterManager();
+      _manager.setItems(items);
+
       getCurrentSubLocality();
     });
 
@@ -86,6 +90,7 @@ class _MakeCourseState extends State<MakeCourse> {
   String addressLocation;
   String country;
 
+  var myCurrentLocality;
   var myCurrentSubLocality;
 
   String addr; //spotMakePage로 넘겨줄 스팟의 전체 주소(인천광역시 미추홀구 용현동...)
@@ -134,8 +139,9 @@ class _MakeCourseState extends State<MakeCourse> {
 
   getMarkerData() async {
     //원래는 현재위치 받아야함 ->핸드폰에서 myCurrentSubLocality를 getCurrentSubLocality를 통해 받을거임
-    var myCurrentSubLocality = "Incheon";
-    await FirebaseFirestore.instance.collectionGroup(myCurrentSubLocality)
+    // var myCurrentSubLocality = "Incheon";
+
+    await FirebaseFirestore.instance.collection('Marker/South Korea/$myCurrentLocality').where("sublocality", isEqualTo: myCurrentSubLocality)
         .get()
         .then((myMockDoc) {
       for (int i = 0; i < myMockDoc.docs.length; i++) {
@@ -176,6 +182,7 @@ class _MakeCourseState extends State<MakeCourse> {
         coordinated);
     var firstAddress = address.first;
     setState(() {
+      myCurrentLocality = firstAddress.adminArea;
       myCurrentSubLocality = firstAddress.subLocality;
     });
   }
@@ -265,16 +272,39 @@ class _MakeCourseState extends State<MakeCourse> {
         return Marker(
           markerId: MarkerId(cluster.getId()),
           position: cluster.location,
-          onTap: () {
+          onTap: () async {
             print('${cluster.location} location');
             print('---- $cluster');
             cluster.items.forEach((p) => print(p));
 
-            Navigator.of(context).popUntil((route) => route.isFirst);
-            Navigator.of(context).pushReplacement(
-                MaterialPageRoute(builder: (context) =>
-                    SpotPage(uid: this.uid, loggeduser: this.loggeduser, location: cluster.location)));
+            if(cluster.items.length == 1) {
+              Navigator.of(context).popUntil((route) => route.isFirst);
+              Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(builder: (context) =>
+                      SpotPage(uid: this.uid,
+                          loggeduser: this.loggeduser,
+                          location: cluster.location)));
+            }
+            else{
 
+              final coordinated = new geoCo.Coordinates(
+                  cluster.location.latitude, cluster.location.longitude);
+              var address = await geoCo.Geocoder.local
+                  .findAddressesFromCoordinates(coordinated);
+              var firstAddress = address.first;
+
+              await FirebaseFirestore.instance.collection('ClickedData')
+                  .doc(firstAddress.countryName)
+                  .collection(firstAddress.adminArea)
+                  .add({
+                'sublocality' : firstAddress.subLocality,
+                'lat, long': [cluster.location.latitude, cluster.location.longitude],
+                'numberOfNodes' : cluster.items.length
+
+                //위도와 경도를 배열로 출력
+                //전체주소
+              });
+            }
           },
           icon: await _getMarkerBitmap(cluster.isMultiple ? 125 : 75,
               text: cluster.isMultiple ? cluster.count.toString() : null),
@@ -315,8 +345,11 @@ class _MakeCourseState extends State<MakeCourse> {
     return BitmapDescriptor.fromBytes(data.buffer.asUint8List());
   }
   _fetchoffer(){
-    return Future.delayed(Duration(seconds: 1));
+    return Future.delayed(Duration(seconds: 2));
   }
+
+
+
 
 
   @override
