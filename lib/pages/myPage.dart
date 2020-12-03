@@ -429,9 +429,11 @@ class _MyPageState extends State<MyPage> {
                                           child: Column(
                                             crossAxisAlignment: CrossAxisAlignment.start,
                                             children: [
-                                              Text(
-                                                titleList[index],
-                                                textAlign: TextAlign.center,
+                                              Flexible(
+                                                child: Text(
+                                                  titleList[index],
+                                                  textAlign: TextAlign.center,
+                                                ),
                                               ),
                                             ],
                                           ),
@@ -464,9 +466,11 @@ class _MyPageState extends State<MyPage> {
                                           child: Column(
                                             crossAxisAlignment: CrossAxisAlignment.start,
                                             children: [
-                                              Text(
-                                                titleList2[index],
-                                                textAlign: TextAlign.center,
+                                              Flexible(
+                                                child: Text(
+                                                  titleList2[index],
+                                                  textAlign: TextAlign.center,
+                                                ),
                                               ),
                                             ],
                                           ),
