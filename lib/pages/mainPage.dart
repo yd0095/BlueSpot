@@ -89,9 +89,9 @@ class _MainPageState extends State<MainPage> {
   }
 
   getData() async{
-    currentlocatePosition();
+    await currentlocatePosition();
     //구 주소 확인 => myCurrentSubLocality;
-    getCurrentLocality();
+    await getCurrentLocality();
 
     currentStream3 = firestore.collection('Course').where("course_Locality", isEqualTo: myCurrentLocality+myCurrentSubLocality).snapshots();
     currentStream3.forEach((field) {
@@ -185,14 +185,14 @@ class _MainPageState extends State<MainPage> {
   final List<String> theme = ['데이트','먹방','힐링','오락','건강'];
 
   //실제위치 받아오는 함수.
-  void currentlocatePosition() async {
+  currentlocatePosition() async {
     //Accuracy.bestForNavigation도 굳.
     Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
     currentPosition = position; //position에서 lat,lng를 받아온다.
   }
 
-  void getCurrentLocality() async {
+  getCurrentLocality() async {
     final coordinated = geoCo.Coordinates(
         currentPosition.latitude, currentPosition.longitude);
     var address = await geoCo.Geocoder.local.findAddressesFromCoordinates(

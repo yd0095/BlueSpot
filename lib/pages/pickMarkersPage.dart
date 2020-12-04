@@ -134,7 +134,10 @@ class _PickPageState extends State<PickPage> {
   getMarkerData() async {
     //원래는 현재위치 받아야함 ->핸드폰에서 myCurrentSubLocality를 getCurrentSubLocality를 통해 받을거임
 
-    await FirebaseFirestore.instance.collection('Marker/South Korea/$myCurrentLocality').where("sublocality", isEqualTo: myCurrentSubLocality)
+    await getCurrentLocation();
+    await getCurrentSubLocality();
+
+    await FirebaseFirestore.instance.collection('Marker/대한민국/$myCurrentLocality').where("sublocality", isEqualTo: myCurrentSubLocality)
         .get()
         .then((myMockDoc) {
       for (int i = 0; i < myMockDoc.docs.length; i++) {
@@ -160,7 +163,7 @@ class _PickPageState extends State<PickPage> {
     });
   }
 
-  void getCurrentLocation() async {
+  getCurrentLocation() async {
     Position currentPosition =
     await GeolocatorPlatform.instance.getCurrentPosition();
     setState(() {
@@ -168,7 +171,7 @@ class _PickPageState extends State<PickPage> {
     });
   }
 
-  void getCurrentSubLocality() async {
+  getCurrentSubLocality() async {
     final coordinated = geoCo.Coordinates(
         position.latitude, position.longitude);
     var address = await geoCo.Geocoder.local.findAddressesFromCoordinates(

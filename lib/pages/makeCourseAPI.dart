@@ -67,14 +67,16 @@ class _MakeCourseState extends State<MakeCourse> {
   void initState() {
     now = DateTime.now();
 
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      getCurrentSubLocality();
+
+
+      //getCurrentSubLocality();
+
       getMarkerData();
-      _fetchoffer();
       _manager = _initClusterManager();
       _manager.setItems(items);
 
-      getCurrentSubLocality();
     });
 
     super.initState();
@@ -141,7 +143,13 @@ class _MakeCourseState extends State<MakeCourse> {
     //원래는 현재위치 받아야함 ->핸드폰에서 myCurrentSubLocality를 getCurrentSubLocality를 통해 받을거임
     // var myCurrentSubLocality = "Incheon";
 
-    await FirebaseFirestore.instance.collection('Marker/South Korea/$myCurrentLocality').where("sublocality", isEqualTo: myCurrentSubLocality)
+    await getCurrentLocation();
+    await getCurrentSubLocality();
+
+    print('$myCurrentLocality is admin');
+    print('$myCurrentSubLocality is sub');
+
+    await FirebaseFirestore.instance.collection('Marker/대한민국/$myCurrentLocality').where("sublocality", isEqualTo: myCurrentSubLocality)
         .get()
         .then((myMockDoc) {
       for (int i = 0; i < myMockDoc.docs.length; i++) {
@@ -167,15 +175,17 @@ class _MakeCourseState extends State<MakeCourse> {
     });
   }
 
-  void getCurrentLocation() async {
+  getCurrentLocation() async {
     Position currentPosition =
     await GeolocatorPlatform.instance.getCurrentPosition();
     setState(() {
       position = currentPosition;
+
+      getCurrentSubLocality();
     });
   }
 
-  void getCurrentSubLocality() async {
+  getCurrentSubLocality() async {
     final coordinated = geoCo.Coordinates(
         position.latitude, position.longitude);
     var address = await geoCo.Geocoder.local.findAddressesFromCoordinates(
