@@ -93,7 +93,7 @@ class _MainPageState extends State<MainPage> {
     //구 주소 확인 => myCurrentSubLocality;
     await getCurrentLocality();
 
-    currentStream3 = firestore.collection('Course').where("course_Locality", isEqualTo: myCurrentLocality+myCurrentSubLocality).snapshots();
+    currentStream3 = firestore.collection('Course').where("course_info.course_Locality", isEqualTo: "$myCurrentLocality$myCurrentSubLocality").snapshots();
     currentStream3.forEach((field) {
       field.docs.asMap().forEach((index, data) {
         setState(() {

@@ -147,12 +147,6 @@ class _MyEnrolledDetailPageState extends State<MyEnrolledDetailPage> {
   }
 
   getMarkerData() async {
-    //원래는 현재위치 받아야함 ->핸드폰에서 myCurrentSubLocality를 getCurrentSubLocality를 통해 받을거임
-    //myCurrentSubLocality = getCurrentLocality();
-    var myCurrentLocality = "Incheon";
-    //myCurrentSubLocality = getCurrentSubLocality();
-    // var myCurrentSubLocality = "Nam-gu";
-    // await FirebaseFirestore.instance.collectionGroup(myCurrentLocality).where("sublocality", isEqualTo: myCurrentSubLocality)
 
     var markerid1;
     var markerid2;
@@ -171,18 +165,19 @@ class _MyEnrolledDetailPageState extends State<MyEnrolledDetailPage> {
     print("$markerid2  id2");
     print("$markerid3  id3");
 
+    var subLocality = "인천광역시";
 
-    await FirebaseFirestore.instance.collection('Marker/South Korea/Incheon').where("markerId",isEqualTo: markerid1)
+    await FirebaseFirestore.instance.collection('Marker/대한민국/$subLocality').where("markerId",isEqualTo: markerid1)
         .get()
         .then((myMockDoc) {
         initMarker(myMockDoc.docs[0].data(), myMockDoc.docs[0].id);
     });
-    await FirebaseFirestore.instance.collection('Marker/South Korea/Incheon').where("markerId",isEqualTo: markerid2)
+    await FirebaseFirestore.instance.collection('Marker/대한민국/$subLocality').where("markerId",isEqualTo: markerid2)
         .get()
         .then((myMockDoc) {
       initMarker(myMockDoc.docs[0].data(), myMockDoc.docs[0].id);
     });
-    await FirebaseFirestore.instance.collection('Marker/South Korea/Incheon').where("markerId",isEqualTo: markerid3)
+    await FirebaseFirestore.instance.collection('Marker/대한민국/$subLocality').where("markerId",isEqualTo: markerid3)
         .get()
         .then((myMockDoc) {
       initMarker(myMockDoc.docs[0].data(), myMockDoc.docs[0].id);

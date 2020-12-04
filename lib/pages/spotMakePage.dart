@@ -304,6 +304,7 @@ class _SpotMakePageState extends State<SpotMakePage> {
             style: TextStyle(color: Colors.white, fontSize: 20),
           ),
           onPressed: (){
+            Navigator.of(context).popUntil((route) => route.isFirst);
             Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => MainPage(uid: this.uid, loggeduser: this.loggeduser,)));
           },
           width: 120,

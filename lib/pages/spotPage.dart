@@ -18,6 +18,8 @@ import 'package:bluespot/pages/mapPage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:geocoder/geocoder.dart' as geoCo;
+import 'package:geolocator/geolocator.dart';
 
 class SpotPage extends StatefulWidget {
   final String uid;
@@ -40,6 +42,9 @@ class _SpotPageState extends State<SpotPage> {
   final String uid;
   final User loggeduser;
   final LatLng location;
+
+  String myCurrentLocality;
+  String myCurrentSubLocality;
   _SpotPageState(this.uid, this.loggeduser, this.location);
 
   Color lightSkyblue = Color(0xFFBBDEFB);
@@ -73,10 +78,14 @@ class _SpotPageState extends State<SpotPage> {
     // TODO: implement initState
     super.initState();
 
-    var myCurrentLocality = "Incheon";
+    getData();
+  }
+  getData() async{
+    await getCurrentLocality();
+
     var lnglatlist = [location.latitude,location.longitude];
 
-    currentStream = firestore.collectionGroup(myCurrentLocality).where("lat, long", isEqualTo: lnglatlist).snapshots();
+    currentStream = firestore.collection('Marker/대한민국/$myCurrentLocality').where("lat, long", isEqualTo: lnglatlist).snapshots();
     currentStream.forEach((field) {
       field.docs.asMap().forEach((index, data) {
         setState(() {
@@ -120,6 +129,17 @@ class _SpotPageState extends State<SpotPage> {
   //     );
   //   }
   // }
+  getCurrentLocality() async {
+    final coordinated = geoCo.Coordinates(
+        location.latitude, location.longitude);
+    var address = await geoCo.Geocoder.local.findAddressesFromCoordinates(
+        coordinated);
+    var firstAddress = address.first;
+    setState(() {
+      myCurrentLocality = firstAddress.adminArea;
+      myCurrentSubLocality = firstAddress.subLocality;
+    });
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -303,11 +323,11 @@ class _SpotPageState extends State<SpotPage> {
                                       fontSize:18,
                                       fontWeight: FontWeight.w500,
                                     ), ),
-                                    IconButton(
-                                        icon: Icon(Icons.more_vert , color: Colors.black,),
-                                        iconSize: 20,
-                                        padding: EdgeInsets.only(left:250)
-                                    ),
+                                    // IconButton(
+                                    //     icon: Icon(Icons.more_vert , color: Colors.black,),
+                                    //     iconSize: 20,
+                                    //     padding: EdgeInsets.only(left: 200),
+                                    // ),
                                   ]
                               )
                           );
@@ -326,12 +346,6 @@ class _SpotPageState extends State<SpotPage> {
                         content_title ?? "title",style: GoogleFonts.inter(
                         fontSize:20,
                         fontWeight: FontWeight.bold,
-                          ),),
-                          Text(
-                            '아직 미구현',style: GoogleFonts.inter(
-                            fontSize:17,
-                            color: Colors.grey,
-                            fontWeight: FontWeight.w500,
                           ),),
                           Padding(
                             padding:EdgeInsets.all(10)
