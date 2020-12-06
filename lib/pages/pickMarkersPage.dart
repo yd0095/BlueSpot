@@ -102,7 +102,8 @@ class _PickPageState extends State<PickPage> {
 
   List<String> threeMarkers=[];
   LatLng firstMarker;
-
+  var bt = [BitmapDescriptor.defaultMarker,BitmapDescriptor.defaultMarkerWithHue(80)];
+  int _click = 0;
   //init amrker, getMarker가 retrieve function. -> 실행안댐.
   //처음 실행하면 마커를 불러오기위해서 초기화하는 함수.
   void initMarker(specify, specifyId) async {
@@ -113,7 +114,11 @@ class _PickPageState extends State<PickPage> {
         position:
         // LatLng(specify['location'].latitude, specify['location'].longitude),
         LatLng(specify['lat, long'][0], specify['lat, long'][1]),
+        icon: bt[_click],
         onTap: (){
+          setState(() {
+            _click = 1;
+          });
           if(threeMarkers.length < 3) {
             threeMarkers.add(specify['markerId']);
             if(threeMarkers.length == 1) {

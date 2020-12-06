@@ -388,8 +388,8 @@ class _MyPageState extends State<MyPage> {
                             itemCount: _choose(),
                             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                               crossAxisCount: 2,
-                              crossAxisSpacing: 10,
-                              mainAxisSpacing: 10,
+                              crossAxisSpacing: 20,
+                              mainAxisSpacing: 20,
                             ),
                             // ignore: missing_return
                             itemBuilder: (BuildContext context, int index) {
@@ -411,37 +411,45 @@ class _MyPageState extends State<MyPage> {
                               //execute
                               else if(_currentSelection == 0){
                                 return Card(
-                                  child: InkWell(
-                                    onTap: (){
-                                      //print('hahaha');
-                                      Navigator.of(context).popUntil((route) => route.isFirst);
-                                      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) =>
-                                          SpotPage3(uid: this.uid,loggeduser: this.loggeduser, marker_id: markerId1[index],)));
-                                    },
-                                    child:Column(
-                                      children: [
-                                        AspectRatio(aspectRatio:18.0 / 13.0,
-                                          child: Image.network(snapshot.data[index],
-                                            fit: BoxFit.fill,),
-                                        ),
-                                        Padding(
-                                          padding: EdgeInsets.fromLTRB(16.0, 12.0, 16.0, 8.0),
-                                          child: Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                    child: InkWell(
+                                      onTap: (){
+                                        //print('hahaha');
+                                        Navigator.of(context).popUntil((route) => route.isFirst);
+                                        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) =>
+                                            SpotPage3(uid: this.uid,loggeduser: this.loggeduser, marker_id: markerId1[index],)));
+                                      },
+                                      child:Column(
+                                        children: [
+                                          AspectRatio(aspectRatio:18.0 / 13.0,
+                                            child: Image.network(snapshot.data[index] ?? "lib/images/b.jpg",
+                                              fit: BoxFit.fill,),
+                                          ),
+                                          Column(
                                             children: [
-                                              Flexible(
-                                                child: Text(
-                                                  titleList[index],
-                                                  textAlign: TextAlign.center,
+                                              Padding(
+                                                padding: EdgeInsets.fromLTRB(16.0, 12.0, 16.0, 8.0),
+                                                child: Column(
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  children: [
+                                                      Row(
+                                                        children: [
+                                                          Flexible(
+                                                            child: Text(
+                                                              titleList[index] ?? "",
+                                                              textAlign: TextAlign.center,
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                  ],
                                                 ),
                                               ),
+                                              //무조건 이렇게
                                             ],
                                           ),
-                                        ),
-                                        //무조건 이렇게
-                                      ],
-                                    ),
-                                  )
+                                        ],
+                                      ),
+                                    )
                                 );
                               }
                               else if(_currentSelection == 1){
@@ -458,7 +466,7 @@ class _MyPageState extends State<MyPage> {
                                     child:Column(
                                       children: [
                                         AspectRatio(aspectRatio:18.0 / 13.0,
-                                          child: Image.network(snapshot.data[index],
+                                          child: Image.network(snapshot.data[index] ?? "lib/images/b.jpg",
                                             fit: BoxFit.fill,),
                                         ),
                                         Padding(
@@ -466,11 +474,15 @@ class _MyPageState extends State<MyPage> {
                                           child: Column(
                                             crossAxisAlignment: CrossAxisAlignment.start,
                                             children: [
-                                              Flexible(
-                                                child: Text(
-                                                  titleList2[index],
-                                                  textAlign: TextAlign.center,
-                                                ),
+                                              Row(
+                                                children: [
+                                                  Flexible(
+                                                    child: Text(
+                                                      titleList2[index] ?? "",
+                                                      textAlign: TextAlign.center,
+                                                    ),
+                                                  ),
+                                                ],
                                               ),
                                             ],
                                           ),

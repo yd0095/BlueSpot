@@ -74,7 +74,7 @@ class _RecommendState extends State<Recommend> {
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       // getCurrentLocation();
-      getCurrentSubLocality();
+
       _getPolyline();
       //_getPolyline2();
 
@@ -147,7 +147,7 @@ class _RecommendState extends State<Recommend> {
         LatLng(specify['lat, long'][0], specify['lat, long'][1]),
     );
     setState(() {
-      if (markers.length<3) {
+      // if (markers.length<3) {
         mid = markerId;
         //midList.add(markerId);
         if(mid1 == null){
@@ -167,7 +167,7 @@ class _RecommendState extends State<Recommend> {
           _wayLon = marker.position.longitude;
         }
         markers[markerId] = marker;
-      }
+      // }
     });
   }
 
@@ -176,17 +176,23 @@ class _RecommendState extends State<Recommend> {
     // var myCurrentLocality = "Incheon";
     // await FirebaseFirestore.instance.collectionGroup(myCurrentLocality)
     // 이거 되면 될듯.
+    await getCurrentLocation();
+    await getCurrentSubLocality();
 
-    await FirebaseFirestore.instance.collection('ClickedData/$myCurrentLocality').where("sublocality", isEqualTo: myCurrentSubLocality).orderBy('numberOfNodes', descending: true).limit(3)
+    print("$myCurrentLocality is loc");
+
+    await FirebaseFirestore.instance.collection('ClickedData/대한민국/$myCurrentLocality').where("sublocality", isEqualTo: myCurrentSubLocality).orderBy('numberOfNodes', descending: true)
+    // await FirebaseFirestore.instance.collection('ClickedData/대한민국/$myCurrentLocality').where("sublocality", isEqualTo: myCurrentSubLocality)
         .get()
         .then((myMockDoc) {
       for (int i = 0; i < 3; i++) {
+        print("${myMockDoc.docs[i]} is aa");
         initMarker(myMockDoc.docs[i].data(), myMockDoc.docs[i].id);
       }
     });
   }
 
-  void getCurrentLocation() async {
+  getCurrentLocation() async {
     Position currentPosition =
     await GeolocatorPlatform.instance.getCurrentPosition();
     setState(() {
@@ -194,7 +200,7 @@ class _RecommendState extends State<Recommend> {
     });
   }
 
-  void getCurrentSubLocality() async {
+  getCurrentSubLocality() async {
     final coordinated = geoCo.Coordinates(
         position.latitude, position.longitude);
     var address = await geoCo.Geocoder.local.findAddressesFromCoordinates(
@@ -235,7 +241,7 @@ class _RecommendState extends State<Recommend> {
 
   void _getPolyline() async {
     await getMarkerData().then((value) async{
-      print("$_originLat,$_originLon");
+      print("$_originLat,$_originLon lat,lon");
       print("$_destLat,$_destLon");
 
       PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(

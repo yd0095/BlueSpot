@@ -217,7 +217,7 @@ class _MakeCourseState extends State<MakeCourse> {
           },
       );*/
       print("$addr is addr");
-      Navigator.of(context).popUntil((route) => route.isFirst);
+      Navigator.of(context).pop();
       Navigator.of(context).pushReplacement(MaterialPageRoute(
           builder: (context) => SpotMakePage(uid: this.uid,
               loggeduser: this.loggeduser,

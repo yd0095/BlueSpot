@@ -385,13 +385,13 @@ class _MyEnrolledDetailPageState extends State<MyEnrolledDetailPage> {
               ),
             ),
             Positioned(
-              bottom: 40.0,
+              bottom: 60.0,
               right: 30.0,
               left: 30.0,
               child:Column(
                 children:<Widget>[
                   Container(
-                    height: 80.0,
+                    height: 90.0,
                     //width: double.infinity,
                     width: 300.0,
                     decoration: BoxDecoration(
